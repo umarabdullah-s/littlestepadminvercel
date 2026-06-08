@@ -1,0 +1,108 @@
+.staffPage {
+  padding: 20px;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.title {
+  font-size: 34px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.subtitle {
+  margin-top: 6px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.addBtn {
+  border: none;
+  background: #2563eb;
+  color: white;
+  padding: 12px 26px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.tableSection {
+  margin-top: 24px;
+  background: white;
+  border-radius: 20px;
+  padding: 14px;
+  overflow-x: auto;
+}
+
+.tableSection table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableSection th {
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 13px;
+  text-align: left;
+  padding: 18px;
+}
+
+.tableSection td {
+  padding: 20px 18px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+  color: #334155;
+}
+
+.staffNameWrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.staffAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #d1fae5;
+  color: #065f46;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status {
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.in {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.out {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.leave {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.paginationWrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}

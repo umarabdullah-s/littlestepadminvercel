@@ -1,0 +1,294 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f1f5f9;
+ 
+}
+
+.wrapper {
+  height:90vh;
+  width: 80%;
+  display: flex;
+  border-radius: 30px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+
+.left {
+  flex: 55%;
+  background: #2f95ea;
+  color: white;
+  padding: 50px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 25px;
+}
+
+.mainTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+
+.card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 18px;
+  border-radius: 14px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+.cardTitle {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.cardDesc {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.footer {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+
+
+.right {
+  flex: 45%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.formContainer {
+   
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+
+
+.logo {
+  width: 180px;
+  object-fit: contain;
+  margin: auto;
+}
+
+
+
+.welcomeText {
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.subText {
+  text-align: center;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  /* gap: 10px; */
+}
+
+.inputLabel {
+  margin-bottom: 4px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.inputWrapper {
+  border: 2px solid #64748b;
+  border-radius: 18px;
+
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  gap: 15px;
+}
+
+.inputWrapper input {
+  flex: 1;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 15px;
+  color: #1e293b;
+}
+
+.inputWrapper input::placeholder {
+  color: #94a3b8;
+}
+.errorText {
+  color: #e53935;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 6px;
+  display: block;
+  padding-left: 4px;
+}
+.icon {
+  color: #64748b;
+  font-size: 20px !important;
+}
+
+.eyeBtn {
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.remember input {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.remember span {
+  font-size: 14px;
+  color: #475569;
+}
+
+.forgot {
+  font-size: 14px;
+  color: #2f95ea;
+  cursor: pointer;
+}
+
+
+
+.loginBtn {
+  height: 60px;
+  border: none;
+  border-radius: 14px;
+  background: #2f95ea;
+
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.loginBtn:hover {
+  background: #1f7ed0;
+}
+.loginBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.bottomText {
+  text-align: center;
+  font-size: 14px;
+  color: #94a3b8;
+}
+@media screen and (max-width: 768px) {
+  .left {
+    display: none;
+  }
+
+  .wrapper {
+    width: 95%;
+    height: auto;
+  }
+
+  .right {
+    flex: 100%;
+    width: 100%;
+    padding: 30px 20px;
+  }
+
+  .formContainer {
+    width: 100%;
+  }
+}
+@media screen and (min-width: 769px) and (max-width: 992px) {
+  .left {
+    display: none;
+  }
+
+  .wrapper {
+    width: 65%;
+    height: auto;
+  }
+
+  .right {
+    flex: 100%;
+    width: 100%;
+    padding: 30px 20px;
+  }
+
+  .formContainer {
+    width: 100%;
+  }
+}
+@media screen and (min-width: 993px) and (max-width: 1200px) {
+  .wrapper {
+    width: 95%;
+  }
+
+  .left {
+    padding: 35px;
+  }
+
+  .right {
+    padding: 35px 25px;
+  }
+
+  .mainTitle {
+    font-size: 1.7rem;
+  }
+
+  .cardTitle {
+    font-size: 18px;
+  }
+
+  .cardDesc {
+    font-size: 13px;
+  }
+}

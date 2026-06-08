@@ -1,0 +1,361 @@
+import React, { useEffect, useState } from "react";
+
+import MainLayout from "../../components/layouts/MainLayout";
+
+import styles from "./Dashboard.module.css";
+import {
+  getAttendanceSummary,
+  getAttendanceList,
+  getNotifications,
+  updateNotification,
+} from "../../api/serviceapi";
+import Skeleton from "@mui/material/Skeleton";
+import { useNavigate } from "react-router-dom";
+import Pagination from "@mui/material/Pagination";
+
+const Dashboard = () => {
+  const navigate = useNavigate();
+  const [summary, setSummary] = useState({
+    checkedInStaffs: 0,
+    onLeaveStaffs: 0,
+    checkedOutStaffs: 0,
+    onPermissionStaffs: 0,
+  });
+  const [loading, setLoading] = useState(true);
+  const [staffData, setStaffData] = useState([]);
+  const [tableLoading, setTableLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [notifications, setNotifications] = useState([]);
+  const [notificationLoading, setNotificationLoading] = useState(true);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+ useEffect(() => {
+   fetchAttendanceSummary();
+   fetchAttendanceList();
+   fetchNotifications();
+ }, []);
+ const fetchAttendanceSummary = async () => {
+   try {
+     setLoading(true);
+
+     const response = await getAttendanceSummary();
+
+     setSummary(response.data.data);
+   } catch (error) {
+     console.log(error);
+   } finally {
+     setLoading(false);
+   }
+ };
+const fetchAttendanceList = async (filter = "", currentPage = 1) => {
+  try {
+    setTableLoading(true);
+
+    const response = await getAttendanceList(filter, currentPage);
+
+    setStaffData(response.data.data.data);
+
+    setPage(response.data.data.currentPage);
+    setTotalPages(response.data.data.totalPages);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setTableLoading(false);
+  }
+};
+const fetchNotifications = async () => {
+  try {
+    setNotificationLoading(true);
+
+    const response = await getNotifications();
+
+    setNotifications(response.data.data.notifications);
+    setUnreadCount(response.data.data.unreadCount);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setNotificationLoading(false);
+  }
+};
+
+const handleNotificationClick = async (notificationId) => {
+  try {
+    const response = await updateNotification(notificationId, {
+      isRead: true,
+    });
+    await fetchNotifications();
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+  const stats = [
+    {
+      id: 1,
+      count: summary.totalStaffs,
+      title: "Total Staff",
+      subtitle: "registered employees",
+    },
+    {
+      id: 2,
+      count: summary.checkedInStaffs,
+      title: "Checked In",
+      subtitle: "present today",
+    },
+    {
+      id: 3,
+      count: summary.notCheckedInStaffs,
+      title: "Not Yet Checked In",
+      subtitle: "awaiting check-in",
+    },
+    {
+      id: 4,
+      count: summary.onPermissionStaffs,
+      title: "On Permission",
+      subtitle: "temporary absence",
+    },
+    {
+      id: 5,
+      count: summary.onLeaveStaffs,
+      title: "On Leave",
+      subtitle: "approved leave",
+    },
+  ];
+
+
+  return (
+    <MainLayout>
+      <div className={styles.dashboard}>
+        <div className={styles.top}>
+          <p className={styles.title}>Good Morning, Admin</p>
+
+          <p className={styles.subtitle}>
+            Here’s what’s happening with your team today.
+          </p>
+        </div>
+
+        <div className={styles.statsGrid}>
+          {stats.map((item) => (
+            <div key={item.id} className={styles.card}>
+              <p className={styles.count}>
+                {loading ? (
+                  <Skeleton variant="text" width={50} height={40} />
+                ) : (
+                  item.count
+                )}
+              </p>
+
+              <p className={styles.cardTitle}>{item.title}</p>
+
+              <p className={styles.cardSubtitle}>{item.subtitle}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className={styles.bottom}>
+          <div className={styles.tableSection}>
+            <div className={styles.tableHeader}>
+              <p>Staff Status</p>
+
+              <select
+                value={statusFilter}
+                onChange={(e) => {
+                  const value = e.target.value;
+
+                  setStatusFilter(value);
+
+                  fetchAttendanceList(value === "all" ? "" : value, 1);
+                }}
+              >
+                <option value="all">All</option>
+                <option value="checked in">Checked In</option>
+                <option value="checked out">Checked Out</option>
+                <option value="on leave">On Leave</option>
+              </select>
+            </div>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Staff Id</th>
+                  <th>Role</th>
+                  <th>Check-In</th>
+                  <th>Check-Out</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {tableLoading ? (
+                  [...Array(5)].map((_, index) => (
+                    <tr key={index}>
+                      <td>
+                        <Skeleton variant="text" width={100} />
+                      </td>
+
+                      <td>
+                        <Skeleton variant="text" width={60} />
+                      </td>
+
+                      <td>
+                        <Skeleton variant="text" width={80} />
+                      </td>
+
+                      <td>
+                        <Skeleton variant="text" width={90} />
+                      </td>
+
+                      <td>
+                        <Skeleton variant="text" width={90} />
+                      </td>
+
+                      <td>
+                        <Skeleton variant="rounded" width={80} height={30} />
+                      </td>
+                    </tr>
+                  ))
+                ) : staffData.length > 0 ? (
+                  staffData.map((staff) => (
+                    <tr key={staff.id}>
+                      <td>
+                        <div className={styles.staffNameWrapper}>
+                          <div className={styles.staffAvatar}>
+                            {staff.name
+                              ?.split(" ")
+                              .map((word) => word[0])
+                              .join("")
+                              .slice(0, 2)
+                              .toUpperCase()}
+                          </div>
+
+                          <span>{staff.name}</span>
+                        </div>
+                      </td>
+
+                      <td>{staff.staffId}</td>
+
+                      <td>{staff.role || "--"}</td>
+
+                      <td>{staff.checkInTime || "--"}</td>
+
+                      <td>{staff.checkOutTime || "--"}</td>
+
+                      <td>
+                        <span
+                          className={`${styles.status} ${
+                            staff.status === "checked in"
+                              ? styles.in
+                              : staff.status === "checked out"
+                                ? styles.out
+                                : styles.leave
+                          }`}
+                        >
+                          {staff.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6">
+                      <div className={styles.noData}>
+                        <img src="/critic_no_found.svg" alt="No Data Found" />
+
+                        <p>No Data Found</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+            <div className={styles.paginationWrapper}>
+              <Pagination
+                count={totalPages}
+                page={page}
+                shape="rounded"
+                onChange={(event, value) => {
+                  setPage(value);
+                  fetchAttendanceList(
+                    statusFilter === "all" ? "" : statusFilter,
+                    value,
+                  );
+                }}
+                sx={{
+                  "& .MuiPaginationItem-root": {
+                    borderRadius: "12px",
+                    border: "1px solid #e5e7eb",
+                  },
+
+                  "& .Mui-selected": {
+                    backgroundColor: "#2F64E1 !important",
+                    color: "#fff",
+                    borderRadius: "12px",
+                  },
+
+                  "& .MuiPaginationItem-root:hover": {
+                    backgroundColor: "#f3f4f6",
+                  },
+                }}
+              />
+            </div>
+          </div>
+
+          <div className={styles.requestSection}>
+            <div className={styles.requestHeader}>
+              <p>Notification ({unreadCount})</p>
+
+              <span
+                onClick={() => navigate("/request")}
+                style={{ cursor: "pointer" }}
+              >
+                View all →
+              </span>
+            </div>
+
+            <div className={styles.requestList}>
+              {notificationLoading ? (
+                [...Array(3)].map((_, index) => (
+                  <div key={index} className={styles.requestCard}>
+                    <Skeleton variant="text" width={120} />
+                    <Skeleton variant="text" width="100%" />
+                  </div>
+                ))
+              ) : notifications.length > 0 ? (
+                notifications.map((item) => (
+                  <div
+                    key={item._id}
+                    className={`${styles.requestCard} ${
+                      !item.isRead ? styles.unreadCard : ""
+                    }`}
+                    onClick={() => handleNotificationClick(item._id)}
+                  >
+                    <div className={styles.requestTop}>
+                      <div className={styles.avatar}>
+                        {item.staffName?.charAt(0).toUpperCase()}
+                      </div>
+
+                      <div>
+                        <p className={styles.requestName}>{item.staffName}</p>
+
+                        <p className={styles.requestText}>{item.message}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className={styles.noData}>
+                  <img src="/critic_no_found.svg" alt="No Notifications" />
+                  <p>No Notifications Found</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </MainLayout>
+  );
+};
+
+export default Dashboard;

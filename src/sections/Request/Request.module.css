@@ -1,0 +1,727 @@
+.requestPage {
+  padding: 10px;
+}
+
+
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+
+  color: #111827;
+}
+
+.date {
+  margin-top: 8px;
+
+  color: #64748b;
+  font-size: 14px;
+}
+
+.subtitle {
+  margin-top: 10px;
+
+  color: #64748b;
+  font-size: 14px;
+}
+
+
+
+.filters {
+  margin-top: 28px;
+
+  display: flex;
+  gap: 14px;
+
+ 
+}
+
+.filterBtn,
+.activeFilter {
+  padding: 12px 22px;
+
+  border-radius: 30px;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition: 0.3s ease;
+}
+
+.filterBtn {
+  background: white;
+
+  border: 1px solid #cbd5e1;
+
+  color: #64748b;
+}
+
+.filterBtn:hover {
+  background: #f8fafc;
+}
+
+.activeFilter {
+  background: #111827;
+
+  border: none;
+
+  color: white;
+}
+
+
+
+.cards {
+  margin-top: 28px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 22px;
+}
+
+.card {
+  background: white;
+
+  border-radius: 24px;
+
+  overflow: hidden;
+
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+
+  transition: 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 24px;
+}
+
+.userInfo {
+  display: flex;
+  gap: 16px;
+}
+
+.avatar {
+  width: 45px;
+  height: 45px;
+
+  border-radius: 50%;
+
+  background: #d1fae5;
+  color: #0f766e;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: 700;
+}
+
+.name {
+  font-size: 18px;
+  font-weight: 600;
+
+  color: #111827;
+}
+
+.badges {
+  margin-top: 8px;
+
+  display: flex;
+  gap: 10px;
+}
+
+.leave {
+  background: #fef3c7;
+  color: #b45309;
+
+  padding: 5px 10px;
+
+  border-radius: 8px;
+
+  font-size: 12px;
+}
+
+.pending {
+  background: #e2e8f0;
+  color: #475569;
+
+  padding: 5px 10px;
+
+  border-radius: 8px;
+
+  font-size: 12px;
+}
+
+.time {
+  color: #64748b;
+  font-size: 14px;
+}
+
+
+
+.details {
+  display: flex;
+  gap: 22px;
+  padding: 0 24px;
+}
+
+.details span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+
+
+.description {
+  padding: 18px 24px;
+  color: #475569;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+
+
+.actions {
+  background: #f8fafc;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.leftActions {
+  display: flex;
+  gap: 14px;
+}
+
+.approve,
+.deny {
+  border: none;
+
+  padding: 12px 24px;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  font-weight: 500;
+
+  transition: 0.3s ease;
+}
+
+.approve {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.approve:hover {
+  background: #bbf7d0;
+}
+
+.deny {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.deny:hover {
+  background: #fecaca;
+}
+
+.recordBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  border: none;
+
+  background: transparent;
+
+  color: #64748b;
+
+  cursor: pointer;
+
+  font-size: 14px;
+}
+.approvedBtn {
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: #dcfce7;
+  color: #15803d;
+  font-weight: 600;
+  cursor: default;
+}
+
+.rejectedBtn {
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: #fee2e2;
+  color: #dc2626;
+  font-weight: 600;
+  cursor: default;
+}
+@media (min-width: 577px) and (max-width: 768px) {
+  .requestPage {
+    padding: 16px;
+  }
+
+  
+
+  .title {
+    font-size: 24px;
+  }
+
+  .date {
+    font-size: 13px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+  
+
+  .filters {
+    margin-top: 24px;
+
+    display: flex;
+    gap: 12px;
+
+    flex-wrap: nowrap;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    width: 100%;
+
+    padding-bottom: 4px;
+
+    scrollbar-width: none;
+  }
+
+  .filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filterBtn,
+  .activeFilter {
+    flex-shrink: 0;
+
+    white-space: nowrap;
+
+    padding: 11px 18px;
+
+    font-size: 13px;
+  }
+
+  
+
+  .card {
+    border-radius: 20px;
+  }
+
+  .cardTop {
+    flex-direction: column;
+
+    gap: 18px;
+
+    padding: 20px;
+  }
+
+  .userInfo {
+    gap: 14px;
+  }
+
+  .avatar {
+    width: 42px;
+    height: 42px;
+
+    font-size: 14px;
+  }
+
+  .name {
+    font-size: 17px;
+  }
+
+  .badges {
+    flex-wrap: wrap;
+
+    gap: 8px;
+  }
+
+  .leave,
+  .pending {
+    font-size: 11px;
+
+    padding: 5px 9px;
+  }
+
+  .time {
+    font-size: 13px;
+  }
+
+  
+
+  .details {
+    flex-wrap: wrap;
+
+    gap: 14px;
+
+    padding: 0 20px;
+  }
+
+  .details span {
+    font-size: 13px;
+  }
+
+  
+
+  .description {
+    padding: 18px 20px;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+  }
+
+ 
+
+  .actions {
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 16px;
+
+    padding: 18px 20px;
+  }
+
+  .leftActions {
+    width: 100%;
+
+    display: flex;
+
+    gap: 12px;
+  }
+
+  .approve,
+  .deny {
+    flex: 1;
+
+    padding: 11px;
+
+    font-size: 13px;
+  }
+
+  .recordBtn {
+    font-size: 13px;
+  }
+}
+@media (min-width: 769px) and (max-width: 992px) {
+  .requestPage {
+    padding: 18px;
+  }
+
+  
+
+  .title {
+    font-size: 26px;
+  }
+
+  .date {
+    font-size: 14px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  
+
+  .filters {
+    margin-top: 26px;
+
+    display: flex;
+    gap: 12px;
+
+    flex-wrap: nowrap;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    width: 100%;
+
+    padding-bottom: 4px;
+
+    scrollbar-width: none;
+  }
+
+  .filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filterBtn,
+  .activeFilter {
+    flex-shrink: 0;
+
+    white-space: nowrap;
+
+    padding: 12px 20px;
+
+    font-size: 13px;
+  }
+
+ 
+
+  .cards {
+    gap: 20px;
+  }
+
+  .card {
+    border-radius: 22px;
+  }
+
+
+  .cardTop {
+    padding: 22px;
+  }
+
+  .userInfo {
+    gap: 15px;
+  }
+
+  .avatar {
+    width: 44px;
+    height: 44px;
+
+    font-size: 14px;
+  }
+
+  .name {
+    font-size: 18px;
+  }
+
+  .badges {
+    gap: 9px;
+  }
+
+  .leave,
+  .pending {
+    font-size: 12px;
+
+    padding: 5px 10px;
+  }
+
+  .time {
+    font-size: 13px;
+  }
+
+  
+
+  .details {
+    gap: 18px;
+
+    flex-wrap: wrap;
+
+    padding: 0 22px;
+  }
+
+  .details span {
+    font-size: 13px;
+  }
+
+  
+
+  .description {
+    padding: 18px 22px;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+  }
+
+  
+
+  .actions {
+    padding: 18px 22px;
+
+    gap: 14px;
+  }
+
+  .leftActions {
+    gap: 12px;
+  }
+
+  .approve,
+  .deny {
+    padding: 11px 20px;
+
+    font-size: 13px;
+  }
+
+  .recordBtn {
+    font-size: 13px;
+  }
+}
+@media (min-width: 993px) and (max-width: 1200px) {
+  .requestPage {
+    padding: 20px;
+  }
+
+  
+
+  .title {
+    font-size: 28px;
+  }
+
+  .date {
+    font-size: 14px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  
+
+  .filters {
+    margin-top: 26px;
+
+    display: flex;
+    gap: 14px;
+
+    flex-wrap: nowrap;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    width: 100%;
+
+    padding-bottom: 4px;
+
+    scrollbar-width: none;
+  }
+
+  .filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filterBtn,
+  .activeFilter {
+    flex-shrink: 0;
+
+    white-space: nowrap;
+
+    padding: 12px 22px;
+
+    font-size: 14px;
+  }
+
+ 
+
+  .cards {
+    gap: 22px;
+  }
+
+  .card {
+    border-radius: 24px;
+  }
+
+  
+
+  .cardTop {
+    padding: 24px;
+  }
+
+  .userInfo {
+    gap: 16px;
+  }
+
+  .avatar {
+    width: 45px;
+    height: 45px;
+
+    font-size: 15px;
+  }
+
+  .name {
+    font-size: 19px;
+  }
+
+  .badges {
+    gap: 10px;
+  }
+
+  .leave,
+  .pending {
+    font-size: 12px;
+
+    padding: 5px 10px;
+  }
+
+  .time {
+    font-size: 14px;
+  }
+
+ 
+
+  .details {
+    gap: 20px;
+
+    flex-wrap: wrap;
+
+    padding: 0 24px;
+  }
+
+  .details span {
+    font-size: 14px;
+  }
+
+
+
+  .description {
+    padding: 18px 24px;
+
+    font-size: 15px;
+
+    line-height: 1.7;
+  }
+
+  
+
+  .actions {
+    padding: 18px 24px;
+
+    gap: 14px;
+  }
+
+  .leftActions {
+    gap: 14px;
+  }
+
+  .approve,
+  .deny {
+    padding: 12px 22px;
+
+    font-size: 14px;
+  }
+
+  .recordBtn {
+    font-size: 14px;
+  }
+}
