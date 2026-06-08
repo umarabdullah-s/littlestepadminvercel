@@ -12,14 +12,8 @@ import Skeleton from "@mui/material/Skeleton";
 
 
 const filters = ["All requests", "Leave", "Permission", "Pending", "Resolved"];
-
-const Request = () => {
-const [activeFilter, setActiveFilter] = useState("All requests");
-const [requests, setRequests] = useState([]);
-const [loading, setLoading] = useState(true);
-
-const getStatusFromFilter = () => {
-  switch (activeFilter) {
+const getStatusFromFilter = (filter) => {
+  switch (filter) {
     case "Pending":
       return "pending";
 
@@ -36,6 +30,29 @@ const getStatusFromFilter = () => {
       return "";
   }
 };
+const Request = () => {
+const [activeFilter, setActiveFilter] = useState("All requests");
+const [requests, setRequests] = useState([]);
+const [loading, setLoading] = useState(true);
+
+// const getStatusFromFilter = () => {
+//   switch (activeFilter) {
+//     case "Pending":
+//       return "pending";
+
+//     case "Resolved":
+//       return "resolved";
+
+//     case "Leave":
+//       return "leave";
+
+//     case "Permission":
+//       return "permission";
+
+//     default:
+//       return "";
+//   }
+// };
 
 const leaveRequests = async (status = "") => {
   try {
@@ -57,7 +74,7 @@ const handleApprove = async (id) => {
       status: "approved",
     });
 
-    leaveRequests(getStatusFromFilter());
+   await leaveRequests(getStatusFromFilter(activeFilter));
   } catch (error) {
     console.error(error);
   }
@@ -69,14 +86,14 @@ const handleReject = async (id) => {
       status: "rejected",
     });
 
-    leaveRequests(getStatusFromFilter());
+    await leaveRequests(getStatusFromFilter(activeFilter));
   } catch (error) {
     console.error(error);
   }
 };
 
 useEffect(() => {
-  leaveRequests(getStatusFromFilter());
+  leaveRequests(getStatusFromFilter(activeFilter));
 }, [activeFilter]);
   return (
     <MainLayout>
