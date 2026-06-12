@@ -1,0 +1,474 @@
+import React from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import MainLayout from "../../components/layouts/MainLayout";
+import styles from "./StaffDetails.module.css";
+import { useState, useEffect } from "react";
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import CloseIcon from "@mui/icons-material/Close";
+import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
+import IconButton from "@mui/material/IconButton";
+import { getStaffById } from "../../api/serviceapi";
+
+const StaffDetails = () => {
+  const [activeTab, setActiveTab] = useState("attendance");
+  const [openUploadModal, setOpenUploadModal] = useState(false);
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const fetchStaff = async () => {
+    try {
+      const response = await getStaffById(id);
+      console.log(response.data.data)
+      }
+    
+    catch (error) {
+      console.error("Error fetching staff:", error);
+    }
+  };
+  useEffect(() => {
+    fetchStaff();
+  }, [id]);
+  return (
+    <MainLayout>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <button className={styles.backBtn} onClick={() => navigate(-1)}>
+            ← Back
+          </button>
+        </div>
+
+        <div className={styles.profileCard}>
+          <div className={styles.profileLeft}>
+            <div className={styles.avatar}>RA</div>
+
+            <div>
+              <h2>Ravi Anand</h2>
+              <p>English Teacher</p>
+              <p>Staff ID: {}</p>
+
+              <div className={styles.infoRow}>
+                <div className={styles.infoItem}>
+                  <EmailOutlinedIcon className={styles.infoIcon} />
+                  <span>ravisample@gmail.com</span>
+                </div>
+
+                <div className={styles.infoItem}>
+                  <LocalPhoneOutlinedIcon className={styles.infoIcon} />
+                  <span>+91 98765-43210</span>
+                </div>
+
+                <div className={styles.infoItem}>
+                  <CalendarMonthOutlinedIcon className={styles.infoIcon} />
+                  <span>Joined Aug 12, 2019</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button className={styles.editBtn}>Edit Profile</button>
+        </div>
+
+        <div className={styles.detailsGrid}>
+          <div className={styles.detailCard}>
+            <h4>Role</h4>
+            <p>Teaching</p>
+          </div>
+
+          <div className={styles.detailCard}>
+            <h4>Work Schedule</h4>
+            <p>Mon-Fri, 8AM-4PM</p>
+          </div>
+
+          <div className={styles.detailCard}>
+            <h4>Employment Type</h4>
+            <p>Full-time</p>
+          </div>
+
+          <div className={styles.detailCard}>
+            <h4>Address</h4>
+            <p>Chennai</p>
+          </div>
+
+          <div className={styles.detailCard}>
+            <h4>Emergency Contact</h4>
+            <p>+91 98765 43210</p>
+          </div>
+
+          <div className={styles.detailCard}>
+            <h4>Blood Group</h4>
+            <p>AB+</p>
+          </div>
+
+          <div className={styles.detailCard}>
+            <h4>DOB</h4>
+            <p>12-12-2000</p>
+          </div>
+
+          <div className={styles.detailCard}>
+            <h4>Payment Mode</h4>
+            <p>Bank Transfer</p>
+            <p>12345678</p>
+          </div>
+
+          <div className={styles.detailCard}>
+            <h4>PAN Number</h4>
+            <p>12-12-2000</p>
+          </div>
+
+          <div className={styles.detailCard}>
+            <h4>IFSC Code</h4>
+            <p>12-12-2000</p>
+          </div>
+        </div>
+
+        <div className={styles.statsGrid}>
+          <div className={styles.statCard}>
+            <h2>22</h2>
+            <p>Working Days</p>
+          </div>
+
+          <div className={styles.statCard}>
+            <h2>3</h2>
+            <p>Leave Taken</p>
+          </div>
+
+          <div className={styles.statCard}>
+            <h2>3</h2>
+            <p>Permissions</p>
+          </div>
+
+         
+        </div>
+        <div className={styles.tabs}>
+          <button
+            className={`${styles.tab} ${
+              activeTab === "attendance" ? styles.activeTab : ""
+            }`}
+            onClick={() => setActiveTab("attendance")}
+          >
+            Attendance
+          </button>
+
+         
+
+          <button
+            className={`${styles.tab} ${
+              activeTab === "documents" ? styles.activeTab : ""
+            }`}
+            onClick={() => setActiveTab("documents")}
+          >
+            Documents
+          </button>
+
+          <button
+            className={`${styles.tab} ${
+              activeTab === "requests" ? styles.activeTab : ""
+            }`}
+            onClick={() => setActiveTab("requests")}
+          >
+            Requests
+          </button>
+        </div>
+
+        {activeTab === "documents" && (
+          <div className={styles.tableContainer}>
+            <div className={styles.tableHeader}>
+              <h3>Employee Files</h3>
+
+              <button
+                className={styles.uploadBtn}
+                onClick={() => setOpenUploadModal(true)}
+              >
+                Upload New Document
+              </button>
+            </div>
+
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>DOCUMENT NAME</th>
+                  <th>CATEGORY</th>
+                  <th>STATUS</th>
+                  <th>UPLOAD DATE</th>
+                  <th>ACTIONS</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td>Aadhar.pdf</td>
+                  <td>Identity Proof</td>
+                  <td>
+                    <span className={styles.verified}>VERIFIED</span>
+                  </td>
+                  <td>12 Jun 2025</td>
+                  <td>
+                    <div className={styles.actionIcons}>
+                      <VisibilityOutlinedIcon className={styles.actionIcon} />
+
+                      <DownloadOutlinedIcon className={styles.actionIcon} />
+
+                      <DeleteOutlineOutlinedIcon
+                        className={styles.actionIcon}
+                      />
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>PAN Card.pdf</td>
+                  <td>Identity Proof</td>
+                  <td>
+                    <span className={styles.pending}>PENDING</span>
+                  </td>
+                  <td>--</td>
+                  <td>
+                    <button className={styles.uploadSmallBtn}>Upload</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+        {activeTab === "attendance" && (
+          <div className={styles.attendanceContainer}>
+            <div className={styles.attendanceStats}>
+              <div className={styles.attendanceCard}>
+                <h2>2</h2>
+                <h4>Leave</h4>
+                <p>Month</p>
+              </div>
+
+              <div className={styles.attendanceCard}>
+                <h2>1</h2>
+                <h4>Permission</h4>
+                <p>Month</p>
+              </div>
+
+              <div className={styles.attendanceCard}>
+                <h2>23</h2>
+                <h4>Checked In</h4>
+                <p>Month</p>
+              </div>
+            </div>
+
+            <div className={styles.attendanceHeader}>
+              <h3>Past Attendance</h3>
+
+              <select className={styles.monthFilter}>
+                <option>June 2026</option>
+                <option>May 2026</option>
+                <option>April 2026</option>
+              </select>
+            </div>
+
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>DATE</th>
+                  <th>TOTAL HOURS</th>
+                  <th>CHECK-IN</th>
+                  <th>CHECK-OUT</th>
+                  <th>STATUS</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {[
+                  {
+                    date: "12-6-2026",
+                    hours: "8H - 12M",
+                    checkIn: "08:52 AM",
+                    checkOut: "15:52 PM",
+                    status: "Checked In",
+                  },
+                  {
+                    date: "11-6-2026",
+                    hours: "8H - 12M",
+                    checkIn: "--",
+                    checkOut: "--",
+                    status: "On Leave",
+                  },
+                  {
+                    date: "10-6-2026",
+                    hours: "8H - 12M",
+                    checkIn: "09:10 AM",
+                    checkOut: "15:10 PM",
+                    status: "Checked Out",
+                  },
+                ].map((attendance, index) => (
+                  <tr key={index}>
+                    <td>{attendance.date}</td>
+                    <td>{attendance.hours}</td>
+                    <td>{attendance.checkIn}</td>
+                    <td>{attendance.checkOut}</td>
+
+                    <td>
+                      <span
+                        className={
+                          attendance.status === "Checked In"
+                            ? styles.checkedIn
+                            : attendance.status === "Checked Out"
+                              ? styles.checkedOut
+                              : styles.onLeave
+                        }
+                      >
+                        {attendance.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+       
+        {activeTab === "requests" && (
+          <div className={styles.tableContainer}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>TYPE</th>
+                  <th>DATE</th>
+                  <th>REASON</th>
+                  <th>APPLIED ON</th>
+                  <th>STATUS</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td>
+                    <strong>Half-day Permission</strong>
+                  </td>
+                  <td>12 Jun 2026</td>
+                  <td>Medical Checkup</td>
+                  <td>10 Jun 2026</td>
+                  <td>
+                    <span className={styles.approved}>Approved</span>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <strong>Casual Leave</strong>
+                  </td>
+                  <td>5 Jun 2026</td>
+                  <td>Family Function</td>
+                  <td>3 Jun 2026</td>
+                  <td>
+                    <span className={styles.approved}>Approved</span>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <strong>Sick Leave</strong>
+                  </td>
+                  <td>20 May 2026</td>
+                  <td>Fever</td>
+                  <td>20 May 2026</td>
+                  <td>
+                    <span className={styles.approved}>Approved</span>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <strong>Casual Leave</strong>
+                  </td>
+                  <td>10 May 2026</td>
+                  <td>Personal Work</td>
+                  <td>8 May 2026</td>
+                  <td>
+                    <span className={styles.declined}>Declined</span>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <strong>Half-day Permission</strong>
+                  </td>
+                  <td>2 May 2026</td>
+                  <td>Bank Work</td>
+                  <td>1 May 2026</td>
+                  <td>
+                    <span className={styles.approved}>Approved</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div className={styles.pagination}>
+              <button>{"<"}</button>
+              <button className={styles.activePage}>1</button>
+              <button>2</button>
+              <button>3</button>
+              <button>{">"}</button>
+            </div>
+          </div>
+        )}
+      </div>
+      <Dialog
+        open={openUploadModal}
+        onClose={() => setOpenUploadModal(false)}
+        maxWidth="sm"
+        fullWidth
+        classes={{ paper: styles.dialogPaper }}
+      >
+        <DialogTitle className={styles.dialogTitle}>
+          Upload Document
+          <IconButton
+            onClick={() => setOpenUploadModal(false)}
+            sx={{ position: "absolute", right: 10, top: 10 }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent>
+          <div className={styles.formGroup}>
+            <label>Document Category</label>
+
+            <input type="text" placeholder="Enter" className={styles.input} />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label>File Upload</label>
+
+            <div className={styles.uploadBox}>
+              <CloudUploadOutlinedIcon className={styles.uploadIcon} />
+
+              <h3>Click to Upload or Drag and Drop</h3>
+
+              <p>PDF, JPG, or PNG (Max. 10MB)</p>
+
+              <input type="file" />
+            </div>
+          </div>
+        </DialogContent>
+
+        <DialogActions sx={{ padding: "20px" }}>
+          <button
+            className={styles.cancelBtn}
+            onClick={() => setOpenUploadModal(false)}
+          >
+            Cancel
+          </button>
+
+          <button className={styles.modalUploadBtn}>Upload</button>
+        </DialogActions>
+      </Dialog>
+    </MainLayout>
+  );
+};
+
+export default StaffDetails;

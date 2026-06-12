@@ -10,7 +10,6 @@ import { getLeaveRequests, respondLeaveRequest } from "../../api/serviceapi";
 
 import Skeleton from "@mui/material/Skeleton";
 
-
 const filters = ["All requests", "Leave", "Permission", "Pending", "Resolved"];
 const getStatusFromFilter = (filter) => {
   switch (filter) {
@@ -31,70 +30,52 @@ const getStatusFromFilter = (filter) => {
   }
 };
 const Request = () => {
-const [activeFilter, setActiveFilter] = useState("All requests");
-const [requests, setRequests] = useState([]);
-const [loading, setLoading] = useState(true);
+  const [activeFilter, setActiveFilter] = useState("All requests");
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-// const getStatusFromFilter = () => {
-//   switch (activeFilter) {
-//     case "Pending":
-//       return "pending";
 
-//     case "Resolved":
-//       return "resolved";
+  const leaveRequests = async (status = "") => {
+    try {
+      setLoading(true);
 
-//     case "Leave":
-//       return "leave";
+      const response = await getLeaveRequests(status);
 
-//     case "Permission":
-//       return "permission";
+      setRequests(response.data.data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-//     default:
-//       return "";
-//   }
-// };
+  const handleApprove = async (id) => {
+    try {
+      await respondLeaveRequest(id, {
+        status: "approved",
+      });
 
-const leaveRequests = async (status = "") => {
-  try {
-    setLoading(true);
+      await leaveRequests(getStatusFromFilter(activeFilter));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    const response = await getLeaveRequests(status);
+  const handleReject = async (id) => {
+    try {
+      await respondLeaveRequest(id, {
+        status: "rejected",
+      });
 
-    setRequests(response.data.data.data);
-  } catch (error) {
-    console.log(error);
-  } finally {
-    setLoading(false);
-  }
-};
+      await leaveRequests(getStatusFromFilter(activeFilter));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-const handleApprove = async (id) => {
-  try {
-    await respondLeaveRequest(id, {
-      status: "approved",
-    });
-
-   await leaveRequests(getStatusFromFilter(activeFilter));
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const handleReject = async (id) => {
-  try {
-    await respondLeaveRequest(id, {
-      status: "rejected",
-    });
-
-    await leaveRequests(getStatusFromFilter(activeFilter));
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-useEffect(() => {
-  leaveRequests(getStatusFromFilter(activeFilter));
-}, [activeFilter]);
+  useEffect(() => {
+    leaveRequests(getStatusFromFilter(activeFilter));
+  }, [activeFilter]);
   return (
     <MainLayout>
       <div className={styles.requestPage}>

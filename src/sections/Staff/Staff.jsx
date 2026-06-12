@@ -4,28 +4,32 @@ import Pagination from "@mui/material/Pagination";
 import styles from "./Staff.module.css";
 import { getStaffs } from "../../api/serviceapi";
 import Skeleton from "@mui/material/Skeleton";
+import { useNavigate } from "react-router-dom";
 const Staff = () => {
   const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalRecords, setTotalRecords] = useState(0);
   const [staffData, setStaffData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const fetchStaffs = async () => {
-    try {
-      setLoading(true);
+  const navigate = useNavigate();
+ const fetchStaffs = async (pageNumber = 1) => {
+   try {
+     setLoading(true);
 
-      const response = await getStaffs();
+     const response = await getStaffs(pageNumber);
 
-      console.log(response.data);
-
-      setStaffData(response.data.data.data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    fetchStaffs();
-  }, []);
+     setStaffData(response.data.data.data);
+     setTotalRecords(response.data.data.totalRecords);
+     setTotalPages(response.data.data.totalPages);
+   } catch (error) {
+     console.log(error);
+   } finally {
+     setLoading(false);
+   }
+ };
+useEffect(() => {
+  fetchStaffs(page);
+}, [page]);
 
   return (
     <MainLayout>
@@ -33,10 +37,15 @@ const Staff = () => {
         <div className={styles.top}>
           <div>
             <h1 className={styles.title}>Staff Directory</h1>
-            <p className={styles.subtitle}>Total {staffData.length} staff</p>
+            <p className={styles.subtitle}>Total staff : {totalRecords} </p>
           </div>
 
-          <button className={styles.addBtn}>+ Staff</button>
+          <button
+            className={styles.addBtn}
+            onClick={() => navigate("/staff/create-staff")}
+          >
+            + Staff
+          </button>
         </div>
 
         <div className={styles.tableSection}>
@@ -85,7 +94,11 @@ const Staff = () => {
                     </tr>
                   ))
                 : staffData.map((staff) => (
-                    <tr key={staff._id}>
+                    <tr
+                      key={staff._id}
+                      onClick={() => navigate(`/staff/${staff._id}`)}
+                      className={styles.clickableRow}
+                    >
                       <td>
                         <div className={styles.staffNameWrapper}>
                           <div className={styles.staffAvatar}>
@@ -115,15 +128,19 @@ const Staff = () => {
 
                       <td>{staff.email}</td>
 
-                      <td>{staff.mobileNumber}</td>
+                      <td>{staff.phone}</td>
 
                       <td>
                         <span
                           className={`${styles.status} ${
-                            staff.isCheckedIn ? styles.in : styles.out
+                            staff.status?.toLowerCase() === "checked in"
+                              ? styles.in
+                              : staff.status === "not yet checked in"
+                                                              ? styles.out
+                                                              : styles.leave
                           }`}
                         >
-                          ● {staff.isCheckedIn ? "Checked In" : "Checked Out"}
+                          {staff.status || "--"}
                         </span>
                       </td>
                     </tr>
@@ -133,7 +150,7 @@ const Staff = () => {
 
           <div className={styles.paginationWrapper}>
             <Pagination
-              count={3}
+              count={totalPages}
               page={page}
               shape="rounded"
               onChange={(event, value) => setPage(value)}
@@ -142,10 +159,9 @@ const Staff = () => {
                   borderRadius: "10px",
                   border: "1px solid #e5e7eb",
                 },
-
                 "& .Mui-selected": {
                   backgroundColor: "#2F64E1 !important",
-                  color: "rgb(255, 255, 255)",
+                  color: "#fff",
                 },
               }}
             />

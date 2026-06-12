@@ -275,71 +275,130 @@
   font-weight: 600;
   cursor: default;
 }
-@media (min-width: 577px) and (max-width: 768px) {
+@media (max-width: 576px) {
   .requestPage {
-    padding: 16px;
+    padding: 8px;
   }
-
-  
 
   .title {
-    font-size: 24px;
+    font-size: 18px;
   }
 
+  .subtitle,
   .date {
     font-size: 13px;
   }
 
-  .subtitle {
-    font-size: 13px;
-  }
-
-  
-
   .filters {
-    margin-top: 24px;
-
-    display: flex;
-    gap: 12px;
-
-    flex-wrap: nowrap;
-
-    overflow-x: auto;
-    overflow-y: hidden;
-
-    width: 100%;
-
-    padding-bottom: 4px;
-
-    scrollbar-width: none;
-  }
-
-  .filters::-webkit-scrollbar {
-    display: none;
+    flex-wrap: wrap;
+    gap: 10px;
   }
 
   .filterBtn,
   .activeFilter {
-    flex-shrink: 0;
-
-    white-space: nowrap;
-
-    padding: 11px 18px;
-
+    padding: 10px 16px;
     font-size: 13px;
-  }
-
-  
-
-  .card {
-    border-radius: 20px;
   }
 
   .cardTop {
     flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
 
-    gap: 18px;
+  .userInfo {
+    gap: 12px;
+  }
 
+  .name {
+    font-size: 16px;
+  }
+
+  .badges {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .details {
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 16px;
+  }
+
+  .description {
+    padding: 16px;
+    font-size: 14px;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .leftActions {
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .approve,
+  .deny,
+  .approvedBtn,
+  .rejectedBtn,
+  .recordBtn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .recordBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .time {
+    font-size: 13px;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+
+  .noData img {
+    width: 220px;
+    max-width: 100%;
+  }
+
+  .noData p {
+    font-size: 14px;
+    text-align: center;
+  }
+}
+@media (min-width: 577px) and (max-width: 768px) {
+  .requestPage {
+    padding: 15px;
+  }
+
+  .title {
+    font-size: 19px;
+  }
+
+  .filters {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .filterBtn,
+  .activeFilter {
+    padding: 11px 18px;
+    font-size: 14px;
+  }
+
+  .cardTop {
     padding: 20px;
   }
 
@@ -350,8 +409,7 @@
   .avatar {
     width: 42px;
     height: 42px;
-
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .name {
@@ -360,28 +418,12 @@
 
   .badges {
     flex-wrap: wrap;
-
     gap: 8px;
   }
 
-  .leave,
-  .pending {
-    font-size: 11px;
-
-    padding: 5px 9px;
-  }
-
-  .time {
-    font-size: 13px;
-  }
-
-  
-
   .details {
     flex-wrap: wrap;
-
-    gap: 14px;
-
+    gap: 16px;
     padding: 0 20px;
   }
 
@@ -389,46 +431,36 @@
     font-size: 13px;
   }
 
-  
-
   .description {
-    padding: 18px 20px;
-
+    padding: 16px 20px;
     font-size: 14px;
-
-    line-height: 1.6;
   }
-
- 
 
   .actions {
-    flex-direction: column;
-
-    align-items: stretch;
-
-    gap: 16px;
-
-    padding: 18px 20px;
-  }
-
-  .leftActions {
-    width: 100%;
-
-    display: flex;
-
+    padding: 16px 20px;
+    flex-wrap: wrap;
     gap: 12px;
   }
 
+  .leftActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
   .approve,
-  .deny {
-    flex: 1;
-
-    padding: 11px;
-
-    font-size: 13px;
+  .deny,
+  .approvedBtn,
+  .rejectedBtn {
+    padding: 10px 18px;
+    font-size: 14px;
   }
 
   .recordBtn {
+    font-size: 14px;
+  }
+
+  .time {
     font-size: 13px;
   }
 }
@@ -437,65 +469,20 @@
     padding: 18px;
   }
 
-  
-
   .title {
-    font-size: 26px;
+    font-size: 20px;
   }
-
-  .date {
-    font-size: 14px;
-  }
-
-  .subtitle {
-    font-size: 14px;
-  }
-
-  
 
   .filters {
-    margin-top: 26px;
-
-    display: flex;
+    flex-wrap: wrap;
     gap: 12px;
-
-    flex-wrap: nowrap;
-
-    overflow-x: auto;
-    overflow-y: hidden;
-
-    width: 100%;
-
-    padding-bottom: 4px;
-
-    scrollbar-width: none;
-  }
-
-  .filters::-webkit-scrollbar {
-    display: none;
   }
 
   .filterBtn,
   .activeFilter {
-    flex-shrink: 0;
-
-    white-space: nowrap;
-
-    padding: 12px 20px;
-
-    font-size: 13px;
+    padding: 11px 20px;
+    font-size: 14px;
   }
-
- 
-
-  .cards {
-    gap: 20px;
-  }
-
-  .card {
-    border-radius: 22px;
-  }
-
 
   .cardTop {
     padding: 22px;
@@ -508,8 +495,7 @@
   .avatar {
     width: 44px;
     height: 44px;
-
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .name {
@@ -517,65 +503,49 @@
   }
 
   .badges {
-    gap: 9px;
+    gap: 8px;
+    flex-wrap: wrap;
   }
-
-  .leave,
-  .pending {
-    font-size: 12px;
-
-    padding: 5px 10px;
-  }
-
-  .time {
-    font-size: 13px;
-  }
-
-  
 
   .details {
     gap: 18px;
-
-    flex-wrap: wrap;
-
     padding: 0 22px;
+    flex-wrap: wrap;
   }
 
   .details span {
-    font-size: 13px;
+    font-size: 14px;
   }
-
-  
 
   .description {
     padding: 18px 22px;
-
-    font-size: 14px;
-
-    line-height: 1.6;
+    font-size: 15px;
   }
-
-  
 
   .actions {
     padding: 18px 22px;
-
-    gap: 14px;
+    gap: 12px;
   }
 
   .leftActions {
     gap: 12px;
+    flex-wrap: wrap;
   }
 
   .approve,
-  .deny {
+  .deny,
+  .approvedBtn,
+  .rejectedBtn {
     padding: 11px 20px;
-
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .recordBtn {
-    font-size: 13px;
+    font-size: 14px;
+  }
+
+  .time {
+    font-size: 14px;
   }
 }
 @media (min-width: 993px) and (max-width: 1200px) {
@@ -583,145 +553,81 @@
     padding: 20px;
   }
 
-  
-
-  .title {
-    font-size: 28px;
-  }
-
-  .date {
-    font-size: 14px;
-  }
-
-  .subtitle {
-    font-size: 14px;
-  }
-
-  
-
   .filters {
-    margin-top: 26px;
-
-    display: flex;
-    gap: 14px;
-
-    flex-wrap: nowrap;
-
-    overflow-x: auto;
-    overflow-y: hidden;
-
-    width: 100%;
-
-    padding-bottom: 4px;
-
-    scrollbar-width: none;
-  }
-
-  .filters::-webkit-scrollbar {
-    display: none;
+    gap: 12px;
   }
 
   .filterBtn,
   .activeFilter {
-    flex-shrink: 0;
-
-    white-space: nowrap;
-
-    padding: 12px 22px;
-
+    padding: 12px 20px;
     font-size: 14px;
   }
 
- 
-
   .cards {
-    gap: 22px;
+    gap: 20px;
   }
 
   .card {
-    border-radius: 24px;
+    border-radius: 22px;
   }
 
-  
-
   .cardTop {
-    padding: 24px;
+    padding: 22px;
   }
 
   .userInfo {
-    gap: 16px;
+    gap: 14px;
   }
 
   .avatar {
-    width: 45px;
-    height: 45px;
-
-    font-size: 15px;
+    width: 44px;
+    height: 44px;
+    font-size: 16px;
   }
 
   .name {
-    font-size: 19px;
+    font-size: 18px;
   }
 
   .badges {
-    gap: 10px;
+    gap: 8px;
   }
-
-  .leave,
-  .pending {
-    font-size: 12px;
-
-    padding: 5px 10px;
-  }
-
-  .time {
-    font-size: 14px;
-  }
-
- 
 
   .details {
-    gap: 20px;
-
-    flex-wrap: wrap;
-
-    padding: 0 24px;
+    gap: 18px;
+    padding: 0 22px;
   }
 
   .details span {
     font-size: 14px;
   }
 
-
-
   .description {
-    padding: 18px 24px;
-
+    padding: 18px 22px;
     font-size: 15px;
-
-    line-height: 1.7;
   }
 
-  
-
   .actions {
-    padding: 18px 24px;
-
-    gap: 14px;
+    padding: 18px 22px;
   }
 
   .leftActions {
-    gap: 14px;
+    gap: 12px;
   }
 
   .approve,
-  .deny {
-    padding: 12px 22px;
-
+  .deny,
+  .approvedBtn,
+  .rejectedBtn {
+    padding: 11px 22px;
     font-size: 14px;
   }
 
   .recordBtn {
+    font-size: 14px;
+  }
+
+  .time {
     font-size: 14px;
   }
 }

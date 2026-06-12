@@ -14,7 +14,7 @@
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
 }
 
-/* SEARCH BOX */
+
 
 .searchWrapper {
   width: 260px;
@@ -55,7 +55,6 @@
   color: #374151;
 }
 
-/* PROFILE */
 
 .profile {
   display: flex;
@@ -69,7 +68,7 @@
   color: #4b5563;
 }
 
-/* AVATAR */
+
 
 .avatar {
   width: 34px;
@@ -106,7 +105,7 @@
     gap: 14px;
   }
 
-  /* SEARCH */
+ 
 
   .searchWrapper {
     width: 100%;
@@ -122,7 +121,6 @@
     font-size: 16px;
   }
 
-  /* PROFILE */
 
   .profile {
     justify-content: space-between;
@@ -132,7 +130,7 @@
     font-size: 14px;
   }
 
-  /* AVATAR */
+ 
 
   .avatar {
     width: 32px;

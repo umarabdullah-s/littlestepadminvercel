@@ -31,6 +31,30 @@ export const respondLeaveRequest = (id, data) => {
   return apiService.put(`/leave/${id}/respond`, data);
 };
 
-export const getStaffs = () => {
-  return apiService.get("/staffs");
+export const getStaffs = (page = 1) => {
+  return apiService.get(`/staffs?page=${page}`);
+};
+
+export const getStaffById = (id) => {
+  return apiService.get(`/staffs/${id}`);
+};
+
+export const getAnnouncement = () => {
+  return apiService.get("/announcement");
+};
+
+export const createAnnouncement = (data) => {
+  return apiService.post("/announcement", data);
+};
+
+export const deleteAnnouncement = (id) => {
+  return apiService.delete(`/announcement/${id}`);
+};
+
+export const getAnnouncementSummary = () => {
+  return apiService.get("/announcement/summary");
+};
+
+export const updateAnnouncement = (id, data) => {
+  return apiService.put(`/announcement/${id}`, data);
 };

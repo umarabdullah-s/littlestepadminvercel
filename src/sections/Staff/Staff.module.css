@@ -9,7 +9,7 @@
 }
 
 .title {
-  font-size: 34px;
+  font-size: 20px;
   font-weight: 700;
   color: #1e293b;
 }
@@ -87,13 +87,13 @@
 }
 
 .in {
-  background: #eff6ff;
-  color: #2563eb;
+  background: #dcfce7;
+  color: #16a34a;
 }
 
 .out {
-  background: #dcfce7;
-  color: #16a34a;
+  background: #dbeafe;
+  color: #2563eb;
 }
 
 .leave {
@@ -101,8 +101,16 @@
   color: #dc2626;
 }
 
+
 .paginationWrapper {
   display: flex;
   justify-content: flex-end;
   margin-top: 24px;
+}
+.clickableRow {
+  cursor: pointer;
+}
+
+.clickableRow:hover {
+  background-color: #f8fafc;
 }

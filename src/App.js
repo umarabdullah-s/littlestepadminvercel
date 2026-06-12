@@ -8,6 +8,8 @@ import Staff from "./sections/Staff/Staff";
 import Attendance from "./sections/Attendance/Attendance";
 import Announcement from "./sections/Announcement/Announcement";
 import ProtectedRoute from "./components/layouts/ProtectedRoute";
+import StaffDetails from "./sections/StaffDetails/StaffDetails";
+import CreateStaff from "./sections/createStaff/CreateStaff";
 
 function App() {
   
@@ -54,6 +56,22 @@ function App() {
           element={
             <ProtectedRoute>
               <Announcement />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/staff/:id"
+          element={
+            <ProtectedRoute>
+              <StaffDetails />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/staff/create-staff"
+          element={
+            <ProtectedRoute>
+              <CreateStaff/>
             </ProtectedRoute>
           }
         />

@@ -1,0 +1,468 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  padding: 20px;
+}
+
+.statsContainer {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.statCard {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  width: 120px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.statCard h5 {
+  color: #64748b;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.statCard h2 {
+  color: #3b82f6;
+  font-size: 36px;
+}
+
+.statCard p {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.composeCard,
+.historyCard {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.composeCard h3,
+.historyCard h3 {
+  margin-bottom: 20px;
+  color: #1e293b;
+}
+.composeTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.composeIcon {
+  color: #3b82f6;
+  font-size: 22px !important;
+}
+.formGroup {
+  margin-bottom: 18px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.formGroup input,
+.formGroup textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #dbe2ea;
+  border-radius: 10px;
+  outline: none;
+}
+
+.formGroup textarea {
+  resize: none;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.cancelBtn {
+  padding: 10px 28px;
+  border: 1px solid #3b82f6;
+  background: white;
+  color: #3b82f6;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.postBtn {
+  padding: 10px 28px;
+  border: none;
+  background: #3b82f6;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.historyTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+   color: #475569;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.historyIcon {
+  font-size: 30px !important;
+  color: #475569;
+}
+.historyItem {
+  padding: 22px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.historyItem:last-child {
+  border-bottom: none;
+}
+
+.historyTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.historyItem h4 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2f3640;
+}
+
+.dateRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.dateIcon {
+  font-size: 14px !important;
+}
+
+.actionIcons {
+  display: flex;
+  gap: 12px;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.actionIcons svg {
+  font-size: 20px !important;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.actionIcons svg:first-child:hover {
+  color: #2563eb;
+  transform: scale(1.15);
+}
+.actionIcons svg:last-child:hover {
+  color: #ef4444;
+  transform: scale(1.15);
+}
+.message {
+  margin-top: 12px;
+  margin-bottom: 14px;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.sent {
+  display: inline-block;
+  background: #dcfce7;
+  color: #16a34a;
+  padding: 5px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.error {
+  color: #ef4444;
+  font-size: 13px;
+  margin-top: 4px;
+  display: block;
+}
+.dateTimeRow {
+  display: flex;
+  gap: 16px;
+}
+
+.dateTimeRow .formGroup {
+  flex: 1;
+}
+.noData {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.noDataImage {
+  width: 220px;
+  max-width: 100%;
+}
+
+.noData p {
+  margin-top: 12px;
+  color: #64748b;
+  font-size: 14px;
+}
+.postBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+@media (max-width: 576px) {
+  .container {
+    grid-template-columns: 1fr;
+    padding: 0px;
+    gap: 16px;
+  }
+
+  .statsContainer {
+    flex-direction: column;
+  }
+
+  .statCard {
+    width: 100%;
+  }
+
+  .composeCard,
+  .historyCard {
+    padding: 16px;
+  }
+
+  .dateTimeRow {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+  }
+
+  .cancelBtn,
+  .postBtn {
+    width: 100%;
+  }
+
+  .historyTop {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .actionIcons {
+    align-self: flex-end;
+  }
+
+  .historyItem h4 {
+    font-size: 16px;
+  }
+
+  .message {
+    font-size: 13px;
+  }
+
+  .composeTitle,
+  .historyTitle {
+    font-size: 16px;
+  }
+
+  .historyIcon,
+  .composeIcon {
+    font-size: 20px !important;
+  }
+
+  .noDataImage {
+    width: 160px;
+  }
+}
+@media (min-width: 577px) and (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 16px;
+  }
+
+  .statsContainer {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .statCard {
+    flex: 1;
+    min-width: 180px;
+    width: auto;
+  }
+
+  .composeCard,
+  .historyCard {
+    padding: 20px;
+  }
+
+  .dateTimeRow {
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  .buttonGroup {
+    justify-content: center;
+  }
+
+  .cancelBtn,
+  .postBtn {
+    min-width: 140px;
+  }
+
+  .historyTop {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .historyItem h4 {
+    font-size: 17px;
+  }
+
+  .composeTitle {
+    font-size: 18px;
+  }
+
+  .historyTitle {
+    font-size: 17px;
+  }
+
+  .noDataImage {
+    width: 180px;
+  }
+}
+@media (min-width: 769px) and (max-width: 992px) {
+  .container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 16px;
+  }
+
+  .statsContainer {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .statCard {
+    width: 140px;
+    padding: 18px;
+  }
+
+  .statCard h2 {
+    font-size: 30px;
+  }
+
+  .composeCard,
+  .historyCard {
+    padding: 20px;
+  }
+
+  .composeTitle {
+    font-size: 18px;
+  }
+
+  .historyTitle {
+    font-size: 17px;
+  }
+
+  .historyIcon,
+  .composeIcon {
+    font-size: 24px !important;
+  }
+
+  .dateTimeRow {
+    gap: 12px;
+  }
+
+  .historyItem h4 {
+    font-size: 17px;
+  }
+
+  .message {
+    font-size: 13px;
+  }
+
+  .actionIcons svg {
+    font-size: 18px !important;
+  }
+}
+@media (min-width: 993px) and (max-width: 1200px) {
+  .container {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .statsContainer {
+    gap: 14px;
+  }
+
+  .statCard {
+    width: 130px;
+    padding: 18px;
+  }
+
+  .statCard h2 {
+    font-size: 32px;
+  }
+
+  .composeCard,
+  .historyCard {
+    padding: 22px;
+  }
+
+  .composeTitle {
+    font-size: 19px;
+  }
+
+  .historyTitle {
+    font-size: 18px;
+  }
+
+  .historyIcon,
+  .composeIcon {
+    font-size: 26px !important;
+  }
+
+  .dateTimeRow {
+    gap: 14px;
+  }
+
+  .historyItem h4 {
+    font-size: 18px;
+  }
+
+  .message {
+    font-size: 14px;
+  }
+
+  .actionIcons svg {
+    font-size: 19px !important;
+  }
+}

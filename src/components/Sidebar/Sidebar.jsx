@@ -67,15 +67,7 @@ const Sidebar = () => {
               Staff
             </NavLink>
 
-            <NavLink
-              to="/attendance"
-              className={({ isActive }) =>
-                isActive ? styles.active : styles.link
-              }
-            >
-              <MdOutlineAccessTime className={styles.icon} />
-              Attendance
-            </NavLink>
+           
 
             <NavLink
               to="/announcement"

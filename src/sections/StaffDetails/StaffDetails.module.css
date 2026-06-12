@@ -1,0 +1,545 @@
+.container {
+  padding: 24px;
+}
+.header{
+    display:flex;
+    justify-content:flex-end;
+}
+.backBtn {
+  background: #f3f4f6;
+  color: #4b5563;
+
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+
+  padding: 12px 24px;
+  margin-bottom: 20px;
+  cursor: pointer;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  transition: all 0.2s ease;
+}
+
+.backBtn:hover {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+.profileCard {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profileLeft {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #dbeafe;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.infoRow {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background: #f1f5f9;
+  border-radius: 999px;
+
+  padding: 10px 18px;
+
+  color: #334155;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.infoIcon {
+  color: #3b82f6;
+  font-size: 20px !important;
+}
+.editBtn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.detailsGrid {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.detailCard {
+  background: white;
+  padding: 18px;
+  border-radius: 12px;
+}
+
+.detailCard h4 {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
+
+.detailCard p {
+  color: #1e293b;
+  font-size: 14px;
+}
+
+.statsGrid {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.statCard {
+  background: white;
+  padding: 20px;
+  text-align: center;
+  border-radius: 12px;
+}
+
+.statCard h2 {
+  color: #2563eb;
+  margin-bottom: 6px;
+}
+
+.statCard p {
+  color: #64748b;
+  font-size: 13px;
+}
+.tabs {
+  display: flex;
+  gap: 20px;
+  margin-top: 30px;
+  background: white;
+  padding: 0 20px;
+  border-radius: 12px 12px 0 0;
+}
+
+.tab {
+  border: none;
+  background: transparent;
+  padding: 18px 10px;
+  cursor: pointer;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.activeTab {
+  color: #2563eb;
+  border-bottom: 2px solid #2563eb;
+}
+
+.tableContainer {
+  background: white;
+  padding: 24px;
+  border-radius: 0 0 12px 12px;
+}
+
+.tableHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.uploadBtn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  background: #f8fafc;
+  text-align: left;
+  padding: 16px;
+}
+
+.table td {
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.verified {
+  color: #16a34a;
+  background: #dcfce7;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.pending {
+  color: #dc2626;
+  background: #fee2e2;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.uploadSmallBtn {
+  border: 1px solid #3b82f6;
+  background: white;
+  color: #3b82f6;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.actionIcons {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.actionIcon {
+  font-size: 20px !important;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.actionIcon:hover {
+  color: #2563eb;
+  transform: scale(1.1);
+}
+.dialogPaper {
+  border-radius: 30px !important;
+}
+.dialogTitle {
+  font-weight: 600;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #dbe2ea;
+  border-radius: 8px;
+  outline: none;
+}
+
+.uploadBox {
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+
+  padding: 40px 20px;
+
+  text-align: center;
+
+  background: #f8fafc;
+}
+
+.uploadIcon {
+  font-size: 60px !important;
+  color: #3b82f6;
+  margin-bottom: 10px;
+}
+
+.uploadBox h3 {
+  margin: 10px 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.uploadBox p {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.uploadBox input[type="file"] {
+  margin-top: 15px;
+}
+
+.cancelBtn {
+  background: white;
+  color: #3b82f6;
+
+  border: 1px solid #3b82f6;
+
+  padding: 10px 30px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.modalUploadBtn {
+  background: #3b82f6;
+  color: white;
+
+  border: none;
+
+  padding: 10px 30px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.approved {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  background: #dcfce7;
+  color: #059669;
+
+  padding: 6px 12px;
+  border-radius: 20px;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.approved::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #059669;
+}
+
+.declined {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  background: #fee2e2;
+  color: #dc2626;
+
+  padding: 6px 12px;
+  border-radius: 20px;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.declined::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #dc2626;
+}
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.pagination button {
+  width: 32px;
+  height: 32px;
+
+  border: 1px solid #e5e7eb;
+  background: white;
+  border-radius: 6px;
+
+  cursor: pointer;
+}
+
+.activePage {
+  background: #3b82f6 !important;
+  color: white;
+  border-color: #3b82f6 !important;
+}
+.salaryContainer {
+  background: white;
+  padding: 24px;
+  border-radius: 0 0 12px 12px;
+}
+
+.salaryCards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.salaryInfoCard {
+  background: #f1f5f9;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.salaryInfoCard h4 {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+.salaryInfoCard h2 {
+  font-size: 28px;
+  color: #1e293b;
+  margin-bottom: 6px;
+}
+
+.salaryInfoCard h3 {
+  font-size: 20px;
+  color: #1e293b;
+  margin-bottom: 6px;
+}
+
+.salaryInfoCard p {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.paymentTitle {
+  margin-bottom: 20px;
+  color: #1e293b;
+}
+
+.approved {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #dcfce7;
+  color: #16a34a;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.approved::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: #16a34a;
+  border-radius: 50%;
+}
+
+.pending {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fee2e2;
+  color: #dc2626;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.pending::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: #dc2626;
+  border-radius: 50%;
+}
+.attendanceContainer {
+  background: white;
+  padding: 24px;
+  border-radius: 0 0 12px 12px;
+}
+
+.attendanceStats {
+  display: grid;
+  grid-template-columns: repeat(3, 220px);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.attendanceCard {
+  background: #f1f5f9;
+  padding: 24px;
+  border-radius: 14px;
+}
+
+.attendanceCard h2 {
+  font-size: 40px;
+  margin-bottom: 8px;
+  color: #1e293b;
+}
+
+.attendanceCard h4 {
+  font-size: 15px;
+  color: #334155;
+}
+
+.attendanceCard p {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.attendanceHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.monthFilter {
+  border: none;
+  background: #f1f5f9;
+  padding: 10px 16px;
+  border-radius: 12px;
+  outline: none;
+}
+
+.checkedIn {
+  background: #dbeafe;
+  color: #2563eb;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.checkedOut {
+  background: #dcfce7;
+  color: #16a34a;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.onLeave {
+  background: #fee2e2;
+  color: #dc2626;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+}

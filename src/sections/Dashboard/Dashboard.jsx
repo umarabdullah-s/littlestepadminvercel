@@ -170,7 +170,7 @@ const handleNotificationClick = async (notificationId) => {
               >
                 <option value="all">All</option>
                 <option value="checked in">Checked In</option>
-                <option value="checked out">Checked Out</option>
+                <option value="not yet checked in">Not Yet Checked In</option>
                 <option value="on leave">On Leave</option>
               </select>
             </div>
@@ -247,7 +247,7 @@ const handleNotificationClick = async (notificationId) => {
                           className={`${styles.status} ${
                             staff.status === "checked in"
                               ? styles.in
-                              : staff.status === "checked out"
+                              : staff.status === "not yet checked in"
                                 ? styles.out
                                 : styles.leave
                           }`}
