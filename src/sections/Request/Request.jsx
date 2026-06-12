@@ -10,6 +10,7 @@ import { getLeaveRequests, respondLeaveRequest } from "../../api/serviceapi";
 
 import Skeleton from "@mui/material/Skeleton";
 
+
 const filters = ["All requests", "Leave", "Permission", "Pending", "Resolved"];
 const getStatusFromFilter = (filter) => {
   switch (filter) {
