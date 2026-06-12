@@ -1,32 +1,27 @@
 import React, { useState } from "react";
-
 import styles from "./Sidebar.module.css";
-
 import { NavLink, useNavigate } from "react-router-dom";
-
 import LogoutModal from "../Modals/LogoutModal";
 
-import { MdDashboard } from "react-icons/md";
+import { MdDashboard, MdCampaign, MdLogout } from "react-icons/md";
+
 import { FaClipboardList } from "react-icons/fa";
 import { HiUserGroup } from "react-icons/hi";
-import { MdOutlineAccessTime } from "react-icons/md";
-import { MdCampaign } from "react-icons/md";
-import { MdLogout } from "react-icons/md";
 
 const Sidebar = () => {
   const navigate = useNavigate();
 
   const [openLogout, setOpenLogout] = useState(false);
 
- const handleLogout = () => {
-   localStorage.clear();
+  const handleLogout = () => {
+    localStorage.clear();
 
-   sessionStorage.clear();
+    sessionStorage.clear();
 
-   setOpenLogout(false);
+    setOpenLogout(false);
 
-   navigate("/");
- };
+    navigate("/");
+  };
 
   return (
     <>
@@ -66,8 +61,6 @@ const Sidebar = () => {
               <HiUserGroup className={styles.icon} />
               Staff
             </NavLink>
-
-           
 
             <NavLink
               to="/announcement"

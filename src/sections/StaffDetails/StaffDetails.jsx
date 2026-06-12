@@ -1,8 +1,7 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import MainLayout from "../../components/layouts/MainLayout";
 import styles from "./StaffDetails.module.css";
-import { useState, useEffect } from "react";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
@@ -23,19 +22,18 @@ const StaffDetails = () => {
   const [openUploadModal, setOpenUploadModal] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
-  const fetchStaff = async () => {
-    try {
-      const response = await getStaffById(id);
-      console.log(response.data.data)
-      }
-    
-    catch (error) {
-      console.error("Error fetching staff:", error);
-    }
-  };
-  useEffect(() => {
-    fetchStaff();
-  }, [id]);
+ useEffect(() => {
+   const fetchStaff = async () => {
+     try {
+       const response = await getStaffById(id);
+       console.log(response.data.data);
+     } catch (error) {
+       console.error("Error fetching staff:", error);
+     }
+   };
+
+   fetchStaff();
+ }, [id]);
   return (
     <MainLayout>
       <div className={styles.container}>
@@ -144,8 +142,6 @@ const StaffDetails = () => {
             <h2>3</h2>
             <p>Permissions</p>
           </div>
-
-         
         </div>
         <div className={styles.tabs}>
           <button
@@ -156,8 +152,6 @@ const StaffDetails = () => {
           >
             Attendance
           </button>
-
-         
 
           <button
             className={`${styles.tab} ${
@@ -330,7 +324,7 @@ const StaffDetails = () => {
             </table>
           </div>
         )}
-       
+
         {activeTab === "requests" && (
           <div className={styles.tableContainer}>
             <table className={styles.table}>

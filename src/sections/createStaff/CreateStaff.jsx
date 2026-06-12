@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import MainLayout from "../../components/layouts/MainLayout";
 import styles from "./createStaff.module.css";
 import { useNavigate } from "react-router-dom";
+
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
 import AccountBalanceOutlinedIcon from "@mui/icons-material/AccountBalanceOutlined";
@@ -15,7 +16,6 @@ import PhotoCameraOutlinedIcon from "@mui/icons-material/PhotoCameraOutlined";
 import UploadOutlinedIcon from "@mui/icons-material/UploadOutlined";
 import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
 import ForwardToInboxOutlinedIcon from "@mui/icons-material/ForwardToInboxOutlined";
-import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 
 const CreateStaff = () => {
