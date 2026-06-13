@@ -15,25 +15,65 @@ import DialogActions from "@mui/material/DialogActions";
 import CloseIcon from "@mui/icons-material/Close";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import IconButton from "@mui/material/IconButton";
-import { getStaffById } from "../../api/serviceapi";
+import {
+  getStaffById,
+  getStaffAttendanceSummaryById,
+  getStaffAttendanceByMonth,
+} from "../../api/serviceapi";
 
 const StaffDetails = () => {
   const [activeTab, setActiveTab] = useState("attendance");
   const [openUploadModal, setOpenUploadModal] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
+  const [staff, setStaff] = useState(null);
+  const [attendanceSummary, setAttendanceSummary] = useState(null);
+  const [attendanceData, setAttendanceData] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+
  useEffect(() => {
    const fetchStaff = async () => {
      try {
        const response = await getStaffById(id);
-       console.log(response.data.data);
+       setStaff(response.data.data);
+
+       const attendanceResponse = await getStaffAttendanceSummaryById(id);
+
+       setAttendanceSummary(attendanceResponse.data.data);
+
+       const attendanceTableResponse = await getStaffAttendanceByMonth(
+         id,
+         selectedMonth,
+         selectedYear,
+       );
+
+       setAttendanceData(attendanceTableResponse.data.data);
+
+       console.log(attendanceTableResponse.data);
      } catch (error) {
-       console.error("Error fetching staff:", error);
+       console.error("Error fetching data:", error);
      }
    };
 
    fetchStaff();
- }, [id]);
+ }, [id, selectedMonth, selectedYear]);
   return (
     <MainLayout>
       <div className={styles.container}>
@@ -45,27 +85,40 @@ const StaffDetails = () => {
 
         <div className={styles.profileCard}>
           <div className={styles.profileLeft}>
-            <div className={styles.avatar}>RA</div>
+            <div className={styles.avatar}>
+              <img
+                src={staff?.profile}
+                alt={staff?.name}
+                className={styles.profileImage}
+              />
+            </div>
 
             <div>
-              <h2>Ravi Anand</h2>
-              <p>English Teacher</p>
-              <p>Staff ID: {}</p>
+              <h2>{staff?.name}</h2>
+
+              <p>{staff?.role}</p>
+
+              <p>Staff ID: {staff?.staffId}</p>
 
               <div className={styles.infoRow}>
                 <div className={styles.infoItem}>
                   <EmailOutlinedIcon className={styles.infoIcon} />
-                  <span>ravisample@gmail.com</span>
+                  <span>{staff?.email}</span>
                 </div>
 
                 <div className={styles.infoItem}>
                   <LocalPhoneOutlinedIcon className={styles.infoIcon} />
-                  <span>+91 98765-43210</span>
+                  <span>{staff?.phone}</span>
                 </div>
 
                 <div className={styles.infoItem}>
                   <CalendarMonthOutlinedIcon className={styles.infoIcon} />
-                  <span>Joined Aug 12, 2019</span>
+                  <span>
+                    Joined{" "}
+                    {staff?.dateOfJoining
+                      ? new Date(staff.dateOfJoining).toLocaleDateString()
+                      : "N/A"}
+                  </span>
                 </div>
               </div>
             </div>
@@ -77,70 +130,78 @@ const StaffDetails = () => {
         <div className={styles.detailsGrid}>
           <div className={styles.detailCard}>
             <h4>Role</h4>
-            <p>Teaching</p>
+            <p>{staff?.role || "N/A"}</p>
           </div>
 
           <div className={styles.detailCard}>
             <h4>Work Schedule</h4>
-            <p>Mon-Fri, 8AM-4PM</p>
+            <p>{staff?.workSchedule || "N/A"}</p>
           </div>
 
           <div className={styles.detailCard}>
             <h4>Employment Type</h4>
-            <p>Full-time</p>
+            <p>{staff?.employmentType || "N/A"}</p>
           </div>
 
           <div className={styles.detailCard}>
             <h4>Address</h4>
-            <p>Chennai</p>
+            <p>{staff?.address || "N/A"}</p>
           </div>
 
           <div className={styles.detailCard}>
             <h4>Emergency Contact</h4>
-            <p>+91 98765 43210</p>
+            <p>{staff?.emergencyContact || "N/A"}</p>
           </div>
 
           <div className={styles.detailCard}>
             <h4>Blood Group</h4>
-            <p>AB+</p>
+            <p>{staff?.bloodGroup || "N/A"}</p>
           </div>
 
           <div className={styles.detailCard}>
             <h4>DOB</h4>
-            <p>12-12-2000</p>
+            <p>
+              {staff?.dateOfBirth
+                ? new Date(staff.dateOfBirth).toLocaleDateString()
+                : "N/A"}
+            </p>
           </div>
 
           <div className={styles.detailCard}>
             <h4>Payment Mode</h4>
-            <p>Bank Transfer</p>
-            <p>12345678</p>
+            <p>{staff?.paymentMode || "N/A"}</p>
           </div>
 
           <div className={styles.detailCard}>
             <h4>PAN Number</h4>
-            <p>12-12-2000</p>
+            <p>{staff?.panNumber || "N/A"}</p>
           </div>
 
           <div className={styles.detailCard}>
             <h4>IFSC Code</h4>
-            <p>12-12-2000</p>
+            <p>{staff?.ifscCode || "N/A"}</p>
           </div>
         </div>
 
         <div className={styles.statsGrid}>
           <div className={styles.statCard}>
-            <h2>22</h2>
+            <h2>{attendanceSummary?.daysPresent || 0}</h2>
             <p>Working Days</p>
           </div>
 
           <div className={styles.statCard}>
-            <h2>3</h2>
+            <h2>{attendanceSummary?.daysLeave || 0}</h2>
             <p>Leave Taken</p>
           </div>
 
           <div className={styles.statCard}>
-            <h2>3</h2>
+            <h2>{attendanceSummary?.daysPermission || 0}</h2>
             <p>Permissions</p>
+          </div>
+
+          <div className={styles.statCard}>
+            <h2>{attendanceSummary?.daysLate || 0}</h2>
+            <p>Late</p>
           </div>
         </div>
         <div className={styles.tabs}>
@@ -236,31 +297,37 @@ const StaffDetails = () => {
           <div className={styles.attendanceContainer}>
             <div className={styles.attendanceStats}>
               <div className={styles.attendanceCard}>
-                <h2>2</h2>
+                <h2>{attendanceSummary?.daysLeave || 0}</h2>
                 <h4>Leave</h4>
-                <p>Month</p>
+                <p>This Month</p>
               </div>
 
               <div className={styles.attendanceCard}>
-                <h2>1</h2>
+                <h2>{attendanceSummary?.daysPermission || 0}</h2>
                 <h4>Permission</h4>
-                <p>Month</p>
+                <p> This Month</p>
               </div>
 
               <div className={styles.attendanceCard}>
-                <h2>23</h2>
+                <h2>{attendanceSummary?.daysPresent || 0}</h2>
                 <h4>Checked In</h4>
-                <p>Month</p>
+                <p> This Month</p>
               </div>
             </div>
 
             <div className={styles.attendanceHeader}>
-              <h3>Past Attendance</h3>
+              <h3>Staff Attendance</h3>
 
-              <select className={styles.monthFilter}>
-                <option>June 2026</option>
-                <option>May 2026</option>
-                <option>April 2026</option>
+              <select
+                className={styles.monthFilter}
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(Number(e.target.value))}
+              >
+                {months.map((month, index) => (
+                  <option key={index} value={index + 1}>
+                    {month} {selectedYear}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -276,41 +343,23 @@ const StaffDetails = () => {
               </thead>
 
               <tbody>
-                {[
-                  {
-                    date: "12-6-2026",
-                    hours: "8H - 12M",
-                    checkIn: "08:52 AM",
-                    checkOut: "15:52 PM",
-                    status: "Checked In",
-                  },
-                  {
-                    date: "11-6-2026",
-                    hours: "8H - 12M",
-                    checkIn: "--",
-                    checkOut: "--",
-                    status: "On Leave",
-                  },
-                  {
-                    date: "10-6-2026",
-                    hours: "8H - 12M",
-                    checkIn: "09:10 AM",
-                    checkOut: "15:10 PM",
-                    status: "Checked Out",
-                  },
-                ].map((attendance, index) => (
-                  <tr key={index}>
+                {
+                attendanceData.map((attendance) => (
+                  <tr key={attendance._id}>
                     <td>{attendance.date}</td>
-                    <td>{attendance.hours}</td>
-                    <td>{attendance.checkIn}</td>
-                    <td>{attendance.checkOut}</td>
+
+                    <td>{attendance.totalHours || "--"}</td>
+
+                    <td>{attendance.checkInTime || "--"}</td>
+
+                    <td>{attendance.checkOutTime || "--"}</td>
 
                     <td>
                       <span
                         className={
-                          attendance.status === "Checked In"
+                          attendance.status?.toLowerCase() === "checked in"
                             ? styles.checkedIn
-                            : attendance.status === "Checked Out"
+                            : attendance.status?.toLowerCase() === "checked out"
                               ? styles.checkedOut
                               : styles.onLeave
                         }

@@ -123,7 +123,7 @@ const LogoutModal = ({ open, handleClose, handleLogout }) => {
             },
           }}
         >
-          Logout
+          Sign out
         </Button>
       </DialogActions>
     </Dialog>

@@ -46,15 +46,16 @@
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: #dbeafe;
-  color: #2563eb;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 24px;
+  overflow: hidden;
 }
-
+.avatar img{
+    width:100%;
+    height:100%;
+    object-fit: cover;
+}
 .infoRow {
   display: flex;
   gap: 16px;

@@ -83,7 +83,14 @@ const Request = () => {
         <div className={styles.top}>
           <p className={styles.title}>Requests</p>
 
-          <p className={styles.date}>Fri, May 22, 2026</p>
+          <p className={styles.date}>
+            {new Date().toLocaleDateString("en-US", {
+              weekday: "short",
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </p>
 
           <p className={styles.subtitle}>
             Review and take action on pending staff requests.
@@ -243,7 +250,7 @@ const Request = () => {
             </>
           ) : (
             <div className={styles.noData}>
-              <img src="/nodatafound.svg" alt="No Data Found" />
+              <img src="/critic_no_found.svg" alt="No Data Found" />
               <p>No Requests Found</p>
             </div>
           )}

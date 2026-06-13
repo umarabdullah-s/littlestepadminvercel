@@ -39,6 +39,13 @@ export const getStaffById = (id) => {
   return apiService.get(`/staffs/${id}`);
 };
 
+export const getStaffAttendanceSummaryById = (id) => {
+  return apiService.get(`/attendance/summary/${id}`);
+};
+
+export const getStaffAttendanceByMonth = (id, month, year) => {
+  return apiService.get(`/attendance/me/${id}?month=${month}&year=${year}`);
+};
 export const getAnnouncement = () => {
   return apiService.get("/announcement");
 };
