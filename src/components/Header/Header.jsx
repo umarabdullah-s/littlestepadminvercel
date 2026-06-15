@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Menu, MenuItem, Avatar, Divider, Button } from "@mui/material";
+import { Menu, Avatar, Divider, Button } from "@mui/material";
 import styles from "./Header.module.css";
 import { FiSearch } from "react-icons/fi";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import { useNavigate } from "react-router-dom";
 import LogoutModal from "../Modals/LogoutModal";
-import { getStaffs } from "../../api/serviceapi";
+// import { getStaffs } from "../../api/serviceapi";
 
 const Header = () => {
   const navigate = useNavigate();
