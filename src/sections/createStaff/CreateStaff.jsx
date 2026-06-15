@@ -66,7 +66,7 @@ const CreateStaff = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [profileCompletion, setProfileCompletion] = useState(null);
+  // const [profileCompletion, setProfileCompletion] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
