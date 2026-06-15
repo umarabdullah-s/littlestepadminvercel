@@ -288,21 +288,21 @@ const handleSave = async () => {
     setLoading(false);
   }
 };
-useEffect(() => {
-  const fetchProfileCompletion = async () => {
-    try {
-      const res = await getProfileCompletion(id);
+// useEffect(() => {
+//   const fetchProfileCompletion = async () => {
+//     try {
+//       const res = await getProfileCompletion(id);
 
-      setProfileCompletion(res.data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+//       setProfileCompletion(res.data.data);
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   };
 
-  if (id) {
-    fetchProfileCompletion();
-  }
-}, [id]);
+//   if (id) {
+//     fetchProfileCompletion();
+//   }
+// }, [id]);
 return (
   <MainLayout>
     <div className={styles.container}>
