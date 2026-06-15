@@ -42,11 +42,32 @@ export const getStaffById = (id) => {
 };
 
 export const createStaff = (data) => {
-  return apiService.post("/staffs", data, {
+  return apiService.post("/staffs", data);
+};
+
+// export const uploadFile = (file) => {
+//   const formData = new FormData();
+//   formData.append("file", file);
+
+//   return apiService.post("/file/upload", formData, {
+//     headers: {
+//       "Content-Type": "multipart/form-data",
+//     },
+//   });
+// };
+export const uploadFile = (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  return apiService.post("/file/upload", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
+};
+
+export const getProfileCompletion = (id) => {
+  return apiService.get(`/staffs/${id}/profile-completion`);
 };
 export const getStaffAttendanceSummaryById = (id) => {
   return apiService.get(`/attendance/summary/${id}`);

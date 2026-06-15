@@ -5,8 +5,8 @@ const apiService = {
     return axiosInstance.get(url, { params });
   },
 
-  post: (url, data = {}) => {
-    return axiosInstance.post(url, data);
+  post: (url, data = {}, config = {}) => {
+    return axiosInstance.post(url, data, config);
   },
 
   put: (url, data = {}) => {

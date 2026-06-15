@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import MainLayout from "../../components/layouts/MainLayout";
 import styles from "./createStaff.module.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useParams } from "react-router-dom";
 
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
@@ -17,10 +17,17 @@ import UploadOutlinedIcon from "@mui/icons-material/UploadOutlined";
 import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
 import ForwardToInboxOutlinedIcon from "@mui/icons-material/ForwardToInboxOutlined";
 import CloseIcon from "@mui/icons-material/Close";
-import { createStaff } from "../../api/serviceapi";
-
+import {
+  createStaff,
+  uploadFile,
+  getProfileCompletion,
+} from "../../api/serviceapi";
+import CircularProgress from "@mui/material/CircularProgress";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const CreateStaff = () => {
+  const id=useParams();
   const navigate = useNavigate();
    const initialFormData = {
      name: "",
@@ -38,6 +45,8 @@ const CreateStaff = () => {
      joiningDate: "",
      employmentType: "",
      staffId: "",
+     password: "",
+     confirmPassword: "",
      workSchedule: "",
 
      bankName: "",
@@ -52,12 +61,16 @@ const CreateStaff = () => {
 
      profile: null,
    };
- const [formData, setFormData] = useState(initialFormData);
+  const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [profileCompletion, setProfileCompletion] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
+    console.log(name, value);
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -65,7 +78,6 @@ const CreateStaff = () => {
 
     let error = "";
 
-    
     const requiredFields = [
       "name",
       "gender",
@@ -76,7 +88,8 @@ const CreateStaff = () => {
       "role",
       "classAssigned",
       "joiningDate",
-     
+      "password",
+      "confirmPassword",
     ];
 
     if (requiredFields.includes(name) && !value.trim()) {
@@ -87,7 +100,6 @@ const CreateStaff = () => {
       error = `${label} is required`;
     }
 
-    
     if (
       name === "email" &&
       value &&
@@ -96,9 +108,12 @@ const CreateStaff = () => {
       error = "Invalid email address";
     }
 
-    
     if (name === "phone" && value && !/^\d{10}$/.test(value)) {
       error = "Phone number must be 10 digits";
+    }
+
+    if (name === "confirmPassword" && value && value !== formData.password) {
+      error = "Passwords do not match";
     }
 
     setErrors((prev) => ({
@@ -148,21 +163,22 @@ const CreateStaff = () => {
       if (input) input.value = "";
     });
   };
-  const validateForm = () => {
-    const newErrors = {};
+ const validateForm = () => {
+   const newErrors = {};
 
-    const requiredFields = [
-      "name",
-      "gender",
-      "dateOfBirth",
-      "phone",
-      "email",
-      "address",
-      "role",
-      "classAssigned",
-      "joiningDate",
-      
-    ];
+   const requiredFields = [
+     "name",
+     "gender",
+     "dateOfBirth",
+     "phone",
+     "email",
+     "address",
+     "role",
+     "classAssigned",
+     "joiningDate",
+     "password",
+     "confirmPassword",
+   ];
 
    requiredFields.forEach((field) => {
      if (!String(formData[field] || "").trim()) {
@@ -173,650 +189,765 @@ const CreateStaff = () => {
        newErrors[field] = `${label} is required`;
      }
    });
-    if (!formData.idProof) {
-      newErrors.idProof = "ID Proof is required";
-    }
 
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Invalid email address";
-    }
+   if (!formData.idProof) {
+     newErrors.idProof = "ID Proof is required";
+   }
 
-    if (formData.phone && !/^\d{10}$/.test(formData.phone)) {
-      newErrors.phone = "Phone number must be 10 digits";
-    }
+   if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+     newErrors.email = "Invalid email address";
+   }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
- 
+   if (formData.phone && !/^\d{10}$/.test(formData.phone)) {
+     newErrors.phone = "Phone number must be 10 digits";
+   }
 
- 
+   if (
+     formData.password &&
+     formData.confirmPassword &&
+     formData.password !== formData.confirmPassword
+   ) {
+     newErrors.confirmPassword = "Passwords do not match";
+   }
+
+   setErrors(newErrors);
+
+   return Object.keys(newErrors).length === 0;
+ };
 const handleSave = async () => {
+  console.log("Form Data:", formData);
   if (!validateForm()) return;
-
+   setLoading(true);
   try {
-    const formDataToSend = new FormData();
+    // Upload files
+    const profileUrl = formData.profile
+      ? (await uploadFile(formData.profile)).data.data.url
+      : "";
 
-    formDataToSend.append("name", formData.name);
-    formDataToSend.append("gender", formData.gender);
-    formDataToSend.append("bloodGroup", formData.bloodGroup);
-    formDataToSend.append("dateOfBirth", formData.dateOfBirth);
-    formDataToSend.append("phone", formData.phone);
-    formDataToSend.append("emergencyContact", formData.emergencyContact);
-    formDataToSend.append("email", formData.email);
-    formDataToSend.append("address", formData.address);
+    const aadharUrl = formData.idProof
+      ? (await uploadFile(formData.idProof)).data.data.url
+      : "";
 
-    formDataToSend.append("role", formData.role);
-    formDataToSend.append("class", formData.classAssigned);
-    formDataToSend.append("department", formData.department);
-    formDataToSend.append("dateOfJoining", formData.joiningDate);
-    formDataToSend.append("employmentType", formData.employmentType);
-    formDataToSend.append("staffId", formData.staffId);
-    formDataToSend.append("password", formData.password);
-    formDataToSend.append("workSchedule", formData.workSchedule);
+    const offerLetterUrl = formData.offerLetter
+      ? (await uploadFile(formData.offerLetter)).data.data.url
+      : "";
 
-    formDataToSend.append("bankName", formData.bankName);
-    formDataToSend.append("accountNumber", formData.accountNumber);
-    formDataToSend.append("ifscCode", formData.ifscCode);
-    formDataToSend.append("panNumber", formData.panNumber);
+    const educationCertificateUrl = formData.certificate
+      ? (await uploadFile(formData.certificate)).data.data.url
+      : "";
 
-    if (formData.profile) formDataToSend.append("profile", formData.profile);
+    const experienceLetterUrl = formData.experienceLetter
+      ? (await uploadFile(formData.experienceLetter)).data.data.url
+      : "";
 
-    if (formData.idProof) formDataToSend.append("idProof", formData.idProof);
+    const payload = {
+      name: formData.name,
+      gender: formData.gender,
+      bloodGroup: formData.bloodGroup,
+      dateOfBirth: formData.dateOfBirth,
+      phone: formData.phone,
+      emergencyContact: formData.emergencyContact,
+      email: formData.email,
+      address: formData.address,
 
-    if (formData.certificate)
-      formDataToSend.append("certificate", formData.certificate);
+      role: formData.role,
+      class: formData.classAssigned,
+      department: formData.department,
+      dateOfJoining: formData.joiningDate,
+      employmentType: formData.employmentType,
+      staffId: formData.staffId,
+      password: formData.password,
+      confirmPassword: formData.confirmPassword,
+      workSchedule: formData.workSchedule,
 
-    if (formData.offerLetter)
-      formDataToSend.append("offerLetter", formData.offerLetter);
+      bankName: formData.bankName,
+      accountNumber: formData.accountNumber,
+      ifscCode: formData.ifscCode,
+      panNumber: formData.panNumber,
 
-    if (formData.experienceLetter)
-      formDataToSend.append("experienceLetter", formData.experienceLetter);
+      profileUrl,
+      aadharUrl,
+      offerLetterUrl,
+      educationCertificateUrl,
+      experienceLetterUrl,
+    };
 
-    const response = await createStaff(formDataToSend);
+    const response = await createStaff(payload);
 
     console.log(response.data);
-
     alert("Staff Created Successfully");
-
     resetForm();
-  } catch (error) {
-    console.error(error);
-    alert("Failed to create staff");
+  } 
+  catch (error) {
+     console.log("FULL ERROR", error.response);
+     console.log("DATA", error.response?.data);
+     console.log("STATUS", error.response?.status);
+    alert(error.response?.data?.message || "Failed to create staff");
+  } 
+  finally {
+    setLoading(false);
   }
 };
-  return (
-    <MainLayout>
-      <div className={styles.container}>
-        <div className={styles.formSection}>
-          <div className={styles.header}>
-            <div>
-              <p className={styles.title}>Onboard New Employee</p>
+useEffect(() => {
+  const fetchProfileCompletion = async () => {
+    try {
+      const res = await getProfileCompletion(id);
 
-              <p className={styles.subtitle}>
-                Complete the details below to register a new member.
-              </p>
-            </div>
-            <button className={styles.backBtn} onClick={() => navigate(-1)}>
-              ← Back
-            </button>
+      setProfileCompletion(res.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  if (id) {
+    fetchProfileCompletion();
+  }
+}, [id]);
+return (
+  <MainLayout>
+    <div className={styles.container}>
+      <div className={styles.formSection}>
+        <div className={styles.header}>
+          <div>
+            <p className={styles.title}>Onboard New Employee</p>
+
+            <p className={styles.subtitle}>
+              Complete the details below to register a new member.
+            </p>
           </div>
+          <button className={styles.backBtn} onClick={() => navigate(-1)}>
+            ← Back
+          </button>
+        </div>
 
-          <div className={styles.card}>
-            <h3 className={styles.sectionTitle}>
-              <span className={styles.stepBadge}>1</span>
-              <span className={styles.iconCircle}>
-                <PersonOutlineOutlinedIcon />
-              </span>
-              Personal Information
-            </h3>
+        <div className={styles.card}>
+          <h3 className={styles.sectionTitle}>
+            <span className={styles.stepBadge}>1</span>
+            <span className={styles.iconCircle}>
+              <PersonOutlineOutlinedIcon />
+            </span>
+            Personal Information
+          </h3>
 
-            <div className={styles.grid}>
-              <div className={styles.field}>
-                <label>
-                  Name <span>*</span>
-                </label>
-
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Enter name"
-                />
-
-                {errors.name && (
-                  <small className={styles.error}>{errors.name}</small>
-                )}
-              </div>
-              <div className={styles.field}>
-                <label>
-                  Gender <span>*</span>
-                </label>
-                <select
-                  name="gender"
-                  value={formData.gender}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Other">Other</option>
-                </select>
-                {errors.gender && (
-                  <small className={styles.error}>{errors.gender}</small>
-                )}
-              </div>
-              <div className={styles.field}>
-                <label>Blood Group</label>
-                <input
-                  type="text"
-                  name="bloodGroup"
-                  value={formData.bloodGroup}
-                  onChange={handleChange}
-                  placeholder="e.g. O+"
-                />
-              </div>
-              <div className={styles.field}>
-                <label>
-                  Date of Birth <span>*</span>
-                </label>
-                <input
-                  type="date"
-                  name="dateOfBirth"
-                  value={formData.dateOfBirth}
-                  onChange={handleChange}
-                />
-
-                {errors.dateOfBirth && (
-                  <small className={styles.error}>{errors.dateOfBirth}</small>
-                )}
-              </div>
-              <div className={styles.field}>
-                <label>
-                  Phone Number <span>*</span>
-                </label>
-                <input
-                  type="text"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="enter phone number"
-                />
-
-                {errors.phone && (
-                  <small className={styles.error}>{errors.phone}</small>
-                )}
-              </div>
-              <div className={styles.field}>
-                <label>Emergency Contact</label>
-                <input
-                  type="text"
-                  name="emergencyContact"
-                  value={formData.emergencyContact}
-                  onChange={handleChange}
-                  placeholder="enter emergency contact number"
-                />
-              </div>
-              <div className={styles.field}>
-                <label>
-                  Email address <span>*</span>
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="enter email address"
-                  className={styles.fullWidth}
-                />
-                {errors.email && (
-                  <small className={styles.error}>{errors.email}</small>
-                )}
-              </div>
-            </div>
-
-            <div className={`${styles.field} ${styles.requiredField}`}>
+          <div className={styles.grid}>
+            <div className={styles.field}>
               <label>
-                Residential Address <span>*</span>
+                Name <span>*</span>
               </label>
-              <textarea
-                name="address"
-                value={formData.address}
+
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
-                placeholder="enter your address"
+                placeholder="Enter name"
               />
 
-              {errors.address && (
-                <small className={styles.error}>{errors.address}</small>
+              {errors.name && (
+                <small className={styles.error}>{errors.name}</small>
+              )}
+            </div>
+            <div className={styles.field}>
+              <label>
+                Gender <span>*</span>
+              </label>
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+              >
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+              {errors.gender && (
+                <small className={styles.error}>{errors.gender}</small>
+              )}
+            </div>
+            <div className={styles.field}>
+              <label>Blood Group</label>
+              <input
+                type="text"
+                name="bloodGroup"
+                value={formData.bloodGroup}
+                onChange={handleChange}
+                placeholder="e.g. O+"
+              />
+            </div>
+            <div className={styles.field}>
+              <label>
+                Date of Birth <span>*</span>
+              </label>
+              <input
+                type="date"
+                name="dateOfBirth"
+                value={formData.dateOfBirth}
+                onChange={handleChange}
+              />
+
+              {errors.dateOfBirth && (
+                <small className={styles.error}>{errors.dateOfBirth}</small>
+              )}
+            </div>
+            <div className={styles.field}>
+              <label>
+                Phone Number <span>*</span>
+              </label>
+              <input
+                type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="enter phone number"
+              />
+
+              {errors.phone && (
+                <small className={styles.error}>{errors.phone}</small>
+              )}
+            </div>
+            <div className={styles.field}>
+              <label>Emergency Contact</label>
+              <input
+                type="text"
+                name="emergencyContact"
+                value={formData.emergencyContact}
+                onChange={handleChange}
+                placeholder="enter emergency contact number"
+              />
+            </div>
+            <div className={styles.field}>
+              <label>
+                Email address <span>*</span>
+              </label>
+              <input
+                type="email"
+                name="email"
+                autoComplete="off"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="enter email address"
+                className={styles.fullWidth}
+              />
+              {errors.email && (
+                <small className={styles.error}>{errors.email}</small>
               )}
             </div>
           </div>
 
-          <div className={styles.card}>
-            <h3 className={styles.sectionTitle}>
-              <span className={styles.stepBadge}>2</span>
-              <span className={styles.iconCircle}>
-                <WorkOutlineOutlinedIcon />
-              </span>
-              Work Details
-            </h3>
+          <div className={`${styles.field} ${styles.requiredField}`}>
+            <label>
+              Residential Address <span>*</span>
+            </label>
+            <textarea
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              placeholder="enter your address"
+            />
 
-            <div className={styles.grid}>
-              <div className={styles.field}>
-                <label>
-                  Role <span>*</span>
-                </label>
-                <input
-                  type="text"
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  placeholder="Role"
-                />
+            {errors.address && (
+              <small className={styles.error}>{errors.address}</small>
+            )}
+          </div>
+        </div>
 
-                {errors.role && (
-                  <small className={styles.error}>{errors.role}</small>
-                )}
-              </div>
-              <div className={styles.field}>
-                <label>
-                  Class Assigned <span>*</span>
-                </label>
-                <input
-                  type="text"
-                  name="classAssigned"
-                  value={formData.classAssigned}
-                  onChange={handleChange}
-                  placeholder="Class Assigned"
-                />
-                {errors.classAssigned && (
-                  <small className={styles.error}>{errors.classAssigned}</small>
-                )}
-              </div>
-              <div className={styles.field}>
-                <label>Department</label>
-                <input
-                  type="text"
-                  name="department"
-                  value={formData.department}
-                  onChange={handleChange}
-                  placeholder="Department"
-                />
-              </div>
-              <div className={styles.field}>
-                <label>
-                  Joining Date <span>*</span>
-                </label>
-                <input
-                  type="date"
-                  name="joiningDate"
-                  value={formData.joiningDate}
-                  onChange={handleChange}
-                />
+        <div className={styles.card}>
+          <h3 className={styles.sectionTitle}>
+            <span className={styles.stepBadge}>2</span>
+            <span className={styles.iconCircle}>
+              <WorkOutlineOutlinedIcon />
+            </span>
+            Work Details
+          </h3>
 
-                {errors.joiningDate && (
-                  <small className={styles.error}>{errors.joiningDate}</small>
-                )}
-              </div>
-              <div className={styles.field}>
-                <label>Employment Type</label>
-                <input
-                  type="text"
-                  name="employmentType"
-                  value={formData.employmentType}
-                  onChange={handleChange}
-                  placeholder="Eg: Full Time"
-                />
-              </div>
-              <div className={styles.field}>
-                <label>Staff ID</label>
-                <input
-                  type="text"
-                  name="staffId"
-                  value={formData.staffId}
-                  onChange={handleChange}
-                  placeholder="Staff ID"
-                />
-              </div>
-            </div>
-
-            <div className={`${styles.field} ${styles.requiredField}`}>
-              <label>Work Schedule</label>
+          <div className={styles.grid}>
+            <div className={styles.field}>
+              <label>
+                Role <span>*</span>
+              </label>
               <input
                 type="text"
-                name="workSchedule"
-                value={formData.workSchedule}
+                name="role"
+                value={formData.role}
                 onChange={handleChange}
-                placeholder="Work Schedule"
-                className={styles.fullWidth}
+                placeholder="Role"
+              />
+
+              {errors.role && (
+                <small className={styles.error}>{errors.role}</small>
+              )}
+            </div>
+            <div className={styles.field}>
+              <label>
+                Class Assigned <span>*</span>
+              </label>
+              <input
+                type="text"
+                name="classAssigned"
+                value={formData.classAssigned}
+                onChange={handleChange}
+                placeholder="Class Assigned"
+              />
+              {errors.classAssigned && (
+                <small className={styles.error}>{errors.classAssigned}</small>
+              )}
+            </div>
+            <div className={styles.field}>
+              <label>Department</label>
+              <input
+                type="text"
+                name="department"
+                value={formData.department}
+                onChange={handleChange}
+                placeholder="Department"
+              />
+            </div>
+            <div className={styles.field}>
+              <label>
+                Joining Date <span>*</span>
+              </label>
+              <input
+                type="date"
+                name="joiningDate"
+                value={formData.joiningDate}
+                onChange={handleChange}
+              />
+
+              {errors.joiningDate && (
+                <small className={styles.error}>{errors.joiningDate}</small>
+              )}
+            </div>
+            <div className={styles.field}>
+              <label>Employment Type</label>
+              <input
+                type="text"
+                name="employmentType"
+                value={formData.employmentType}
+                onChange={handleChange}
+                placeholder="Eg: Full Time"
+              />
+            </div>
+            <div className={styles.field}>
+              <label>Staff ID</label>
+              <input
+                type="text"
+                name="staffId"
+                value={formData.staffId}
+                onChange={handleChange}
+                placeholder="Staff ID"
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label>
+                Password <span>*</span>
+              </label>
+
+              <div className={styles.passwordWrapper}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  autoComplete="new-password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Enter password"
+                />
+
+                <button
+                  type="button"
+                  className={styles.eyeBtn}
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </button>
+              </div>
+
+              {errors.password && (
+                <small className={styles.error}>{errors.password}</small>
+              )}
+            </div>
+            <div className={styles.field}>
+              <label>
+                Confirm Password <span>*</span>
+              </label>
+
+              <div className={styles.passwordWrapper}>
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  autoComplete="new-password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm password"
+                />
+
+                <button
+                  type="button"
+                  className={styles.eyeBtn}
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                </button>
+              </div>
+
+              {errors.confirmPassword && (
+                <small className={styles.error}>{errors.confirmPassword}</small>
+              )}
+            </div>
+          </div>
+
+          <div className={`${styles.field} ${styles.requiredField}`}>
+            <label>Work Schedule</label>
+            <input
+              type="text"
+              name="workSchedule"
+              value={formData.workSchedule}
+              onChange={handleChange}
+              placeholder="Work Schedule"
+              className={styles.fullWidth}
+            />
+          </div>
+        </div>
+
+        <div className={styles.card}>
+          <h3 className={styles.sectionTitle}>
+            <span className={styles.stepBadge}>3</span>
+            <span className={styles.iconCircle}>
+              <AccountBalanceOutlinedIcon />
+            </span>
+            Bank Details
+          </h3>
+
+          <div className={styles.grid}>
+            <div className={styles.field}>
+              <label>Bank Name</label>
+              <input
+                type="text"
+                name="bankName"
+                value={formData.bankName}
+                onChange={handleChange}
+                placeholder="Bank Name"
+              />
+            </div>
+            <div className={styles.field}>
+              <label>Account Number</label>
+              <input
+                type="text"
+                name="accountNumber"
+                value={formData.accountNumber}
+                onChange={handleChange}
+                placeholder="Account Number"
+              />
+            </div>
+            <div className={styles.field}>
+              <label>IFSC Code</label>
+              <input
+                type="text"
+                name="ifscCode"
+                value={formData.ifscCode}
+                onChange={handleChange}
+                placeholder="IFSC Code"
+              />
+            </div>
+            <div className={styles.field}>
+              <label>PAN Number</label>
+              <input
+                type="text"
+                name="panNumber"
+                value={formData.panNumber}
+                onChange={handleChange}
+                placeholder="PAN Number"
               />
             </div>
           </div>
+        </div>
 
-          <div className={styles.card}>
-            <h3 className={styles.sectionTitle}>
-              <span className={styles.stepBadge}>3</span>
-              <span className={styles.iconCircle}>
-                <AccountBalanceOutlinedIcon />
-              </span>
-              Bank Details
-            </h3>
+        <div className={styles.card}>
+          <h3 className={styles.sectionTitle}>
+            <span className={styles.stepBadge}>4</span>
+            <span className={styles.iconCircle}>
+              <DescriptionOutlinedIcon />
+            </span>
+            Documents
+          </h3>
 
-            <div className={styles.grid}>
-              <div className={styles.field}>
-                <label>Bank Name</label>
-                <input
-                  type="text"
-                  name="bankName"
-                  value={formData.bankName}
-                  onChange={handleChange}
-                  placeholder="Bank Name"
-                />
-              </div>
-              <div className={styles.field}>
-                <label>Account Number</label>
-                <input
-                  type="text"
-                  name="accountNumber"
-                  value={formData.accountNumber}
-                  onChange={handleChange}
-                  placeholder="Account Number"
-                />
-              </div>
-              <div className={styles.field}>
-                <label>IFSC Code</label>
-                <input
-                  type="text"
-                  name="ifscCode"
-                  value={formData.ifscCode}
-                  onChange={handleChange}
-                  placeholder="IFSC Code"
-                />
-              </div>
-              <div className={styles.field}>
-                <label>PAN Number</label>
-                <input
-                  type="text"
-                  name="panNumber"
-                  value={formData.panNumber}
-                  onChange={handleChange}
-                  placeholder="PAN Number"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.card}>
-            <h3 className={styles.sectionTitle}>
-              <span className={styles.stepBadge}>4</span>
-              <span className={styles.iconCircle}>
-                <DescriptionOutlinedIcon />
-              </span>
-              Documents
-            </h3>
-
-            <div className={styles.documentGrid}>
-              <div>
-                <div className={styles.uploadWrapper}>
-                  {formData.idProof && (
-                    <CloseIcon
-                      className={styles.closeIcon}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        removeFile("idProof");
-                      }}
-                    />
-                  )}
-
-                  <label htmlFor="idProof" className={styles.uploadBox}>
-                    <input
-                      type="file"
-                      id="idProof"
-                      name="idProof"
-                      accept=".pdf,.jpg,.jpeg,.png"
-                      hidden
-                      onChange={handleFileChange}
-                    />
-
-                    <BadgeOutlinedIcon className={styles.uploadIcon} />
-
-                    <h4>
-                      {formData.idProof
-                        ? formData.idProof.name
-                        : "Click to upload ID proof"}
-                      <span>*</span>
-                    </h4>
-
-                    <p>PDF, JPG, PNG - max 5 MB</p>
-                  </label>
-                </div>
-                {errors.idProof && (
-                  <small className={styles.error}>{errors.idProof}</small>
-                )}
-              </div>
-
+          <div className={styles.documentGrid}>
+            <div>
               <div className={styles.uploadWrapper}>
-                {formData.offerLetter && (
+                {formData.idProof && (
                   <CloseIcon
                     className={styles.closeIcon}
                     onClick={(e) => {
                       e.preventDefault();
-                      removeFile("offerLetter");
+                      removeFile("idProof");
                     }}
                   />
                 )}
 
-                <label htmlFor="offerLetter" className={styles.uploadBox}>
+                <label htmlFor="idProof" className={styles.uploadBox}>
                   <input
                     type="file"
-                    id="offerLetter"
-                    name="offerLetter"
-                    accept=".pdf"
-                    hidden
-                    onChange={handleFileChange}
-                  />
-
-                  <ForwardToInboxOutlinedIcon className={styles.uploadIcon} />
-
-                  <h4>
-                    {formData.offerLetter
-                      ? formData.offerLetter.name
-                      : "Click to upload Offer letter"}
-                  </h4>
-
-                  <p>PDF - max 5 MB</p>
-                </label>
-              </div>
-
-              <div className={styles.uploadWrapper}>
-                {formData.certificate && (
-                  <CloseIcon
-                    className={styles.closeIcon}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      removeFile("certificate");
-                    }}
-                  />
-                )}
-
-                <label htmlFor="certificate" className={styles.uploadBox}>
-                  <input
-                    type="file"
-                    id="certificate"
-                    name="certificate"
+                    id="idProof"
+                    name="idProof"
                     accept=".pdf,.jpg,.jpeg,.png"
                     hidden
                     onChange={handleFileChange}
                   />
 
-                  <SchoolOutlinedIcon className={styles.uploadIcon} />
+                  <BadgeOutlinedIcon className={styles.uploadIcon} />
 
                   <h4>
-                    {formData.certificate
-                      ? formData.certificate.name
-                      : "Educational certificates"}
+                    {formData.idProof
+                      ? formData.idProof.name
+                      : "Click to upload ID proof"}
+                    <span>*</span>
                   </h4>
 
-                  <p>PDF, JPG - max 10 MB each</p>
+                  <p>PDF, JPG, PNG - max 5 MB</p>
                 </label>
               </div>
-
-              <div className={styles.uploadWrapper}>
-                {formData.experienceLetter && (
-                  <CloseIcon
-                    className={styles.closeIcon}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      removeFile("experienceLetter");
-                    }}
-                  />
-                )}
-
-                <label htmlFor="experienceLetter" className={styles.uploadBox}>
-                  <input
-                    type="file"
-                    id="experienceLetter"
-                    name="experienceLetter"
-                    accept=".pdf"
-                    hidden
-                    onChange={handleFileChange}
-                  />
-
-                  <WorkHistoryOutlinedIcon className={styles.uploadIcon} />
-
-                  <h4>
-                    {formData.experienceLetter
-                      ? formData.experienceLetter.name
-                      : "Experience letter"}
-                  </h4>
-
-                  <p>PDF - max 5 MB</p>
-                </label>
-              </div>
+              {errors.idProof && (
+                <small className={styles.error}>{errors.idProof}</small>
+              )}
             </div>
-          </div>
-        </div>
 
-        <div className={styles.sidebar}>
-          <div className={styles.photoCard}>
-            <h4 className={styles.cardTitle}>
-              <PhotoCameraOutlinedIcon className={styles.titleIcon} />
-              Staff Photo
-            </h4>
-
-            <div className={styles.uploadWrapper1}>
-              {formData.profile && (
+            <div className={styles.uploadWrapper}>
+              {formData.offerLetter && (
                 <CloseIcon
-                  className={styles.closeIcon1}
+                  className={styles.closeIcon}
                   onClick={(e) => {
                     e.preventDefault();
-                    removeFile("profile");
+                    removeFile("offerLetter");
                   }}
                 />
               )}
 
-              <label htmlFor="profile">
+              <label htmlFor="offerLetter" className={styles.uploadBox}>
                 <input
                   type="file"
-                  id="profile"
-                  name="profile"
-                  accept=".jpg,.jpeg,.png"
+                  id="offerLetter"
+                  name="offerLetter"
+                  accept=".pdf"
                   hidden
                   onChange={handleFileChange}
                 />
 
-                <div className={styles.avatar}>
-                  {formData.profile ? (
-                    <img
-                      src={URL.createObjectURL(formData.profile)}
-                      alt="Staff"
-                      className={styles.previewImage}
-                    />
-                  ) : (
-                    <AddAPhotoOutlinedIcon className={styles.photoIcon} />
-                  )}
-                </div>
+                <ForwardToInboxOutlinedIcon className={styles.uploadIcon} />
+
+                <h4>
+                  {formData.offerLetter
+                    ? formData.offerLetter.name
+                    : "Click to upload Offer letter"}
+                </h4>
+
+                <p>PDF - max 5 MB</p>
               </label>
             </div>
 
-            <p className={styles.uploadText}>
-              {formData.profile
-                ? formData.profile.name.length > 20
-                  ? formData.profile.name.substring(0, 20) + "..."
-                  : formData.profile.name
-                : "No file selected"}
-            </p>
-            <p className={styles.uploadInfo}>JPG, PNG - max 2 MB</p>
+            <div className={styles.uploadWrapper}>
+              {formData.certificate && (
+                <CloseIcon
+                  className={styles.closeIcon}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    removeFile("certificate");
+                  }}
+                />
+              )}
 
-            <label htmlFor="profile" className={styles.uploadBtn}>
-              <UploadOutlinedIcon className={styles.uploadBtnIcon} />
-              {formData.profile ? "Upload" : "Click Here To Upload"}
-            </label>
-          </div>
+              <label htmlFor="certificate" className={styles.uploadBox}>
+                <input
+                  type="file"
+                  id="certificate"
+                  name="certificate"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  hidden
+                  onChange={handleFileChange}
+                />
 
-          <div className={styles.photoCard}>
-            <h4 className={styles.cardTitle}>
-              <FactCheckOutlinedIcon className={styles.titleIcon} />
-              Document Checklist
-            </h4>
+                <SchoolOutlinedIcon className={styles.uploadIcon} />
 
-            <div className={styles.checkItem}>
-              <div className={styles.checkLeft}>
-                <DescriptionOutlinedIcon />
-                <span>ID proof</span>
-              </div>
-              <span className={styles.uploaded}>UPLOADED</span>
+                <h4>
+                  {formData.certificate
+                    ? formData.certificate.name
+                    : "Educational certificates"}
+                </h4>
+
+                <p>PDF, JPG - max 10 MB each</p>
+              </label>
             </div>
 
-            <div className={styles.checkItem}>
-              <div className={styles.checkLeft}>
-                <ForwardToInboxOutlinedIcon />
-                <span>Offer letter</span>
-              </div>
-              <span className={styles.uploaded}>UPLOADED</span>
+            <div className={styles.uploadWrapper}>
+              {formData.experienceLetter && (
+                <CloseIcon
+                  className={styles.closeIcon}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    removeFile("experienceLetter");
+                  }}
+                />
+              )}
+
+              <label htmlFor="experienceLetter" className={styles.uploadBox}>
+                <input
+                  type="file"
+                  id="experienceLetter"
+                  name="experienceLetter"
+                  accept=".pdf"
+                  hidden
+                  onChange={handleFileChange}
+                />
+
+                <WorkHistoryOutlinedIcon className={styles.uploadIcon} />
+
+                <h4>
+                  {formData.experienceLetter
+                    ? formData.experienceLetter.name
+                    : "Experience letter"}
+                </h4>
+
+                <p>PDF - max 5 MB</p>
+              </label>
             </div>
-
-            <div className={styles.checkItem}>
-              <div className={styles.checkLeft}>
-                <SchoolOutlinedIcon />
-                <span>Certificate</span>
-              </div>
-              <span className={styles.missing}>MISSING</span>
-            </div>
-
-            <div className={styles.checkItem}>
-              <div className={styles.checkLeft}>
-                <AssignmentOutlinedIcon />
-                <span>Experience Letter</span>
-              </div>
-              <span className={styles.missing}>MISSING</span>
-            </div>
-
-            <div className={styles.divider}></div>
-
-            <div className={styles.progress}>
-              <span>Profile complete</span>
-              <span>40%</span>
-            </div>
-
-            <div className={styles.progressBar}>
-              <div className={styles.progressFill}></div>
-            </div>
-          </div>
-
-          <div className={styles.actions}>
-            <button className={styles.cancelBtn} onClick={resetForm}>
-              Cancel
-            </button>
-            <button className={styles.saveBtn} onClick={handleSave}>
-              Save
-            </button>
           </div>
         </div>
       </div>
-    </MainLayout>
-  );
+
+      <div className={styles.sidebar}>
+        <div className={styles.photoCard}>
+          <h4 className={styles.cardTitle}>
+            <PhotoCameraOutlinedIcon className={styles.titleIcon} />
+            Staff Photo
+          </h4>
+
+          <div className={styles.uploadWrapper1}>
+            {formData.profile && (
+              <CloseIcon
+                className={styles.closeIcon1}
+                onClick={(e) => {
+                  e.preventDefault();
+                  removeFile("profile");
+                }}
+              />
+            )}
+
+            <label htmlFor="profile">
+              <input
+                type="file"
+                id="profile"
+                name="profile"
+                accept=".jpg,.jpeg,.png"
+                hidden
+                onChange={handleFileChange}
+              />
+
+              <div className={styles.avatar}>
+                {formData.profile ? (
+                  <img
+                    src={URL.createObjectURL(formData.profile)}
+                    alt="Staff"
+                    className={styles.previewImage}
+                  />
+                ) : (
+                  <AddAPhotoOutlinedIcon className={styles.photoIcon} />
+                )}
+              </div>
+            </label>
+          </div>
+
+          <p className={styles.uploadText}>
+            {formData.profile
+              ? formData.profile.name.length > 20
+                ? formData.profile.name.substring(0, 20) + "..."
+                : formData.profile.name
+              : "No file selected"}
+          </p>
+          <p className={styles.uploadInfo}>JPG, PNG - max 2 MB</p>
+
+          <label htmlFor="profile" className={styles.uploadBtn}>
+            <UploadOutlinedIcon className={styles.uploadBtnIcon} />
+            {formData.profile ? "Upload" : "Click Here To Upload"}
+          </label>
+        </div>
+
+        <div className={styles.photoCard}>
+          <h4 className={styles.cardTitle}>
+            <FactCheckOutlinedIcon className={styles.titleIcon} />
+            Document Checklist
+          </h4>
+
+          <div className={styles.checkItem}>
+            <div className={styles.checkLeft}>
+              <DescriptionOutlinedIcon />
+              <span>ID proof</span>
+            </div>
+            <span className={styles.uploaded}>UPLOADED</span>
+          </div>
+
+          <div className={styles.checkItem}>
+            <div className={styles.checkLeft}>
+              <ForwardToInboxOutlinedIcon />
+              <span>Offer letter</span>
+            </div>
+            <span className={styles.uploaded}>UPLOADED</span>
+          </div>
+
+          <div className={styles.checkItem}>
+            <div className={styles.checkLeft}>
+              <SchoolOutlinedIcon />
+              <span>Certificate</span>
+            </div>
+            <span className={styles.missing}>MISSING</span>
+          </div>
+
+          <div className={styles.checkItem}>
+            <div className={styles.checkLeft}>
+              <AssignmentOutlinedIcon />
+              <span>Experience Letter</span>
+            </div>
+            <span className={styles.missing}>MISSING</span>
+          </div>
+
+          <div className={styles.divider}></div>
+
+          <div className={styles.progress}>
+            <span>Profile complete</span>
+            <span>40%</span>
+          </div>
+
+          <div className={styles.progressBar}>
+            <div className={styles.progressFill}></div>
+          </div>
+        </div>
+
+        <div className={styles.actions}>
+          <button className={styles.cancelBtn} onClick={resetForm}>
+            Cancel
+          </button>
+          <button
+            className={styles.saveBtn}
+            onClick={handleSave}
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <CircularProgress
+                  size={18}
+                  color="inherit"
+                  style={{ marginRight: "8px" }}
+                />
+                Saving...
+              </>
+            ) : (
+              "Save"
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  </MainLayout>
+);
 };
 
 export default CreateStaff;
