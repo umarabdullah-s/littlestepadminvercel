@@ -6,6 +6,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import { useNavigate } from "react-router-dom";
 import LogoutModal from "../Modals/LogoutModal";
+import { getStaffs } from "../../api/serviceapi";
 
 const Header = () => {
   const navigate = useNavigate();

@@ -164,7 +164,7 @@ const Request = () => {
 
                       <div>
                         <p className={styles.name}>
-                          {item.staff?.staffName || "Unknown Staff"}
+                          {item.staff?.name || "Unknown Staff"}
                         </p>
                         <div className={styles.badges}>
                           <span className={styles.leave}>

@@ -17,40 +17,42 @@ import UploadOutlinedIcon from "@mui/icons-material/UploadOutlined";
 import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
 import ForwardToInboxOutlinedIcon from "@mui/icons-material/ForwardToInboxOutlined";
 import CloseIcon from "@mui/icons-material/Close";
+import { createStaff } from "../../api/serviceapi";
+
 
 const CreateStaff = () => {
   const navigate = useNavigate();
- const [formData, setFormData] = useState({
-   firstName: "",
-   lastName: "",
-   gender: "",
-   bloodGroup: "",
-   dateOfBirth: "",
-   phone: "",
-   emergencyContact: "",
-   email: "",
-   address: "",
+   const initialFormData = {
+     name: "",
+     gender: "",
+     bloodGroup: "",
+     dateOfBirth: "",
+     phone: "",
+     emergencyContact: "",
+     email: "",
+     address: "",
 
-   role: "",
-   classAssigned: "",
-   department: "",
-   joiningDate: "",
-   employmentType: "",
-   staffId: "",
-   workSchedule: "",
+     role: "",
+     classAssigned: "",
+     department: "",
+     joiningDate: "",
+     employmentType: "",
+     staffId: "",
+     workSchedule: "",
 
-   bankName: "",
-   accountNumber: "",
-   ifscCode: "",
-   panNumber: "",
+     bankName: "",
+     accountNumber: "",
+     ifscCode: "",
+     panNumber: "",
 
-   idProof: null,
-   offerLetter: null,
-   certificate: null,
-   experienceLetter: null,
+     idProof: null,
+     offerLetter: null,
+     certificate: null,
+     experienceLetter: null,
 
-   staffPhoto: null,
- });
+     profile: null,
+   };
+ const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
@@ -65,8 +67,7 @@ const CreateStaff = () => {
 
     
     const requiredFields = [
-      "firstName",
-      "lastName",
+      "name",
       "gender",
       "dateOfBirth",
       "phone",
@@ -132,12 +133,26 @@ const CreateStaff = () => {
       input.value = "";
     }
   };
+  const resetForm = () => {
+    setFormData(initialFormData);
+    setErrors({});
+
+    [
+      "profile",
+      "idProof",
+      "offerLetter",
+      "certificate",
+      "experienceLetter",
+    ].forEach((id) => {
+      const input = document.getElementById(id);
+      if (input) input.value = "";
+    });
+  };
   const validateForm = () => {
     const newErrors = {};
 
     const requiredFields = [
-      "firstName",
-      "lastName",
+      "name",
       "gender",
       "dateOfBirth",
       "phone",
@@ -173,16 +188,66 @@ const CreateStaff = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
- const handleSave = () => {
-   if (validateForm()) {
-     console.log(formData);
-     alert("Form Submitted Successfully");
-   }
- };
+ 
+
+ 
+const handleSave = async () => {
+  if (!validateForm()) return;
+
+  try {
+    const formDataToSend = new FormData();
+
+    formDataToSend.append("name", formData.name);
+    formDataToSend.append("gender", formData.gender);
+    formDataToSend.append("bloodGroup", formData.bloodGroup);
+    formDataToSend.append("dateOfBirth", formData.dateOfBirth);
+    formDataToSend.append("phone", formData.phone);
+    formDataToSend.append("emergencyContact", formData.emergencyContact);
+    formDataToSend.append("email", formData.email);
+    formDataToSend.append("address", formData.address);
+
+    formDataToSend.append("role", formData.role);
+    formDataToSend.append("class", formData.classAssigned);
+    formDataToSend.append("department", formData.department);
+    formDataToSend.append("dateOfJoining", formData.joiningDate);
+    formDataToSend.append("employmentType", formData.employmentType);
+    formDataToSend.append("staffId", formData.staffId);
+    formDataToSend.append("password", formData.password);
+    formDataToSend.append("workSchedule", formData.workSchedule);
+
+    formDataToSend.append("bankName", formData.bankName);
+    formDataToSend.append("accountNumber", formData.accountNumber);
+    formDataToSend.append("ifscCode", formData.ifscCode);
+    formDataToSend.append("panNumber", formData.panNumber);
+
+    if (formData.profile) formDataToSend.append("profile", formData.profile);
+
+    if (formData.idProof) formDataToSend.append("idProof", formData.idProof);
+
+    if (formData.certificate)
+      formDataToSend.append("certificate", formData.certificate);
+
+    if (formData.offerLetter)
+      formDataToSend.append("offerLetter", formData.offerLetter);
+
+    if (formData.experienceLetter)
+      formDataToSend.append("experienceLetter", formData.experienceLetter);
+
+    const response = await createStaff(formDataToSend);
+
+    console.log(response.data);
+
+    alert("Staff Created Successfully");
+
+    resetForm();
+  } catch (error) {
+    console.error(error);
+    alert("Failed to create staff");
+  }
+};
   return (
     <MainLayout>
       <div className={styles.container}>
-        
         <div className={styles.formSection}>
           <div className={styles.header}>
             <div>
@@ -196,7 +261,7 @@ const CreateStaff = () => {
               ← Back
             </button>
           </div>
-        
+
           <div className={styles.card}>
             <h3 className={styles.sectionTitle}>
               <span className={styles.stepBadge}>1</span>
@@ -209,33 +274,19 @@ const CreateStaff = () => {
             <div className={styles.grid}>
               <div className={styles.field}>
                 <label>
-                  First name <span>*</span>
+                  Name <span>*</span>
                 </label>
+
                 <input
                   type="text"
-                  name="firstName"
-                  value={formData.firstName}
+                  name="name"
+                  value={formData.name}
                   onChange={handleChange}
-                  placeholder="enter first name"
+                  placeholder="Enter name"
                 />
 
-                {errors.firstName && (
-                  <small className={styles.error}>{errors.firstName}</small>
-                )}
-              </div>
-              <div className={styles.field}>
-                <label>
-                  Last name <span>*</span>
-                </label>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  placeholder="enter last name"
-                />
-                {errors.lastName && (
-                  <small className={styles.error}>{errors.lastName}</small>
+                {errors.name && (
+                  <small className={styles.error}>{errors.name}</small>
                 )}
               </div>
               <div className={styles.field}>
@@ -304,7 +355,7 @@ const CreateStaff = () => {
                   name="emergencyContact"
                   value={formData.emergencyContact}
                   onChange={handleChange}
-                  placeholder="e.g. John Doe"
+                  placeholder="enter emergency contact number"
                 />
               </div>
               <div className={styles.field}>
@@ -316,7 +367,7 @@ const CreateStaff = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="e.g. ravi@school.com"
+                  placeholder="enter email address"
                   className={styles.fullWidth}
                 />
                 {errors.email && (
@@ -342,7 +393,6 @@ const CreateStaff = () => {
             </div>
           </div>
 
-     
           <div className={styles.card}>
             <h3 className={styles.sectionTitle}>
               <span className={styles.stepBadge}>2</span>
@@ -416,7 +466,7 @@ const CreateStaff = () => {
                   name="employmentType"
                   value={formData.employmentType}
                   onChange={handleChange}
-                  placeholder="Employment Type"
+                  placeholder="Eg: Full Time"
                 />
               </div>
               <div className={styles.field}>
@@ -444,18 +494,16 @@ const CreateStaff = () => {
             </div>
           </div>
 
-         
           <div className={styles.card}>
             <h3 className={styles.sectionTitle}>
               <span className={styles.stepBadge}>3</span>
               <span className={styles.iconCircle}>
                 <AccountBalanceOutlinedIcon />
               </span>
-               Bank Details
+              Bank Details
             </h3>
 
             <div className={styles.grid}>
-            
               <div className={styles.field}>
                 <label>Bank Name</label>
                 <input
@@ -509,7 +557,6 @@ const CreateStaff = () => {
             </h3>
 
             <div className={styles.documentGrid}>
-             
               <div>
                 <div className={styles.uploadWrapper}>
                   {formData.idProof && (
@@ -549,7 +596,6 @@ const CreateStaff = () => {
                 )}
               </div>
 
-              
               <div className={styles.uploadWrapper}>
                 {formData.offerLetter && (
                   <CloseIcon
@@ -583,7 +629,6 @@ const CreateStaff = () => {
                 </label>
               </div>
 
-              
               <div className={styles.uploadWrapper}>
                 {formData.certificate && (
                   <CloseIcon
@@ -617,7 +662,6 @@ const CreateStaff = () => {
                 </label>
               </div>
 
-              
               <div className={styles.uploadWrapper}>
                 {formData.experienceLetter && (
                   <CloseIcon
@@ -654,7 +698,6 @@ const CreateStaff = () => {
           </div>
         </div>
 
-     
         <div className={styles.sidebar}>
           <div className={styles.photoCard}>
             <h4 className={styles.cardTitle}>
@@ -663,30 +706,30 @@ const CreateStaff = () => {
             </h4>
 
             <div className={styles.uploadWrapper1}>
-              {formData.staffPhoto && (
+              {formData.profile && (
                 <CloseIcon
                   className={styles.closeIcon1}
                   onClick={(e) => {
                     e.preventDefault();
-                    removeFile("staffPhoto");
+                    removeFile("profile");
                   }}
                 />
               )}
 
-              <label htmlFor="staffPhoto">
+              <label htmlFor="profile">
                 <input
                   type="file"
-                  id="staffPhoto"
-                  name="staffPhoto"
+                  id="profile"
+                  name="profile"
                   accept=".jpg,.jpeg,.png"
                   hidden
                   onChange={handleFileChange}
                 />
 
                 <div className={styles.avatar}>
-                  {formData.staffPhoto ? (
+                  {formData.profile ? (
                     <img
-                      src={URL.createObjectURL(formData.staffPhoto)}
+                      src={URL.createObjectURL(formData.profile)}
                       alt="Staff"
                       className={styles.previewImage}
                     />
@@ -698,18 +741,18 @@ const CreateStaff = () => {
             </div>
 
             <p className={styles.uploadText}>
-              {formData.staffPhoto
-                ? formData.staffPhoto.name.length > 20
-                  ? formData.staffPhoto.name.substring(0, 20) + "..."
-                  : formData.staffPhoto.name
-                : "Upload photo"}
+              {formData.profile
+                ? formData.profile.name.length > 20
+                  ? formData.profile.name.substring(0, 20) + "..."
+                  : formData.profile.name
+                : "No file selected"}
             </p>
             <p className={styles.uploadInfo}>JPG, PNG - max 2 MB</p>
 
-            <button className={styles.uploadBtn}>
+            <label htmlFor="profile" className={styles.uploadBtn}>
               <UploadOutlinedIcon className={styles.uploadBtnIcon} />
-              Upload
-            </button>
+              {formData.profile ? "Upload" : "Click Here To Upload"}
+            </label>
           </div>
 
           <div className={styles.photoCard}>
@@ -763,7 +806,9 @@ const CreateStaff = () => {
           </div>
 
           <div className={styles.actions}>
-            <button className={styles.cancelBtn}>Cancel</button>
+            <button className={styles.cancelBtn} onClick={resetForm}>
+              Cancel
+            </button>
             <button className={styles.saveBtn} onClick={handleSave}>
               Save
             </button>

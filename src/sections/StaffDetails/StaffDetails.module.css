@@ -364,22 +364,10 @@
   background: #dc2626;
 }
 
-.pagination {
+.paginationWrapper {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
-  margin-top: 20px;
-}
-
-.pagination button {
-  width: 32px;
-  height: 32px;
-
-  border: 1px solid #e5e7eb;
-  background: white;
-  border-radius: 6px;
-
-  cursor: pointer;
+  padding: 16px 0;
 }
 
 .activePage {
@@ -543,4 +531,48 @@
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 12px;
+}
+.noData {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px 20px;
+}
+
+.noData img {
+  width: 220px;
+  max-width: 100%;
+}
+
+.noData p {
+  margin-top: 12px;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  color: #64748b;
+}
+.noData {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px 20px;
+}
+
+.noData img {
+  width: 220px;
+  max-width: 100%;
+}
+
+.noData p {
+  margin-top: 12px;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  color: #64748b;
 }

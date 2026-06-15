@@ -256,7 +256,7 @@
   border-radius: 12px;
 
   color: #1f2937;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
 
   cursor: pointer;
@@ -267,7 +267,7 @@
 }
 
 .uploadBtnIcon {
-  font-size: 22px !important;
+  font-size: 20px !important;
 }
 
 .checkItem {

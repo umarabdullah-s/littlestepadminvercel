@@ -1,15 +1,47 @@
-import React from 'react'
+// need this
+
+// import React from 'react'
+// import Sidebar from "../Sidebar/Sidebar";
+// import Header from "../Header/Header";
+// import styles from "./MainLayout.module.css";
+
+// const MainLayout = ({ children }) => {
+//   return (
+//     <div className={styles.container}>
+//       <Sidebar />
+
+//       <div className={styles.main}>
+//         <Header />
+
+//         <div className={styles.content}>{children}</div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default MainLayout
+
+
+
+import React from "react";
+import { useLocation } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
 import Header from "../Header/Header";
 import styles from "./MainLayout.module.css";
 
 const MainLayout = ({ children }) => {
+  const location = useLocation();
+
+  const hideHeader =
+    location.pathname === "/staff/create-staff" ||
+    /^\/staff\/[^/]+$/.test(location.pathname);
+
   return (
     <div className={styles.container}>
       <Sidebar />
 
       <div className={styles.main}>
-        <Header />
+        {!hideHeader && <Header />}
 
         <div className={styles.content}>{children}</div>
       </div>
@@ -17,4 +49,4 @@ const MainLayout = ({ children }) => {
   );
 };
 
-export default MainLayout
+export default MainLayout;

@@ -31,20 +31,35 @@ export const respondLeaveRequest = (id, data) => {
   return apiService.put(`/leave/${id}/respond`, data);
 };
 
-export const getStaffs = (page = 1) => {
-  return apiService.get(`/staffs?page=${page}`);
+export const getStaffs = (page = 1, search = "") => {
+  return apiService.get(
+    `/staffs?page=${page}${search ? `&search=${search}` : ""}`,
+  );
 };
 
 export const getStaffById = (id) => {
   return apiService.get(`/staffs/${id}`);
 };
 
+export const createStaff = (data) => {
+  return apiService.post("/staffs", data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
 export const getStaffAttendanceSummaryById = (id) => {
   return apiService.get(`/attendance/summary/${id}`);
 };
 
-export const getStaffAttendanceByMonth = (id, month, year) => {
-  return apiService.get(`/attendance/me/${id}?month=${month}&year=${year}`);
+export const getStaffAttendanceByMonth = (id, month, year, page = 1) => {
+  return apiService.get(
+    `/attendance/me/${id}?month=${month}&year=${year}&page=${page}`,
+  );
+};
+
+export const getStaffLeaveById = (id, page = 1) => {
+  return apiService.get(`/leave/me/${id}?page=${page}`);
 };
 export const getAnnouncement = () => {
   return apiService.get("/announcement");

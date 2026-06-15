@@ -1,4 +1,6 @@
-.container {
+/* need this */
+
+/* .container {
   display: flex;
   height: 100vh;
   background: #f4f5f9;
@@ -13,4 +15,26 @@
 .content {
   padding: 20px;
   overflow-y: auto;
+} */
+
+.container {
+  display: flex;
+  height: 100vh;
+  background: #f4f5f9;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.noHeaderContent {
+  padding-top: 20px;
 }

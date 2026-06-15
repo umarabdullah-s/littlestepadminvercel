@@ -19,7 +19,13 @@ import {
   getStaffById,
   getStaffAttendanceSummaryById,
   getStaffAttendanceByMonth,
+  getStaffLeaveById,
 } from "../../api/serviceapi";
+import dayjs from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import Pagination from "@mui/material/Pagination";
 
 const StaffDetails = () => {
   const [activeTab, setActiveTab] = useState("attendance");
@@ -32,21 +38,12 @@ const StaffDetails = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
 
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+  const [leaveData, setLeaveData] = useState([]);
+  const [leavePage, setLeavePage] = useState(1);
+  const [leaveTotalPages, setLeaveTotalPages] = useState(1);
+  const [attendancePage, setAttendancePage] = useState(1);
+  const [attendanceTotalPages, setAttendanceTotalPages] = useState(1);
 
  useEffect(() => {
    const fetchStaff = async () => {
@@ -62,18 +59,22 @@ const StaffDetails = () => {
          id,
          selectedMonth,
          selectedYear,
+         attendancePage,
        );
-
-       setAttendanceData(attendanceTableResponse.data.data);
-
        console.log(attendanceTableResponse.data);
+       setAttendanceData(attendanceTableResponse.data.data.data);
+       setAttendanceTotalPages(attendanceTableResponse.data.data.totalPages);
+       const leaveResponse = await getStaffLeaveById(id, leavePage);
+
+       setLeaveData(leaveResponse.data.data.data);
+       setLeaveTotalPages(leaveResponse.data.data.totalPages);
      } catch (error) {
        console.error("Error fetching data:", error);
      }
    };
 
    fetchStaff();
- }, [id, selectedMonth, selectedYear]);
+ }, [id, selectedMonth, selectedYear, attendancePage, leavePage]);
   return (
     <MainLayout>
       <div className={styles.container}>
@@ -318,17 +319,24 @@ const StaffDetails = () => {
             <div className={styles.attendanceHeader}>
               <h3>Staff Attendance</h3>
 
-              <select
-                className={styles.monthFilter}
-                value={selectedMonth}
-                onChange={(e) => setSelectedMonth(Number(e.target.value))}
-              >
-                {months.map((month, index) => (
-                  <option key={index} value={index + 1}>
-                    {month} {selectedYear}
-                  </option>
-                ))}
-              </select>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  views={["year", "month"]}
+                  label="Month & Year"
+                  value={selectedDate}
+                  onChange={(newValue) => {
+                    setSelectedDate(newValue);
+
+                    setSelectedMonth(newValue.month() + 1);
+                    setSelectedYear(newValue.year());
+                  }}
+                  slotProps={{
+                    textField: {
+                      size: "small",
+                    },
+                  }}
+                />
+              </LocalizationProvider>
             </div>
 
             <table className={styles.table}>
@@ -343,34 +351,74 @@ const StaffDetails = () => {
               </thead>
 
               <tbody>
-                {
-                attendanceData.map((attendance) => (
-                  <tr key={attendance._id}>
-                    <td>{attendance.date}</td>
+                {attendanceData.length > 0 ? (
+                  attendanceData.map((attendance) => (
+                    <tr key={attendance._id}>
+                      <td>{attendance.date}</td>
 
-                    <td>{attendance.totalHours || "--"}</td>
+                      <td>{attendance.totalHours || "--"}</td>
 
-                    <td>{attendance.checkInTime || "--"}</td>
+                      <td>{attendance.checkInTime || "--"}</td>
 
-                    <td>{attendance.checkOutTime || "--"}</td>
+                      <td>{attendance.checkOutTime || "--"}</td>
 
-                    <td>
-                      <span
-                        className={
-                          attendance.status?.toLowerCase() === "checked in"
-                            ? styles.checkedIn
-                            : attendance.status?.toLowerCase() === "checked out"
-                              ? styles.checkedOut
-                              : styles.onLeave
-                        }
-                      >
-                        {attendance.status}
-                      </span>
+                      <td>
+                        <span
+                          className={
+                            attendance.status?.toLowerCase() === "checked in"
+                              ? styles.checkedIn
+                              : attendance.status?.toLowerCase() ===
+                                  "checked out"
+                                ? styles.checkedOut
+                                : styles.onLeave
+                          }
+                        >
+                          {attendance.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5">
+                      <div className={styles.noData}>
+                        <img
+                          src="/critic_no_found.svg"
+                          alt="No Attendance Found"
+                        />
+                        <p>No Attendance Records Found</p>
+                      </div>
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
+            <div className={styles.paginationWrapper}>
+              <Pagination
+                count={attendanceTotalPages}
+                page={attendancePage}
+                shape="rounded"
+                onChange={(event, value) => {
+                  setAttendancePage(value);
+                }}
+                sx={{
+                  "& .MuiPaginationItem-root": {
+                    borderRadius: "12px",
+                    border: "1px solid #e5e7eb",
+                  },
+
+                  "& .Mui-selected": {
+                    backgroundColor: "#2F64E1 !important",
+                    color: "#fff",
+                    borderRadius: "12px",
+                  },
+
+                  "& .MuiPaginationItem-root:hover": {
+                    backgroundColor: "#f3f4f6",
+                  },
+                }}
+              />
+            </div>
           </div>
         )}
 
@@ -388,74 +436,75 @@ const StaffDetails = () => {
               </thead>
 
               <tbody>
-                <tr>
-                  <td>
-                    <strong>Half-day Permission</strong>
-                  </td>
-                  <td>12 Jun 2026</td>
-                  <td>Medical Checkup</td>
-                  <td>10 Jun 2026</td>
-                  <td>
-                    <span className={styles.approved}>Approved</span>
-                  </td>
-                </tr>
+                {leaveData.length > 0 ? (
+                  leaveData.map((leave) => (
+                    <tr key={leave._id}>
+                      <td>
+                        <strong>{leave.leaveType}</strong>
+                      </td>
 
-                <tr>
-                  <td>
-                    <strong>Casual Leave</strong>
-                  </td>
-                  <td>5 Jun 2026</td>
-                  <td>Family Function</td>
-                  <td>3 Jun 2026</td>
-                  <td>
-                    <span className={styles.approved}>Approved</span>
-                  </td>
-                </tr>
+                      <td>{leave.period || "--"}</td>
 
-                <tr>
-                  <td>
-                    <strong>Sick Leave</strong>
-                  </td>
-                  <td>20 May 2026</td>
-                  <td>Fever</td>
-                  <td>20 May 2026</td>
-                  <td>
-                    <span className={styles.approved}>Approved</span>
-                  </td>
-                </tr>
+                      <td>{leave.reason || "--"}</td>
 
-                <tr>
-                  <td>
-                    <strong>Casual Leave</strong>
-                  </td>
-                  <td>10 May 2026</td>
-                  <td>Personal Work</td>
-                  <td>8 May 2026</td>
-                  <td>
-                    <span className={styles.declined}>Declined</span>
-                  </td>
-                </tr>
+                      <td>{leave.requestedOn || "--"}</td>
 
-                <tr>
-                  <td>
-                    <strong>Half-day Permission</strong>
-                  </td>
-                  <td>2 May 2026</td>
-                  <td>Bank Work</td>
-                  <td>1 May 2026</td>
-                  <td>
-                    <span className={styles.approved}>Approved</span>
-                  </td>
-                </tr>
+                      <td>
+                        <span
+                          className={
+                            leave.status?.toLowerCase() === "approved"
+                              ? styles.approved
+                              : leave.status?.toLowerCase() === "rejected"
+                                ? styles.declined
+                                : styles.pending
+                          }
+                        >
+                          {leave.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5">
+                      <div className={styles.noData}>
+                        <img
+                          src="/critic_no_found.svg"
+                          alt="No Requests Found"
+                        />
+                        <p>No Requests Found</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
 
-            <div className={styles.pagination}>
-              <button>{"<"}</button>
-              <button className={styles.activePage}>1</button>
-              <button>2</button>
-              <button>3</button>
-              <button>{">"}</button>
+            <div className={styles.paginationWrapper}>
+              <Pagination
+                count={leaveTotalPages}
+                page={leavePage}
+                shape="rounded"
+                onChange={(event, value) => {
+                  setLeavePage(value);
+                }}
+                sx={{
+                  "& .MuiPaginationItem-root": {
+                    borderRadius: "12px",
+                    border: "1px solid #e5e7eb",
+                  },
+
+                  "& .Mui-selected": {
+                    backgroundColor: "#2F64E1 !important",
+                    color: "#fff",
+                    borderRadius: "12px",
+                  },
+
+                  "& .MuiPaginationItem-root:hover": {
+                    backgroundColor: "#f3f4f6",
+                  },
+                }}
+              />
             </div>
           </div>
         )}
