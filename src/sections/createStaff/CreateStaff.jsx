@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState } from "react";
 import MainLayout from "../../components/layouts/MainLayout";
 import styles from "./createStaff.module.css";
 import { useNavigate,useParams } from "react-router-dom";
@@ -20,14 +20,14 @@ import CloseIcon from "@mui/icons-material/Close";
 import {
   createStaff,
   uploadFile,
-  getProfileCompletion,
+  // getProfileCompletion,
 } from "../../api/serviceapi";
 import CircularProgress from "@mui/material/CircularProgress";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const CreateStaff = () => {
-  const id=useParams();
+  // const id=useParams();
   const navigate = useNavigate();
    const initialFormData = {
      name: "",
