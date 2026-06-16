@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import MainLayout from "../../components/layouts/MainLayout";
 import styles from "./createStaff.module.css";
-import { useNavigate,useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
