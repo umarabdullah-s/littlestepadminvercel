@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState,useEffect} from "react";
 import MainLayout from "../../components/layouts/MainLayout";
 import styles from "./createStaff.module.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
@@ -20,14 +20,17 @@ import CloseIcon from "@mui/icons-material/Close";
 import {
   createStaff,
   uploadFile,
-  // getProfileCompletion,
+  getProfileCompletion,
+  getStaffById,
+  updateStaff,
 } from "../../api/serviceapi";
 import CircularProgress from "@mui/material/CircularProgress";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const CreateStaff = () => {
-  // const id=useParams();
+  const { id } = useParams();
+  const isEditMode = !!id;
   const navigate = useNavigate();
    const initialFormData = {
      name: "",
@@ -66,8 +69,71 @@ const CreateStaff = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  // const [profileCompletion, setProfileCompletion] = useState(null);
+  const [profileCompletion, setProfileCompletion] = useState({
+    percentage: 0,
+    status: [],
+  });
+  const fetchProfileCompletion = async (id) => {
+    try {
+      const res = await getProfileCompletion(id);
 
+      setProfileCompletion(res.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+  if (id) {
+    fetchProfileCompletion(id);
+  }
+}, [id]);
+useEffect(() => {
+  const fetchStaffDetails = async () => {
+    if (!id) return;
+
+    try {
+      const response = await getStaffById(id);
+
+     const staff = response.data.data;
+
+      setFormData((prev) => ({
+        ...prev,
+
+        name: staff.name || "",
+        gender: staff.gender || "",
+        bloodGroup: staff.bloodGroup || "",
+        dateOfBirth: staff.dateOfBirth?.split("T")[0] || "",
+        phone: staff.phone || "",
+        emergencyContact: staff.emergencyContact || "",
+        email: staff.email || "",
+        address: staff.address || "",
+
+        role: staff.role || "",
+        classAssigned: staff.class || "",
+        department: staff.department || "",
+        joiningDate: staff.dateOfJoining?.split("T")[0] || "",
+        employmentType: staff.employmentType || "",
+        staffId: staff.staffId || "",
+        workSchedule: staff.workSchedule || "",
+
+        bankName: staff.bankName || "",
+        accountNumber: staff.accountNumber || "",
+        ifscCode: staff.ifscCode || "",
+        panNumber: staff.panNumber || "",
+
+        profile: staff.profileUrl || null,
+        idProof: staff.aadharUrl || null,
+        offerLetter: staff.offerLetterUrl || null,
+        certificate: staff.educationCertificateUrl || null,
+        experienceLetter: staff.experienceLetterUrl || null,
+      }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  fetchStaffDetails();
+}, [id]);
   const handleChange = (e) => {
     const { name, value } = e.target;
     console.log(name, value);
@@ -78,19 +144,21 @@ const CreateStaff = () => {
 
     let error = "";
 
-    const requiredFields = [
-      "name",
-      "gender",
-      "dateOfBirth",
-      "phone",
-      "email",
-      "address",
-      "role",
-      "classAssigned",
-      "joiningDate",
-      "password",
-      "confirmPassword",
-    ];
+  const requiredFields = [
+    "name",
+    "gender",
+    "dateOfBirth",
+    "phone",
+    "email",
+    "address",
+    "role",
+    "classAssigned",
+    "joiningDate",
+  ];
+
+  if (!isEditMode) {
+    requiredFields.push("password", "confirmPassword");
+  }
 
     if (requiredFields.includes(name) && !value.trim()) {
       const label = name
@@ -122,14 +190,16 @@ const CreateStaff = () => {
     }));
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const { name, files } = e.target;
 
     setFormData((prev) => ({
       ...prev,
       [name]: files[0],
     }));
-
+    if (id) {
+      await fetchProfileCompletion(id);
+    }
     setErrors((prev) => ({
       ...prev,
       [name]: files[0] ? "" : `${name} is required`,
@@ -166,19 +236,21 @@ const CreateStaff = () => {
  const validateForm = () => {
    const newErrors = {};
 
-   const requiredFields = [
-     "name",
-     "gender",
-     "dateOfBirth",
-     "phone",
-     "email",
-     "address",
-     "role",
-     "classAssigned",
-     "joiningDate",
-     "password",
-     "confirmPassword",
-   ];
+ const requiredFields = [
+   "name",
+   "gender",
+   "dateOfBirth",
+   "phone",
+   "email",
+   "address",
+   "role",
+   "classAssigned",
+   "joiningDate",
+ ];
+
+ if (!isEditMode) {
+   requiredFields.push("password", "confirmPassword");
+ }
 
    requiredFields.forEach((field) => {
      if (!String(formData[field] || "").trim()) {
@@ -220,25 +292,60 @@ const handleSave = async () => {
    setLoading(true);
   try {
     // Upload files
-    const profileUrl = formData.profile
-      ? (await uploadFile(formData.profile)).data.data.url
-      : "";
+    const profileUrl =
+      typeof formData.profile === "string"
+        ? formData.profile
+        : formData.profile
+          ? (await uploadFile(formData.profile)).data.data.url
+          : "";
 
-    const aadharUrl = formData.idProof
-      ? (await uploadFile(formData.idProof)).data.data.url
-      : "";
+    const aadharUrl =
+      typeof formData.idProof === "string"
+        ? formData.idProof
+        : formData.idProof
+          ? (await uploadFile(formData.idProof)).data.data.url
+          : "";
 
-    const offerLetterUrl = formData.offerLetter
-      ? (await uploadFile(formData.offerLetter)).data.data.url
-      : "";
+    const offerLetterUrl =
+      typeof formData.offerLetter === "string"
+        ? formData.offerLetter
+        : formData.offerLetter
+          ? (await uploadFile(formData.offerLetter)).data.data.url
+          : "";
 
-    const educationCertificateUrl = formData.certificate
-      ? (await uploadFile(formData.certificate)).data.data.url
-      : "";
+    const educationCertificateUrl =
+      typeof formData.certificate === "string"
+        ? formData.certificate
+        : formData.certificate
+          ? (await uploadFile(formData.certificate)).data.data.url
+          : "";
 
-    const experienceLetterUrl = formData.experienceLetter
-      ? (await uploadFile(formData.experienceLetter)).data.data.url
-      : "";
+    const experienceLetterUrl =
+      typeof formData.experienceLetter === "string"
+        ? formData.experienceLetter
+        : formData.experienceLetter
+          ? (await uploadFile(formData.experienceLetter)).data.data.url
+          : "";
+
+    // const profileUrl = formData.profile
+    //   ? (await uploadFile(formData.profile)).data.data.url
+    //   : "";
+
+    // const aadharUrl = formData.idProof
+    //   ? (await uploadFile(formData.idProof)).data.data.url
+    //   : "";
+
+    // const offerLetterUrl = formData.offerLetter
+    //   ? (await uploadFile(formData.offerLetter)).data.data.url
+    //   : "";
+
+    // const educationCertificateUrl = formData.certificate
+    //   ? (await uploadFile(formData.certificate)).data.data.url
+    //   : "";
+
+    // const experienceLetterUrl = formData.experienceLetter
+    //   ? (await uploadFile(formData.experienceLetter)).data.data.url
+    //   : "";
 
     const payload = {
       name: formData.name,
@@ -272,11 +379,22 @@ const handleSave = async () => {
       experienceLetterUrl,
     };
 
-    const response = await createStaff(payload);
+    let response;
+
+    if (isEditMode) {
+      response = await updateStaff(id, payload);
+      alert("Staff Updated Successfully");
+    } else {
+      response = await createStaff(payload);
+      alert("Staff Created Successfully");
+    }
 
     console.log(response.data);
-    alert("Staff Created Successfully");
-    resetForm();
+    if (id) {
+      await fetchProfileCompletion(id);
+    }
+    console.log(response.data);
+    navigate("/staff");
   } 
   catch (error) {
      console.log("FULL ERROR", error.response);
@@ -309,10 +427,14 @@ return (
       <div className={styles.formSection}>
         <div className={styles.header}>
           <div>
-            <p className={styles.title}>Onboard New Employee</p>
+            <p className={styles.title}>
+              {isEditMode ? "Edit Employee" : "Onboard New Employee"}
+            </p>
 
             <p className={styles.subtitle}>
-              Complete the details below to register a new member.
+              {isEditMode
+                ? "Update the employee information below."
+                : "Complete the details below to register a new member."}
             </p>
           </div>
           <button className={styles.backBtn} onClick={() => navigate(-1)}>
@@ -539,7 +661,7 @@ return (
               />
             </div>
 
-            <div className={styles.field}>
+            {/* <div className={styles.field}>
               <label>
                 Password <span>*</span>
               </label>
@@ -594,7 +716,72 @@ return (
               {errors.confirmPassword && (
                 <small className={styles.error}>{errors.confirmPassword}</small>
               )}
-            </div>
+            </div> */}
+            {!isEditMode && (
+              <>
+                <div className={styles.field}>
+                  <label>
+                    Password <span>*</span>
+                  </label>
+
+                  <div className={styles.passwordWrapper}>
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      autoComplete="new-password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      placeholder="Enter password"
+                    />
+
+                    <button
+                      type="button"
+                      className={styles.eyeBtn}
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </button>
+                  </div>
+
+                  {errors.password && (
+                    <small className={styles.error}>{errors.password}</small>
+                  )}
+                </div>
+
+                <div className={styles.field}>
+                  <label>
+                    Confirm Password <span>*</span>
+                  </label>
+
+                  <div className={styles.passwordWrapper}>
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      name="confirmPassword"
+                      autoComplete="new-password"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      placeholder="Confirm password"
+                    />
+
+                    <button
+                      type="button"
+                      className={styles.eyeBtn}
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                    >
+                      {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                    </button>
+                  </div>
+
+                  {errors.confirmPassword && (
+                    <small className={styles.error}>
+                      {errors.confirmPassword}
+                    </small>
+                  )}
+                </div>
+              </>
+            )}
           </div>
 
           <div className={`${styles.field} ${styles.requiredField}`}>
@@ -699,7 +886,9 @@ return (
 
                   <h4>
                     {formData.idProof
-                      ? formData.idProof.name
+                      ? typeof formData.idProof === "string"
+                        ? "Existing Document"
+                        : formData.idProof.name
                       : "Click to upload ID proof"}
                     <span>*</span>
                   </h4>
@@ -737,8 +926,10 @@ return (
 
                 <h4>
                   {formData.offerLetter
-                    ? formData.offerLetter.name
-                    : "Click to upload Offer letter"}
+                    ? typeof formData.offerLetter === "string"
+                      ? "Existing Document"
+                      : formData.offerLetter.name
+                    : "Click to upload Offer Letter"}
                 </h4>
 
                 <p>PDF - max 5 MB</p>
@@ -770,8 +961,10 @@ return (
 
                 <h4>
                   {formData.certificate
-                    ? formData.certificate.name
-                    : "Educational certificates"}
+                    ? typeof formData.certificate === "string"
+                      ? "Existing Document"
+                      : formData.certificate.name
+                    : "Click to upload Certificate"}
                 </h4>
 
                 <p>PDF, JPG - max 10 MB each</p>
@@ -803,8 +996,10 @@ return (
 
                 <h4>
                   {formData.experienceLetter
-                    ? formData.experienceLetter.name
-                    : "Experience letter"}
+                    ? typeof formData.experienceLetter === "string"
+                      ? "Existing Document"
+                      : formData.experienceLetter.name
+                    : "Click to upload Experience Letter"}
                 </h4>
 
                 <p>PDF - max 5 MB</p>
@@ -845,7 +1040,11 @@ return (
               <div className={styles.avatar}>
                 {formData.profile ? (
                   <img
-                    src={URL.createObjectURL(formData.profile)}
+                    src={
+                      typeof formData.profile === "string"
+                        ? formData.profile
+                        : URL.createObjectURL(formData.profile)
+                    }
                     alt="Staff"
                     className={styles.previewImage}
                   />
@@ -858,9 +1057,11 @@ return (
 
           <p className={styles.uploadText}>
             {formData.profile
-              ? formData.profile.name.length > 20
-                ? formData.profile.name.substring(0, 20) + "..."
-                : formData.profile.name
+              ? typeof formData.profile === "string"
+                ? "Existing Profile Image"
+                : formData.profile.name.length > 20
+                  ? formData.profile.name.substring(0, 20) + "..."
+                  : formData.profile.name
               : "No file selected"}
           </p>
           <p className={styles.uploadInfo}>JPG, PNG - max 2 MB</p>
@@ -882,7 +1083,12 @@ return (
               <DescriptionOutlinedIcon />
               <span>ID proof</span>
             </div>
-            <span className={styles.uploaded}>UPLOADED</span>
+            {profileCompletion.status?.find((item) => item.type === "idProof")
+              ?.status === "uploaded" ? (
+              <span className={styles.uploaded}>UPLOADED</span>
+            ) : (
+              <span className={styles.missing}>MISSING</span>
+            )}
           </div>
 
           <div className={styles.checkItem}>
@@ -890,7 +1096,13 @@ return (
               <ForwardToInboxOutlinedIcon />
               <span>Offer letter</span>
             </div>
-            <span className={styles.uploaded}>UPLOADED</span>
+            {profileCompletion.status?.find(
+              (item) => item.type === "offerLetter",
+            )?.status === "uploaded" ? (
+              <span className={styles.uploaded}>UPLOADED</span>
+            ) : (
+              <span className={styles.missing}>MISSING</span>
+            )}
           </div>
 
           <div className={styles.checkItem}>
@@ -898,7 +1110,13 @@ return (
               <SchoolOutlinedIcon />
               <span>Certificate</span>
             </div>
-            <span className={styles.missing}>MISSING</span>
+            {profileCompletion.status?.find(
+              (item) => item.type === "educationCertificate",
+            )?.status === "uploaded" ? (
+              <span className={styles.uploaded}>UPLOADED</span>
+            ) : (
+              <span className={styles.missing}>MISSING</span>
+            )}
           </div>
 
           <div className={styles.checkItem}>
@@ -906,23 +1124,41 @@ return (
               <AssignmentOutlinedIcon />
               <span>Experience Letter</span>
             </div>
-            <span className={styles.missing}>MISSING</span>
+            {profileCompletion.status?.find(
+              (item) => item.type === "experienceLetter",
+            )?.status === "uploaded" ? (
+              <span className={styles.uploaded}>UPLOADED</span>
+            ) : (
+              <span className={styles.missing}>MISSING</span>
+            )}
           </div>
 
           <div className={styles.divider}></div>
 
           <div className={styles.progress}>
             <span>Profile complete</span>
-            <span>40%</span>
+            <span>{profileCompletion.percentage}%</span>
           </div>
 
           <div className={styles.progressBar}>
-            <div className={styles.progressFill}></div>
+            <div
+              className={styles.progressFill}
+              style={{ width: `${profileCompletion.percentage}%` }}
+            ></div>
           </div>
         </div>
 
         <div className={styles.actions}>
-          <button className={styles.cancelBtn} onClick={resetForm}>
+          <button
+            className={styles.cancelBtn}
+            onClick={() => {
+              if (isEditMode) {
+                navigate(-1);
+              } else {
+                resetForm();
+              }
+            }}
+          >
             Cancel
           </button>
           <button
@@ -937,8 +1173,10 @@ return (
                   color="inherit"
                   style={{ marginRight: "8px" }}
                 />
-                Saving...
+                {isEditMode ? "Updating..." : "Saving..."}
               </>
+            ) : isEditMode ? (
+              "Update"
             ) : (
               "Save"
             )}

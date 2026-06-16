@@ -43,8 +43,12 @@ export const getStaffById = (id) => {
 
 export const createStaff = (data) => {
   return apiService.post("/staffs", data);
+};export const deleteStaff = (id) => {
+  return apiService.delete(`/staffs/${id}`);
 };
-
+export const updateStaff = (id, data) => {
+  return apiService.put(`/staffs/${id}`, data);
+};
 // export const uploadFile = (file) => {
 //   const formData = new FormData();
 //   formData.append("file", file);

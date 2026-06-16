@@ -20,12 +20,14 @@ import {
   getStaffAttendanceSummaryById,
   getStaffAttendanceByMonth,
   getStaffLeaveById,
+  deleteStaff,
 } from "../../api/serviceapi";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Pagination from "@mui/material/Pagination";
+import DeleteStaffModal from "../../components/Modals/DeleteStaffModal";
 
 const StaffDetails = () => {
   const [activeTab, setActiveTab] = useState("attendance");
@@ -44,6 +46,7 @@ const StaffDetails = () => {
   const [leaveTotalPages, setLeaveTotalPages] = useState(1);
   const [attendancePage, setAttendancePage] = useState(1);
   const [attendanceTotalPages, setAttendanceTotalPages] = useState(1);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
  useEffect(() => {
    const fetchStaff = async () => {
@@ -75,6 +78,17 @@ const StaffDetails = () => {
 
    fetchStaff();
  }, [id, selectedMonth, selectedYear, attendancePage, leavePage]);
+ const handleDeleteStaff = async () => {
+   try {
+     await deleteStaff(id);
+
+     setDeleteOpen(false);
+
+     navigate("/staff");
+   } catch (error) {
+     console.log(error);
+   }
+ };
   return (
     <MainLayout>
       <div className={styles.container}>
@@ -88,7 +102,7 @@ const StaffDetails = () => {
           <div className={styles.profileLeft}>
             <div className={styles.avatar}>
               <img
-                src={staff?.profile}
+                src={staff?.profileUrl}
                 alt={staff?.name}
                 className={styles.profileImage}
               />
@@ -125,7 +139,28 @@ const StaffDetails = () => {
             </div>
           </div>
 
-          <button className={styles.editBtn}>Edit Profile</button>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button
+              className={styles.editBtn}
+              onClick={() => navigate(`/staff/edit/${id}`)}
+            >
+              Edit Profile
+            </button>
+
+            <button
+              onClick={() => setDeleteOpen(true)}
+              style={{
+                background: "#ef4444",
+                color: "#fff",
+                border: "none",
+                padding: "10px 18px",
+                borderRadius: "10px",
+                cursor: "pointer",
+              }}
+            >
+              Delete Profile
+            </button>
+          </div>
         </div>
 
         <div className={styles.detailsGrid}>
@@ -559,6 +594,11 @@ const StaffDetails = () => {
           <button className={styles.modalUploadBtn}>Upload</button>
         </DialogActions>
       </Dialog>
+      <DeleteStaffModal
+        open={deleteOpen}
+        handleClose={() => setDeleteOpen(false)}
+        handleDelete={handleDeleteStaff}
+      />
     </MainLayout>
   );
 };

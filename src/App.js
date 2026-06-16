@@ -33,7 +33,6 @@ function App() {
             <ProtectedRoute>
               <Request />
             </ProtectedRoute>
-            
           }
         />
         <Route
@@ -72,7 +71,15 @@ function App() {
           path="/staff/create-staff"
           element={
             <ProtectedRoute>
-              <CreateStaff/>
+              <CreateStaff />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/staff/edit/:id"
+          element={
+            <ProtectedRoute>
+              <CreateStaff />
             </ProtectedRoute>
           }
         />

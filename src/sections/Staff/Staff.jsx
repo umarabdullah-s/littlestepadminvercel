@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import MainLayout from "../../components/layouts/MainLayout";
 import Pagination from "@mui/material/Pagination";
 import styles from "./Staff.module.css";
-import { getStaffs } from "../../api/serviceapi";
+import { getStaffs, deleteStaff } from "../../api/serviceapi";
 import Skeleton from "@mui/material/Skeleton";
 import { useNavigate } from "react-router-dom";
+import DeleteStaffModal from "../../components/Modals/DeleteStaffModal";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 const Staff = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -12,6 +15,8 @@ const Staff = () => {
   const [staffData, setStaffData] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [selectedStaffId, setSelectedStaffId] = useState(null);
  const fetchStaffs = async (pageNumber = 1) => {
    try {
      setLoading(true);
@@ -30,7 +35,23 @@ const Staff = () => {
 useEffect(() => {
   fetchStaffs(page);
 }, [page]);
+const handleDeleteClick = (staffId) => {
+  setSelectedStaffId(staffId);
+  setDeleteOpen(true);
+};
 
+const handleDeleteConfirm = async () => {
+  try {
+    await deleteStaff(selectedStaffId);
+
+    setDeleteOpen(false);
+    setSelectedStaffId(null);
+
+    fetchStaffs(page); // refresh table
+  } catch (error) {
+    console.log(error);
+  }
+};
   return (
     <MainLayout>
       <div className={styles.staffPage}>
@@ -60,6 +81,7 @@ useEffect(() => {
                 <th>E-MAIL</th>
                 <th>MOBILE NUMBER</th>
                 <th>STATUS</th>
+                <th>ACTION</th>
               </tr>
             </thead>
 
@@ -136,12 +158,41 @@ useEffect(() => {
                             staff.status?.toLowerCase() === "checked in"
                               ? styles.in
                               : staff.status === "not yet checked in"
-                                                              ? styles.out
-                                                              : styles.leave
+                                ? styles.out
+                                : styles.leave
                           }`}
                         >
                           {staff.status || "--"}
                         </span>
+                      </td>
+                      <td
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                          }}
+                        >
+                          <EditOutlinedIcon
+                            onClick={() => navigate(`/staff/edit/${staff._id}`)}
+                            sx={{
+                              color: "#2563eb",
+                              cursor: "pointer",
+                            }}
+                          />
+
+                          <DeleteOutlineOutlinedIcon
+                            onClick={() => handleDeleteClick(staff._id)}
+                            sx={{
+                              color: "#ef4444",
+                              cursor: "pointer",
+                            }}
+                          />
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -168,6 +219,14 @@ useEffect(() => {
           </div>
         </div>
       </div>
+      <DeleteStaffModal
+        open={deleteOpen}
+        handleClose={() => {
+          setDeleteOpen(false);
+          setSelectedStaffId(null);
+        }}
+        handleDelete={handleDeleteConfirm}
+      />
     </MainLayout>
   );
 };
