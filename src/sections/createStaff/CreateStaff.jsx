@@ -151,21 +151,25 @@ useEffect(() => {
       error = `${label} is required`;
     }
 
-    if (
-      name === "email" &&
-      value &&
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-    ) {
-      error = "Invalid email address";
-    }
+   if (name === "email" && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+     error = "Invalid email address";
+   }
 
-    if (name === "phone" && value && !/^\d{10}$/.test(value)) {
-      error = "Phone number must be 10 digits";
-    }
+   if (name === "phone" && value && !/^\d{10}$/.test(value)) {
+     error = "Phone number must be 10 digits";
+   }
 
-    if (name === "confirmPassword" && value && value !== formData.password) {
-      error = "Passwords do not match";
-    }
+   if (name === "password") {
+     if (value.length < 6) {
+       error = `Password must be 6 characters (${value.length}/6)`;
+     }
+   }
+
+   if (name === "confirmPassword") {
+     if (value !== formData.password) {
+       error = "Passwords do not match";
+     }
+   }
     setErrors((prev) => ({
       ...prev,
       [name]: error,
@@ -253,7 +257,9 @@ useEffect(() => {
    if (formData.phone && !/^\d{10}$/.test(formData.phone)) {
      newErrors.phone = "Phone number must be 10 digits";
    }
-
+   if (!isEditMode && formData.password && formData.password.length < 6) {
+     newErrors.password = `Password must be 6 characters (${formData.password.length}/6)`;
+   }
    if (
      formData.password &&
      formData.confirmPassword &&
@@ -634,62 +640,7 @@ return (
               />
             </div>
 
-            {/* <div className={styles.field}>
-              <label>
-                Password <span>*</span>
-              </label>
-
-              <div className={styles.passwordWrapper}>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  autoComplete="new-password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Enter password"
-                />
-
-                <button
-                  type="button"
-                  className={styles.eyeBtn}
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </button>
-              </div>
-
-              {errors.password && (
-                <small className={styles.error}>{errors.password}</small>
-              )}
-            </div>
-            <div className={styles.field}>
-              <label>
-                Confirm Password <span>*</span>
-              </label>
-
-              <div className={styles.passwordWrapper}>
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  name="confirmPassword"
-                  autoComplete="new-password"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="Confirm password"
-                />
-
-                <button
-                  type="button"
-                  className={styles.eyeBtn}
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                </button>
-              </div>
-
-              {errors.confirmPassword && (
-                <small className={styles.error}>{errors.confirmPassword}</small>
-              )}
-            </div> */}
+           
             {!isEditMode && (
               <>
                 <div className={styles.field}>
