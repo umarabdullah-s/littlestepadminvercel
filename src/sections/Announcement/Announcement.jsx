@@ -43,6 +43,7 @@ const Announcement = () => {
  const [openSnackbar, setOpenSnackbar] = useState(false);
  const [snackbarMessage, setSnackbarMessage] = useState("");
  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+ const [deleting, setDeleting] = useState(false);
 const validateForm = () => {
   let newErrors = {};
 
@@ -120,6 +121,8 @@ const handleCancel = () => {
   setAnnouncementDate(null);
   setAnnouncementTime(null);
   setErrors({});
+  setIsEditMode(false);
+  setEditId(null);
 };
 const fetchAnnouncement = async () => {
   try {
@@ -141,6 +144,7 @@ const openDeleteModal = (id) => {
 
 const handleDeleteAnnouncement = async () => {
   try {
+    setDeleting(true);
     await deleteAnnouncement(selectedAnnouncementId);
 
     setDeleteModalOpen(false);
@@ -157,6 +161,8 @@ const handleDeleteAnnouncement = async () => {
     setSnackbarMessage(error.response?.data?.message || "Delete failed");
     setSnackbarSeverity("error");
     setOpenSnackbar(true);
+  } finally {
+    setDeleting(false);
   }
 };
 const fetchAnnouncementSummary = async () => {
@@ -177,7 +183,7 @@ const handleEdit = (item) => {
 
   setAnnouncementDate(dayjs(item.announcementDate));
   setAnnouncementTime(dayjs(item.announcementDate));
-
+  setErrors({});
   setEditId(item._id);
   setIsEditMode(true);
 };
@@ -229,7 +235,7 @@ const handleEdit = (item) => {
                     label="Select Date"
                     value={announcementDate}
                     onChange={(newValue) => setAnnouncementDate(newValue)}
-                    disablePast
+                    disablePast={!isEditMode}
                     slotProps={{
                       textField: {
                         fullWidth: true,
@@ -387,6 +393,7 @@ const handleEdit = (item) => {
           open={deleteModalOpen}
           onClose={() => setDeleteModalOpen(false)}
           onConfirm={handleDeleteAnnouncement}
+          deleting={deleting}
         />
       </div>
       <Snackbar

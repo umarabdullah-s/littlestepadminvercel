@@ -9,7 +9,7 @@ import { FiCalendar, FiClock, FiTag, FiFileText } from "react-icons/fi";
 import { getLeaveRequests, respondLeaveRequest } from "../../api/serviceapi";
 
 import Skeleton from "@mui/material/Skeleton";
-
+import { useNavigate } from "react-router-dom";
 
 const filters = ["All requests", "Leave", "Permission", "Pending", "Resolved"];
 const getStatusFromFilter = (filter) => {
@@ -34,6 +34,7 @@ const Request = () => {
   const [activeFilter, setActiveFilter] = useState("All requests");
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
 
   const leaveRequests = async (status = "") => {
@@ -240,7 +241,19 @@ const Request = () => {
                       )}
                     </div>
 
-                    <button className={styles.recordBtn}>
+                    <button
+                      className={styles.recordBtn}
+                      // onClick={() =>
+                      //   item.staff?.id && navigate(`/staff/${item.staff.id}`)
+                      // }
+                      onClick={() =>
+                        navigate(`/staff/${item.staff.id}`, {
+                          state: {
+                            activeTab: "requests",
+                          },
+                        })
+                      }
+                    >
                       <FiFileText />
                       View Record
                     </button>

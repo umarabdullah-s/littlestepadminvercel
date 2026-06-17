@@ -20,7 +20,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import {
   createStaff,
   uploadFile,
-  getProfileCompletion,
   getStaffById,
   updateStaff,
 } from "../../api/serviceapi";
@@ -69,24 +68,8 @@ const CreateStaff = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [profileCompletion, setProfileCompletion] = useState({
-    percentage: 0,
-    status: [],
-  });
-  const fetchProfileCompletion = async (id) => {
-    try {
-      const res = await getProfileCompletion(id);
 
-      setProfileCompletion(res.data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  useEffect(() => {
-  if (id) {
-    fetchProfileCompletion(id);
-  }
-}, [id]);
+  
 useEffect(() => {
   const fetchStaffDetails = async () => {
     if (!id) return;
@@ -196,9 +179,7 @@ useEffect(() => {
       ...prev,
       [name]: files[0],
     }));
-    if (id) {
-      await fetchProfileCompletion(id);
-    }
+    
     setErrors((prev) => ({
       ...prev,
       [name]: files[0] ? "" : `${name} is required`,
@@ -389,9 +370,7 @@ const handleSave = async () => {
     }
 
     console.log(response.data);
-    if (id) {
-      await fetchProfileCompletion(id);
-    }
+   
     console.log(response.data);
     navigate("/staff");
   } 
@@ -405,21 +384,16 @@ const handleSave = async () => {
     setLoading(false);
   }
 };
-// useEffect(() => {
-//   const fetchProfileCompletion = async () => {
-//     try {
-//       const res = await getProfileCompletion(id);
+const documentStatus = {
+  idProof: !!formData.idProof,
+  offerLetter: !!formData.offerLetter,
+  certificate: !!formData.certificate,
+  experienceLetter: !!formData.experienceLetter,
+};
 
-//       setProfileCompletion(res.data.data);
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   };
+const uploadedCount = Object.values(documentStatus).filter(Boolean).length;
 
-//   if (id) {
-//     fetchProfileCompletion();
-//   }
-// }, [id]);
+const percentage = Math.round((uploadedCount / 4) * 100);
 return (
   <MainLayout>
     <div className={styles.container}>
@@ -1084,8 +1058,7 @@ return (
               <DescriptionOutlinedIcon />
               <span>ID proof</span>
             </div>
-            {profileCompletion.status?.find((item) => item.type === "idProof")
-              ?.status === "uploaded" ? (
+            {documentStatus.idProof ? (
               <span className={styles.uploaded}>UPLOADED</span>
             ) : (
               <span className={styles.missing}>MISSING</span>
@@ -1097,9 +1070,7 @@ return (
               <ForwardToInboxOutlinedIcon />
               <span>Offer letter</span>
             </div>
-            {profileCompletion.status?.find(
-              (item) => item.type === "offerLetter",
-            )?.status === "uploaded" ? (
+            {documentStatus.offerLetter ? (
               <span className={styles.uploaded}>UPLOADED</span>
             ) : (
               <span className={styles.missing}>MISSING</span>
@@ -1111,9 +1082,7 @@ return (
               <SchoolOutlinedIcon />
               <span>Certificate</span>
             </div>
-            {profileCompletion.status?.find(
-              (item) => item.type === "educationCertificate",
-            )?.status === "uploaded" ? (
+            {documentStatus.certificate ? (
               <span className={styles.uploaded}>UPLOADED</span>
             ) : (
               <span className={styles.missing}>MISSING</span>
@@ -1125,9 +1094,7 @@ return (
               <AssignmentOutlinedIcon />
               <span>Experience Letter</span>
             </div>
-            {profileCompletion.status?.find(
-              (item) => item.type === "experienceLetter",
-            )?.status === "uploaded" ? (
+            {documentStatus.experienceLetter ? (
               <span className={styles.uploaded}>UPLOADED</span>
             ) : (
               <span className={styles.missing}>MISSING</span>
@@ -1138,13 +1105,13 @@ return (
 
           <div className={styles.progress}>
             <span>Profile complete</span>
-            <span>{profileCompletion.percentage}%</span>
+            <span>{percentage}%</span>
           </div>
 
           <div className={styles.progressBar}>
             <div
               className={styles.progressFill}
-              style={{ width: `${profileCompletion.percentage}%` }}
+              style={{ width: `${percentage}%` }}
             ></div>
           </div>
         </div>

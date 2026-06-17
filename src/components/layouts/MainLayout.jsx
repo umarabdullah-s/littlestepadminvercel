@@ -32,9 +32,11 @@ import styles from "./MainLayout.module.css";
 const MainLayout = ({ children }) => {
   const location = useLocation();
 
-  const hideHeader =
-    location.pathname === "/staff/create-staff" ||
-    /^\/staff\/[^/]+$/.test(location.pathname);
+ const hideHeaderPaths = ["/staff/create-staff", "/announcement"];
+
+ const hideHeader =
+   hideHeaderPaths.includes(location.pathname) ||
+   /^\/staff\/[^/]+$/.test(location.pathname);
 
   return (
     <div className={styles.container}>

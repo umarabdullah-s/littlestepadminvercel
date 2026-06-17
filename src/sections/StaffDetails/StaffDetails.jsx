@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import MainLayout from "../../components/layouts/MainLayout";
 import styles from "./StaffDetails.module.css";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
@@ -23,11 +23,19 @@ import Pagination from "@mui/material/Pagination";
 import DeleteStaffModal from "../../components/Modals/DeleteStaffModal";
 import UploadDocumentModal from "../../components/Modals/UploadDocumentModal";
 
+
 const StaffDetails = () => {
-  const [activeTab, setActiveTab] = useState("attendance");
-  const [openUploadModal, setOpenUploadModal] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
+  const [openUploadModal, setOpenUploadModal] = useState(false);
+   const [activeTab, setActiveTab] = useState("attendance");
+
+   useEffect(() => {
+     if (location.state?.activeTab) {
+       setActiveTab(location.state.activeTab);
+     }
+   }, [location.state]);
   const [staff, setStaff] = useState(null);
   const [attendanceSummary, setAttendanceSummary] = useState(null);
   const [attendanceData, setAttendanceData] = useState([]);
@@ -43,7 +51,17 @@ const StaffDetails = () => {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [documentCategory, setDocumentCategory] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
-
+  const requestsRef = useRef(null);
+  useEffect(() => {
+    if (location.state?.activeTab === "requests") {
+      setTimeout(() => {
+        requestsRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 300);
+    }
+  }, []);
  useEffect(() => {
    const fetchStaff = async () => {
      try {
@@ -455,7 +473,7 @@ const StaffDetails = () => {
         )}
 
         {activeTab === "requests" && (
-          <div className={styles.tableContainer}>
+          <div ref={requestsRef} className={styles.tableContainer}>
             <table className={styles.table}>
               <thead>
                 <tr>

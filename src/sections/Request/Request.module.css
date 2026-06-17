@@ -245,16 +245,33 @@
   display: flex;
   align-items: center;
   gap: 8px;
-
+  padding: 10px 18px;
   border: none;
-
-  background: transparent;
-
-  color: #64748b;
-
+  border-radius: 10px;
+  background: #2f64e1;
+  color: white;
   cursor: pointer;
+  font-weight: 500;
 
-  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.recordBtn:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(47, 100, 225, 0.25);
+}
+
+.recordBtn:active {
+  transform: translateY(0);
+}
+
+.recordBtn svg {
+  transition: transform 0.3s ease;
+}
+
+.recordBtn:hover svg {
+  transform: translateX(4px);
 }
 .approvedBtn {
   border: none;
