@@ -28,6 +28,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Pagination from "@mui/material/Pagination";
 import DeleteStaffModal from "../../components/Modals/DeleteStaffModal";
+import UploadDocumentModal from "../../components/Modals/UploadDocumentModal";
 
 const StaffDetails = () => {
   const [activeTab, setActiveTab] = useState("attendance");
@@ -47,6 +48,8 @@ const StaffDetails = () => {
   const [attendancePage, setAttendancePage] = useState(1);
   const [attendanceTotalPages, setAttendanceTotalPages] = useState(1);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [documentCategory, setDocumentCategory] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
 
  useEffect(() => {
    const fetchStaff = async () => {
@@ -544,56 +547,15 @@ const StaffDetails = () => {
           </div>
         )}
       </div>
-      <Dialog
+      <UploadDocumentModal
         open={openUploadModal}
-        onClose={() => setOpenUploadModal(false)}
-        maxWidth="sm"
-        fullWidth
-        classes={{ paper: styles.dialogPaper }}
-      >
-        <DialogTitle className={styles.dialogTitle}>
-          Upload Document
-          <IconButton
-            onClick={() => setOpenUploadModal(false)}
-            sx={{ position: "absolute", right: 10, top: 10 }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-
-        <DialogContent>
-          <div className={styles.formGroup}>
-            <label>Document Category</label>
-
-            <input type="text" placeholder="Enter" className={styles.input} />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label>File Upload</label>
-
-            <div className={styles.uploadBox}>
-              <CloudUploadOutlinedIcon className={styles.uploadIcon} />
-
-              <h3>Click to Upload or Drag and Drop</h3>
-
-              <p>PDF, JPG, or PNG (Max. 10MB)</p>
-
-              <input type="file" />
-            </div>
-          </div>
-        </DialogContent>
-
-        <DialogActions sx={{ padding: "20px" }}>
-          <button
-            className={styles.cancelBtn}
-            onClick={() => setOpenUploadModal(false)}
-          >
-            Cancel
-          </button>
-
-          <button className={styles.modalUploadBtn}>Upload</button>
-        </DialogActions>
-      </Dialog>
+        handleClose={() => setOpenUploadModal(false)}
+        // handleUpload={handleDocumentUpload}
+        category={documentCategory}
+        setCategory={setDocumentCategory}
+        selectedFile={selectedFile}
+        setSelectedFile={setSelectedFile}
+      />
       <DeleteStaffModal
         open={deleteOpen}
         handleClose={() => setDeleteOpen(false)}

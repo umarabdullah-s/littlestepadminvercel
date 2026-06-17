@@ -183,7 +183,6 @@ useEffect(() => {
     if (name === "confirmPassword" && value && value !== formData.password) {
       error = "Passwords do not match";
     }
-
     setErrors((prev) => ({
       ...prev,
       [name]: error,
@@ -728,6 +727,7 @@ return (
                     <input
                       type={showPassword ? "text" : "password"}
                       name="password"
+                      maxLength={6}
                       autoComplete="new-password"
                       value={formData.password}
                       onChange={handleChange}
@@ -761,6 +761,7 @@ return (
                       value={formData.confirmPassword}
                       onChange={handleChange}
                       placeholder="Confirm password"
+                      maxLength={6}
                     />
 
                     <button
