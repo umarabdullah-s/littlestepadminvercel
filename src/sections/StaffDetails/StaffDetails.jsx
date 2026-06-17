@@ -83,6 +83,7 @@ const StaffDetails = () => {
      navigate("/staff");
    } catch (error) {
      console.log(error);
+    
    }
  };
   return (
