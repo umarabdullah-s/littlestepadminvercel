@@ -31,11 +31,7 @@ const StaffDetails = () => {
   const [openUploadModal, setOpenUploadModal] = useState(false);
    const [activeTab, setActiveTab] = useState("attendance");
 
-   useEffect(() => {
-     if (location.state?.activeTab) {
-       setActiveTab(location.state.activeTab);
-     }
-   }, [location.state]);
+   
   const [staff, setStaff] = useState(null);
   const [attendanceSummary, setAttendanceSummary] = useState(null);
   const [attendanceData, setAttendanceData] = useState([]);
@@ -52,16 +48,27 @@ const StaffDetails = () => {
   const [documentCategory, setDocumentCategory] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const requestsRef = useRef(null);
-  useEffect(() => {
-    if (location.state?.activeTab === "requests") {
-      setTimeout(() => {
-        requestsRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }, 300);
-    }
-  }, []);
+
+ useEffect(() => {
+   const tab = location.state?.activeTab;
+
+   if (!tab) return;
+
+   setActiveTab(tab);
+
+   let timer;
+
+   if (tab === "requests") {
+     timer = setTimeout(() => {
+       requestsRef.current?.scrollIntoView({
+         behavior: "smooth",
+         block: "start",
+       });
+     }, 300);
+   }
+
+   return () => clearTimeout(timer);
+ }, [location.state?.activeTab]);
  useEffect(() => {
    const fetchStaff = async () => {
      try {
