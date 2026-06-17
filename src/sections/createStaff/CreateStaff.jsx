@@ -56,9 +56,10 @@ const CreateStaff = () => {
      ifscCode: "",
      panNumber: "",
 
-     idProof: null,
+     aadharCard: null,
+     panCard: null,
+     educationCertificate: null,
      offerLetter: null,
-     certificate: null,
      experienceLetter: null,
 
      profile: null,
@@ -78,7 +79,7 @@ useEffect(() => {
       const response = await getStaffById(id);
 
      const staff = response.data.data;
-
+     console.log("Staff Data:", staff);
       setFormData((prev) => ({
         ...prev,
 
@@ -105,9 +106,11 @@ useEffect(() => {
         panNumber: staff.panNumber || "",
 
         profile: staff.profileUrl || null,
-        idProof: staff.aadharUrl || null,
+
+        aadharCard: staff.aadharCardUrl || null,
+        panCard: staff.panCardUrl || null,
+        educationCertificate: staff.educationCertificateUrl || null,
         offerLetter: staff.offerLetterUrl || null,
-        certificate: staff.educationCertificateUrl || null,
         experienceLetter: staff.experienceLetterUrl || null,
       }));
     } catch (error) {
@@ -205,17 +208,17 @@ useEffect(() => {
   const resetForm = () => {
     setFormData(initialFormData);
     setErrors({});
-
-    [
-      "profile",
-      "idProof",
-      "offerLetter",
-      "certificate",
-      "experienceLetter",
-    ].forEach((id) => {
-      const input = document.getElementById(id);
-      if (input) input.value = "";
-    });
+[
+  "profile",
+  "aadharCard",
+  "panCard",
+  "educationCertificate",
+  "offerLetter",
+  "experienceLetter",
+].forEach((id) => {
+  const input = document.getElementById(id);
+  if (input) input.value = "";
+});
   };
  const validateForm = () => {
    const newErrors = {};
@@ -246,8 +249,16 @@ useEffect(() => {
      }
    });
 
-   if (!formData.idProof) {
-     newErrors.idProof = "ID Proof is required";
+   if (!formData.aadharCard) {
+     newErrors.aadharCard = "Aadhaar Card is required";
+   }
+
+   if (!formData.panCard) {
+     newErrors.panCard = "PAN Card is required";
+   }
+
+   if (!formData.educationCertificate) {
+     newErrors.educationCertificate = "Education Certificate is required";
    }
 
    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -277,61 +288,47 @@ const handleSave = async () => {
   if (!validateForm()) return;
    setLoading(true);
   try {
-    // Upload files
-    const profileUrl =
-      typeof formData.profile === "string"
-        ? formData.profile
-        : formData.profile
-          ? (await uploadFile(formData.profile)).data.data.url
-          : "";
+  const profileUrl =
+    typeof formData.profile === "string"
+      ? formData.profile
+      : formData.profile
+        ? (await uploadFile(formData.profile)).data.data.url
+        : "";
 
-    const aadharUrl =
-      typeof formData.idProof === "string"
-        ? formData.idProof
-        : formData.idProof
-          ? (await uploadFile(formData.idProof)).data.data.url
-          : "";
+  const aadharCardUrl =
+    typeof formData.aadharCard === "string"
+      ? formData.aadharCard
+      : formData.aadharCard
+        ? (await uploadFile(formData.aadharCard)).data.data.url
+        : "";
 
-    const offerLetterUrl =
-      typeof formData.offerLetter === "string"
-        ? formData.offerLetter
-        : formData.offerLetter
-          ? (await uploadFile(formData.offerLetter)).data.data.url
-          : "";
+  const panCardUrl =
+    typeof formData.panCard === "string"
+      ? formData.panCard
+      : formData.panCard
+        ? (await uploadFile(formData.panCard)).data.data.url
+        : "";
 
-    const educationCertificateUrl =
-      typeof formData.certificate === "string"
-        ? formData.certificate
-        : formData.certificate
-          ? (await uploadFile(formData.certificate)).data.data.url
-          : "";
+  const educationCertificateUrl =
+    typeof formData.educationCertificate === "string"
+      ? formData.educationCertificate
+      : formData.educationCertificate
+        ? (await uploadFile(formData.educationCertificate)).data.data.url
+        : "";
 
-    const experienceLetterUrl =
-      typeof formData.experienceLetter === "string"
-        ? formData.experienceLetter
-        : formData.experienceLetter
-          ? (await uploadFile(formData.experienceLetter)).data.data.url
-          : "";
+  const offerLetterUrl =
+    typeof formData.offerLetter === "string"
+      ? formData.offerLetter
+      : formData.offerLetter
+        ? (await uploadFile(formData.offerLetter)).data.data.url
+        : "";
 
-    // const profileUrl = formData.profile
-    //   ? (await uploadFile(formData.profile)).data.data.url
-    //   : "";
-
-    // const aadharUrl = formData.idProof
-    //   ? (await uploadFile(formData.idProof)).data.data.url
-    //   : "";
-
-    // const offerLetterUrl = formData.offerLetter
-    //   ? (await uploadFile(formData.offerLetter)).data.data.url
-    //   : "";
-
-    // const educationCertificateUrl = formData.certificate
-    //   ? (await uploadFile(formData.certificate)).data.data.url
-    //   : "";
-
-    // const experienceLetterUrl = formData.experienceLetter
-    //   ? (await uploadFile(formData.experienceLetter)).data.data.url
-    //   : "";
+  const experienceLetterUrl =
+    typeof formData.experienceLetter === "string"
+      ? formData.experienceLetter
+      : formData.experienceLetter
+        ? (await uploadFile(formData.experienceLetter)).data.data.url
+        : "";
 
     const payload = {
       name: formData.name,
@@ -359,9 +356,10 @@ const handleSave = async () => {
       panNumber: formData.panNumber,
 
       profileUrl,
-      aadharUrl,
-      offerLetterUrl,
+      aadharCardUrl,
+      panCardUrl,
       educationCertificateUrl,
+      offerLetterUrl,
       experienceLetterUrl,
     };
 
@@ -391,15 +389,16 @@ const handleSave = async () => {
   }
 };
 const documentStatus = {
-  idProof: !!formData.idProof,
+  aadharCard: !!formData.aadharCard,
+  panCard: !!formData.panCard,
+  educationCertificate: !!formData.educationCertificate,
   offerLetter: !!formData.offerLetter,
-  certificate: !!formData.certificate,
   experienceLetter: !!formData.experienceLetter,
 };
 
 const uploadedCount = Object.values(documentStatus).filter(Boolean).length;
 
-const percentage = Math.round((uploadedCount / 4) * 100);
+const percentage = Math.round((uploadedCount / 5) * 100);
 return (
   <MainLayout>
     <div className={styles.container}>
@@ -640,7 +639,6 @@ return (
               />
             </div>
 
-           
             {!isEditMode && (
               <>
                 <div className={styles.field}>
@@ -786,47 +784,135 @@ return (
           </h3>
 
           <div className={styles.documentGrid}>
-            <div>
-              <div className={styles.uploadWrapper}>
-                {formData.idProof && (
-                  <CloseIcon
-                    className={styles.closeIcon}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      removeFile("idProof");
-                    }}
-                  />
-                )}
+            {/* Aadhaar Card */}
+            <div className={styles.uploadWrapper}>
+              {formData.aadharCard && (
+                <CloseIcon
+                  className={styles.closeIcon}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    removeFile("aadharCard");
+                  }}
+                />
+              )}
 
-                <label htmlFor="idProof" className={styles.uploadBox}>
-                  <input
-                    type="file"
-                    id="idProof"
-                    name="idProof"
-                    accept=".pdf,.jpg,.jpeg,.png"
-                    hidden
-                    onChange={handleFileChange}
-                  />
+              <label htmlFor="aadharCard" className={styles.uploadBox}>
+                <input
+                  type="file"
+                  id="aadharCard"
+                  name="aadharCard"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  hidden
+                  onChange={handleFileChange}
+                />
 
-                  <BadgeOutlinedIcon className={styles.uploadIcon} />
+                <BadgeOutlinedIcon className={styles.uploadIcon} />
 
-                  <h4>
-                    {formData.idProof
-                      ? typeof formData.idProof === "string"
-                        ? "Existing Document"
-                        : formData.idProof.name
-                      : "Click to upload ID proof"}
-                    <span>*</span>
-                  </h4>
+                <h4>
+                  {formData.aadharCard
+                    ? typeof formData.aadharCard === "string"
+                      ? "Existing Document"
+                      : formData.aadharCard.name
+                    : "Click to upload Aadhaar Card"}
+                  <span>*</span>
+                </h4>
 
-                  <p>PDF, JPG, PNG - max 5 MB</p>
-                </label>
-              </div>
-              {errors.idProof && (
-                <small className={styles.error}>{errors.idProof}</small>
+                <p>PDF, JPG, PNG - max 5 MB</p>
+              </label>
+
+              {errors.aadharCard && (
+                <small className={styles.error}>{errors.aadharCard}</small>
               )}
             </div>
 
+            {/* PAN Card */}
+            <div className={styles.uploadWrapper}>
+              {formData.panCard && (
+                <CloseIcon
+                  className={styles.closeIcon}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    removeFile("panCard");
+                  }}
+                />
+              )}
+
+              <label htmlFor="panCard" className={styles.uploadBox}>
+                <input
+                  type="file"
+                  id="panCard"
+                  name="panCard"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  hidden
+                  onChange={handleFileChange}
+                />
+
+                <BadgeOutlinedIcon className={styles.uploadIcon} />
+
+                <h4>
+                  {formData.panCard
+                    ? typeof formData.panCard === "string"
+                      ? "Existing Document"
+                      : formData.panCard.name
+                    : "Click to upload PAN Card"}
+                  <span>*</span>
+                </h4>
+
+                <p>PDF, JPG, PNG - max 5 MB</p>
+              </label>
+
+              {errors.panCard && (
+                <small className={styles.error}>{errors.panCard}</small>
+              )}
+            </div>
+
+            {/* Education Certificate */}
+            <div className={styles.uploadWrapper}>
+              {formData.educationCertificate && (
+                <CloseIcon
+                  className={styles.closeIcon}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    removeFile("educationCertificate");
+                  }}
+                />
+              )}
+
+              <label
+                htmlFor="educationCertificate"
+                className={styles.uploadBox}
+              >
+                <input
+                  type="file"
+                  id="educationCertificate"
+                  name="educationCertificate"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  hidden
+                  onChange={handleFileChange}
+                />
+
+                <SchoolOutlinedIcon className={styles.uploadIcon} />
+
+                <h4>
+                  {formData.educationCertificate
+                    ? typeof formData.educationCertificate === "string"
+                      ? "Existing Document"
+                      : formData.educationCertificate.name
+                    : "Click to upload Education Certificate"}
+                  <span>*</span>
+                </h4>
+
+                <p>PDF, JPG - max 10 MB</p>
+              </label>
+
+              {errors.educationCertificate && (
+                <small className={styles.error}>
+                  {errors.educationCertificate}
+                </small>
+              )}
+            </div>
+
+            {/* Offer Letter */}
             <div className={styles.uploadWrapper}>
               {formData.offerLetter && (
                 <CloseIcon
@@ -862,41 +948,7 @@ return (
               </label>
             </div>
 
-            <div className={styles.uploadWrapper}>
-              {formData.certificate && (
-                <CloseIcon
-                  className={styles.closeIcon}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    removeFile("certificate");
-                  }}
-                />
-              )}
-
-              <label htmlFor="certificate" className={styles.uploadBox}>
-                <input
-                  type="file"
-                  id="certificate"
-                  name="certificate"
-                  accept=".pdf,.jpg,.jpeg,.png"
-                  hidden
-                  onChange={handleFileChange}
-                />
-
-                <SchoolOutlinedIcon className={styles.uploadIcon} />
-
-                <h4>
-                  {formData.certificate
-                    ? typeof formData.certificate === "string"
-                      ? "Existing Document"
-                      : formData.certificate.name
-                    : "Click to upload Certificate"}
-                </h4>
-
-                <p>PDF, JPG - max 10 MB each</p>
-              </label>
-            </div>
-
+            {/* Experience Letter */}
             <div className={styles.uploadWrapper}>
               {formData.experienceLetter && (
                 <CloseIcon
@@ -1007,9 +1059,9 @@ return (
           <div className={styles.checkItem}>
             <div className={styles.checkLeft}>
               <DescriptionOutlinedIcon />
-              <span>ID proof</span>
+              <span>Aadhaar Card</span>
             </div>
-            {documentStatus.idProof ? (
+            {documentStatus.aadharCard ? (
               <span className={styles.uploaded}>UPLOADED</span>
             ) : (
               <span className={styles.missing}>MISSING</span>
@@ -1018,10 +1070,10 @@ return (
 
           <div className={styles.checkItem}>
             <div className={styles.checkLeft}>
-              <ForwardToInboxOutlinedIcon />
-              <span>Offer letter</span>
+              <BadgeOutlinedIcon />
+              <span>PAN Card</span>
             </div>
-            {documentStatus.offerLetter ? (
+            {documentStatus.panCard ? (
               <span className={styles.uploaded}>UPLOADED</span>
             ) : (
               <span className={styles.missing}>MISSING</span>
@@ -1031,9 +1083,21 @@ return (
           <div className={styles.checkItem}>
             <div className={styles.checkLeft}>
               <SchoolOutlinedIcon />
-              <span>Certificate</span>
+              <span>Education Certificate</span>
             </div>
-            {documentStatus.certificate ? (
+            {documentStatus.educationCertificate ? (
+              <span className={styles.uploaded}>UPLOADED</span>
+            ) : (
+              <span className={styles.missing}>MISSING</span>
+            )}
+          </div>
+
+          <div className={styles.checkItem}>
+            <div className={styles.checkLeft}>
+              <ForwardToInboxOutlinedIcon />
+              <span>Offer Letter</span>
+            </div>
+            {documentStatus.offerLetter ? (
               <span className={styles.uploaded}>UPLOADED</span>
             ) : (
               <span className={styles.missing}>MISSING</span>

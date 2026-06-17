@@ -49,16 +49,7 @@ export const createStaff = (data) => {
 export const updateStaff = (id, data) => {
   return apiService.put(`/staffs/${id}`, data);
 };
-// export const uploadFile = (file) => {
-//   const formData = new FormData();
-//   formData.append("file", file);
 
-//   return apiService.post("/file/upload", formData, {
-//     headers: {
-//       "Content-Type": "multipart/form-data",
-//     },
-//   });
-// };
 export const uploadFile = (file) => {
   const formData = new FormData();
   formData.append("file", file);
@@ -68,10 +59,6 @@ export const uploadFile = (file) => {
       "Content-Type": "multipart/form-data",
     },
   });
-};
-
-export const getProfileCompletion = (id) => {
-  return apiService.get(`/staffs/${id}/profile-completion`);
 };
 export const getStaffAttendanceSummaryById = (id) => {
   return apiService.get(`/attendance/summary/${id}`);
