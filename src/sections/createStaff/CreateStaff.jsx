@@ -26,6 +26,9 @@ import {
 import CircularProgress from "@mui/material/CircularProgress";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 const CreateStaff = () => {
   const { id } = useParams();
@@ -399,6 +402,33 @@ const documentStatus = {
 const uploadedCount = Object.values(documentStatus).filter(Boolean).length;
 
 const percentage = Math.round((uploadedCount / 5) * 100);
+const uploadedDocuments = [
+  {
+    label: "Aadhaar Card",
+    file: formData.aadharCard,
+    field: "aadharCard",
+  },
+  {
+    label: "PAN Card",
+    file: formData.panCard,
+    field: "panCard",
+  },
+  {
+    label: "Education Certificate",
+    file: formData.educationCertificate,
+    field: "educationCertificate",
+  },
+  {
+    label: "Offer Letter",
+    file: formData.offerLetter,
+    field: "offerLetter",
+  },
+  {
+    label: "Experience Letter",
+    file: formData.experienceLetter,
+    field: "experienceLetter",
+  },
+].filter((item) => item.file);
 return (
   <MainLayout>
     <div className={styles.container}>
@@ -778,7 +808,7 @@ return (
           <h3 className={styles.sectionTitle}>
             <span className={styles.stepBadge}>4</span>
             <span className={styles.iconCircle}>
-              <DescriptionOutlinedIcon />
+              <PictureAsPdfOutlinedIcon />
             </span>
             Documents
           </h3>
@@ -984,6 +1014,54 @@ return (
               </label>
             </div>
           </div>
+
+          {uploadedDocuments.length > 0 && (
+            <>
+              <h4 className={styles.uploadedTitle}>UPLOADED FILES</h4>
+
+              {uploadedDocuments.map((doc) => (
+                <div key={doc.field} className={styles.fileCard}>
+                  <div className={styles.fileInfo}>
+                    <div className={styles.pdfBox}>
+                      <DescriptionOutlinedIcon className={styles.pdfIcon} />
+                    </div>
+
+                    <div className={styles.fileDetails}>
+                      <h5>
+                        {typeof doc.file === "string"
+                          ? doc.file.split("/").pop()
+                          : doc.file.name}
+                      </h5>
+
+                      <p>{doc.label}</p>
+                    </div>
+                  </div>
+
+                  <div className={styles.fileActions}>
+                    <VisibilityOutlinedIcon
+                      className={styles.viewIcon}
+                      onClick={() => {
+                        let fileUrl;
+
+                        if (typeof doc.file === "string") {
+                          fileUrl = doc.file; 
+                        } else {
+                          fileUrl = URL.createObjectURL(doc.file); 
+                        }
+
+                        window.open(fileUrl, "_blank");
+                      }}
+                    />
+
+                    <DeleteOutlineOutlinedIcon
+                      className={styles.deleteIcon}
+                      onClick={() => removeFile(doc.field)}
+                    />
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
         </div>
       </div>
 

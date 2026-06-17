@@ -463,6 +463,77 @@
   opacity: 0.7;
   cursor: not-allowed;
 }
+.uploadedTitle {
+  margin: 20px 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.fileCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #eef1f5;
+  border: 1px solid #d8dde6;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.fileInfo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.pdfBox {
+  width: 46px;
+  height: 46px;
+  background: #fff4f4;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pdfIcon {
+  color: #d32f2f;
+  font-size: 32px !important;
+}
+
+.fileDetails h5 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.fileDetails p {
+  margin: 3px 0 0;
+  font-size: 12px;
+  color: #7a8599;
+}
+
+.fileActions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.viewIcon {
+  color: #6b7280 !important;
+  cursor: pointer;
+  font-size: 22px !important;
+}
+
+.deleteIcon {
+  color: #d32f2f !important;
+  cursor: pointer;
+  font-size: 22px !important;
+}
 @media (max-width: 576px) {
   .container {
     flex-direction: column;
