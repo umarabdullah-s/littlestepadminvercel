@@ -79,7 +79,7 @@ const handleDeleteConfirm = async () => {
                 <th>DATE OF JOIN</th>
                 <th>No. OF MONTH</th>
                 <th>E-MAIL</th>
-                <th>MOBILE NUMBER</th>
+                <th>NUMBER</th>
                 <th>STATUS</th>
                 <th>ACTION</th>
               </tr>

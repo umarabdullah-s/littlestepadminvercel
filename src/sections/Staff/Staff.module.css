@@ -48,13 +48,13 @@
   color: #64748b;
   font-size: 13px;
   text-align: left;
-  padding: 18px;
+  padding: 15px;
 }
 
 .tableSection td {
-  padding: 20px 18px;
+  padding: 20px 15px;
   border-bottom: 1px solid #e5e7eb;
-  font-size: 14px;
+  font-size: 13px;
   color: #334155;
 }
 
