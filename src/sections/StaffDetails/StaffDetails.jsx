@@ -81,7 +81,6 @@ const StaffDetails = () => {
        setStaff(response.data.data);
 
        const attendanceResponse = await getStaffAttendanceSummaryById(id);
-
        setAttendanceSummary(attendanceResponse.data.data);
 
        const attendanceTableResponse = await getStaffAttendanceByMonth(
