@@ -45,13 +45,13 @@ const StaffDetails = () => {
   const [leaveData, setLeaveData] = useState([]);
   const [leavePage, setLeavePage] = useState(1);
   const [leaveTotalPages, setLeaveTotalPages] = useState(1);
-  const [attendancePage, setAttendancePage] = useState(1);
-  const [attendanceTotalPages, setAttendanceTotalPages] = useState(1);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [documentCategory, setDocumentCategory] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const requestsRef = useRef(null);
   const [documents, setDocuments] = useState([]);
+  const [attendancePage, setAttendancePage] = useState(1);
+  const [attendanceTotalPages, setAttendanceTotalPages] = useState(1);
 
  useEffect(() => {
    const tab = location.state?.activeTab;
@@ -88,11 +88,9 @@ const StaffDetails = () => {
          id,
          selectedMonth,
          selectedYear,
-         attendancePage,
        );
        console.log(attendanceTableResponse.data);
        setAttendanceData(attendanceTableResponse.data.data.data);
-       setAttendanceTotalPages(attendanceTableResponse.data.data.totalPages);
        const leaveResponse = await getStaffLeaveById(id, leavePage);
 
        setLeaveData(leaveResponse.data.data.data);
@@ -106,7 +104,7 @@ const StaffDetails = () => {
    };
 
    fetchStaff();
- }, [id, selectedMonth, selectedYear, attendancePage, leavePage]);
+ }, [id, selectedMonth, selectedYear, leavePage]);
  const handleDeleteStaff = async () => {
    try {
      await deleteStaff(id);
@@ -130,32 +128,7 @@ const handleDownload = async (doc) => {
     console.log(error);
   }
 };
-const documentOptions = documents.map((doc) => ({
-  value: doc.type,
-  label: doc.label,
-}));
-// const handleDeleteDocument = async (doc) => {
-//   try {
-//     await deleteDocument(id, doc._id);
 
-//     setDocuments((prev) =>
-//       prev.map((item) =>
-//         item.type === doc.type
-//           ? {
-//               ...item,
-//               _id: null,
-//               url: null,
-//               name: null,
-//               status: "pending",
-//               uploadedDate: null,
-//             }
-//           : item,
-//       ),
-//     );
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
 const handleDeleteDocument = async (doc) => {
   try {
     await deleteDocument(id, doc._id);
@@ -636,14 +609,14 @@ const handleDeleteDocument = async (doc) => {
               </tbody>
             </table>
 
-            {leaveData.length > 0 && (
+            {attendanceData.length > 0 && (
               <div className={styles.paginationWrapper}>
                 <Pagination
-                  count={leaveTotalPages}
-                  page={leavePage}
+                  count={attendanceTotalPages}
+                  page={attendancePage}
                   shape="rounded"
                   onChange={(event, value) => {
-                    setLeavePage(value);
+                    setAttendancePage(value);
                   }}
                   sx={{
                     "& .MuiPaginationItem-root": {
@@ -654,9 +627,6 @@ const handleDeleteDocument = async (doc) => {
                       backgroundColor: "#2F64E1 !important",
                       color: "#fff",
                       borderRadius: "12px",
-                    },
-                    "& .MuiPaginationItem-root:hover": {
-                      backgroundColor: "#f3f4f6",
                     },
                   }}
                 />

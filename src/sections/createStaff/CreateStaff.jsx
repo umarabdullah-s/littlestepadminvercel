@@ -371,16 +371,16 @@ const handleSave = async () => {
       experienceLetterUrl,
     };
 
-    let response;
-
     if (isEditMode) {
-      response = await updateStaff(id, payload);
+      await updateStaff(id, payload);
 
+      setSnackbarSeverity("success");
       setSnackbarMessage("Staff Updated Successfully");
       setOpenSnackbar(true);
     } else {
-      response = await createStaff(payload);
+      await createStaff(payload);
 
+      setSnackbarSeverity("success");
       setSnackbarMessage("Staff Created Successfully");
       setOpenSnackbar(true);
     }
