@@ -61,16 +61,22 @@ export const deleteDocument = (staffId, documentId) => {
   return apiService.delete(`/document/${staffId}/${documentId}`);
 };
 
+// export const uploadDocument = (staffId, fileData) => {
+//   const formData = new FormData();
+
+//   formData.append("type", fileData.type); 
+//   formData.append("url", fileData.url); 
+
+//   return apiService.post(`/document/${staffId}`, formData, {
+//     headers: {
+//       "Content-Type": "multipart/form-data",
+//     },
+//   });
+// };
 export const uploadDocument = (staffId, fileData) => {
-  const formData = new FormData();
-
-  formData.append("type", fileData.type); 
-  formData.append("url", fileData.url); 
-
-  return apiService.post(`/document/${staffId}`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
+  return apiService.post(`/document/${staffId}`, {
+    type: fileData.type,
+    url: fileData.url,
   });
 };
 export const uploadFile = (file) => {            

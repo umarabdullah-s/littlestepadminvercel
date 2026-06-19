@@ -160,7 +160,10 @@ const handleUploadDocument = async () => {
     const uploadResponse = await uploadFile(selectedFile);
 
     const fileUrl = uploadResponse.data.data.url;
-
+    console.log({
+      type: documentCategory,
+      url: fileUrl,
+    });
     await uploadDocument(id, {
       type: documentCategory,
       url: fileUrl,
