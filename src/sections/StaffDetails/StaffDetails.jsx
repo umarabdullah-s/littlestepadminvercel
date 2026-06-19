@@ -88,23 +88,25 @@ const StaffDetails = () => {
          id,
          selectedMonth,
          selectedYear,
+         attendancePage,
        );
        console.log(attendanceTableResponse.data);
        setAttendanceData(attendanceTableResponse.data.data.data);
+       setAttendanceTotalPages(attendanceTableResponse.data.data.totalPages);
        const leaveResponse = await getStaffLeaveById(id, leavePage);
 
        setLeaveData(leaveResponse.data.data.data);
        setLeaveTotalPages(leaveResponse.data.data.totalPages);
        const documentResponse = await getStaffDocuments(id);
        setDocuments(documentResponse.data.data);
-      console.log("hjk",documentResponse.data.data);
+       console.log("hjk", documentResponse.data.data);
      } catch (error) {
        console.error("Error fetching data:", error);
      }
    };
 
    fetchStaff();
- }, [id, selectedMonth, selectedYear, leavePage]);
+ }, [id, selectedMonth, selectedYear, attendancePage, leavePage]);
  const handleDeleteStaff = async () => {
    try {
      await deleteStaff(id);
@@ -522,14 +524,14 @@ const handleDeleteDocument = async (doc) => {
                 )}
               </tbody>
             </table>
-            {leaveData.length > 0 && (
+            {attendanceData.length > 0 && (
               <div className={styles.paginationWrapper}>
                 <Pagination
-                  count={leaveTotalPages}
-                  page={leavePage}
+                  count={attendanceTotalPages}
+                  page={attendancePage}
                   shape="rounded"
                   onChange={(event, value) => {
-                    setLeavePage(value);
+                    setAttendancePage(value);
                   }}
                   sx={{
                     "& .MuiPaginationItem-root": {
@@ -609,14 +611,14 @@ const handleDeleteDocument = async (doc) => {
               </tbody>
             </table>
 
-            {attendanceData.length > 0 && (
+            {leaveData.length > 0 && (
               <div className={styles.paginationWrapper}>
                 <Pagination
-                  count={attendanceTotalPages}
-                  page={attendancePage}
+                  count={leaveTotalPages}
+                  page={leavePage}
                   shape="rounded"
                   onChange={(event, value) => {
-                    setAttendancePage(value);
+                    setLeavePage(value);
                   }}
                   sx={{
                     "& .MuiPaginationItem-root": {
