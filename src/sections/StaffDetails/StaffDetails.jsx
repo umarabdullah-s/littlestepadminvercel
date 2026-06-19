@@ -27,8 +27,10 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Pagination from "@mui/material/Pagination";
 import DeleteStaffModal from "../../components/Modals/DeleteStaffModal";
 import UploadDocumentModal from "../../components/Modals/UploadDocumentModal";
+import DeleteDocumentModal from "../../components/Modals/DeleteDocumentModal";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import Fade from "@mui/material/Fade";
 
 
 
@@ -63,6 +65,9 @@ const StaffDetails = () => {
   severity: "success",
 });
 const [uploadLoading, setUploadLoading] = useState(false);
+const [deleteDocumentOpen, setDeleteDocumentOpen] = useState(false);
+const [selectedDocument, setSelectedDocument] = useState(null);
+const [deletingDocument, setDeletingDocument] = useState(false);
 
  useEffect(() => {
    const tab = location.state?.activeTab;
@@ -141,16 +146,31 @@ const handleDownload = async (doc) => {
   }
 };
 
-const handleDeleteDocument = async (doc) => {
+const handleDeleteDocument = async () => {
   try {
-    console.log(doc._id);
-    await deleteDocument(id, doc._id);
-    
-    const documentResponse = await getStaffDocuments(id);
+    setDeletingDocument(true);
 
+    await deleteDocument(id, selectedDocument._id);
+
+    const documentResponse = await getStaffDocuments(id);
     setDocuments(documentResponse.data.data);
+
+    setDeleteDocumentOpen(false);
+    setSelectedDocument(null);
+
+    setSnackbar({
+      open: true,
+      message: "Document deleted successfully",
+      severity: "success",
+    });
   } catch (error) {
-    console.log(error);
+    setSnackbar({
+      open: true,
+      message: "Failed to delete document",
+      severity: "error",
+    });
+  } finally {
+    setDeletingDocument(false);
   }
 };
 const handleUploadDocument = async () => {
@@ -176,11 +196,11 @@ const handleUploadDocument = async () => {
     setSelectedFile(null);
     setDocumentCategory("");
 
-    setSnackbar({
-      open: true,
-      message: "Document uploaded successfully",
-      severity: "success",
-    });
+   setSnackbar({
+     open: true,
+     message: "Document uploaded successfully",
+     severity: "success",
+   });
   } catch (error) {
     setSnackbar({
       open: true,
@@ -440,7 +460,10 @@ const handleUploadDocument = async () => {
 
                             <DeleteOutlineOutlinedIcon
                               className={styles.actionIcon}
-                              onClick={() => handleDeleteDocument(doc)}
+                              onClick={() => {
+                                setSelectedDocument(doc);
+                                setDeleteDocumentOpen(true);
+                              }}
                             />
                           </div>
                         ) : (
@@ -702,9 +725,18 @@ const handleUploadDocument = async () => {
         handleClose={() => setDeleteOpen(false)}
         handleDelete={handleDeleteStaff}
       />
+      <DeleteDocumentModal
+        open={deleteDocumentOpen}
+        handleClose={() => {
+          setDeleteDocumentOpen(false);
+          setSelectedDocument(null);
+        }}
+        handleDelete={handleDeleteDocument}
+        deleting={deletingDocument}
+      />
       <Snackbar
         open={snackbar.open}
-        autoHideDuration={3000}
+        autoHideDuration={2000}
         onClose={() =>
           setSnackbar((prev) => ({
             ...prev,
@@ -713,18 +745,28 @@ const handleUploadDocument = async () => {
         }
         anchorOrigin={{
           vertical: "top",
-          horizontal: "right",
+          horizontal: "center",
         }}
+        TransitionComponent={Fade}
       >
         <Alert
           severity={snackbar.severity}
           variant="filled"
+          elevation={6}
           onClose={() =>
             setSnackbar((prev) => ({
               ...prev,
               open: false,
             }))
           }
+          sx={{
+            backgroundColor: "#ffffff",
+            color: "#111827",
+            borderRadius: "12px",
+            fontWeight: 500,
+            minWidth: "260px",
+            boxShadow: "0 8px 20px rgba(0,0,0,0.12)",
+          }}
         >
           {snackbar.message}
         </Alert>
