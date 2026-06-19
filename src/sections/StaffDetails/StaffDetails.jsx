@@ -14,6 +14,9 @@ import {
   getStaffAttendanceByMonth,
   getStaffLeaveById,
   deleteStaff,
+  getStaffDocuments,
+  downloadDocument,
+  deleteDocument,
 } from "../../api/serviceapi";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -48,6 +51,7 @@ const StaffDetails = () => {
   const [documentCategory, setDocumentCategory] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const requestsRef = useRef(null);
+  const [documents, setDocuments] = useState([]);
 
  useEffect(() => {
    const tab = location.state?.activeTab;
@@ -69,6 +73,7 @@ const StaffDetails = () => {
 
    return () => clearTimeout(timer);
  }, [location.state?.activeTab]);
+
  useEffect(() => {
    const fetchStaff = async () => {
      try {
@@ -92,6 +97,9 @@ const StaffDetails = () => {
 
        setLeaveData(leaveResponse.data.data.data);
        setLeaveTotalPages(leaveResponse.data.data.totalPages);
+       const documentResponse = await getStaffDocuments(id);
+       setDocuments(documentResponse.data.data);
+      console.log("hjk",documentResponse.data.data);
      } catch (error) {
        console.error("Error fetching data:", error);
      }
@@ -111,6 +119,54 @@ const StaffDetails = () => {
     
    }
  };
+const handleDownload = async (doc) => {
+  try {
+    const response = await downloadDocument(id, doc._id);
+
+    const { url } = response.data.data;
+
+    window.location.href = url;
+  } catch (error) {
+    console.log(error);
+  }
+};
+const documentOptions = documents.map((doc) => ({
+  value: doc.type,
+  label: doc.label,
+}));
+// const handleDeleteDocument = async (doc) => {
+//   try {
+//     await deleteDocument(id, doc._id);
+
+//     setDocuments((prev) =>
+//       prev.map((item) =>
+//         item.type === doc.type
+//           ? {
+//               ...item,
+//               _id: null,
+//               url: null,
+//               name: null,
+//               status: "pending",
+//               uploadedDate: null,
+//             }
+//           : item,
+//       ),
+//     );
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+const handleDeleteDocument = async (doc) => {
+  try {
+    await deleteDocument(id, doc._id);
+
+    const documentResponse = await getStaffDocuments(id);
+
+    setDocuments(documentResponse.data.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
   return (
     <MainLayout>
       <div className={styles.container}>
@@ -298,7 +354,11 @@ const StaffDetails = () => {
 
               <button
                 className={styles.uploadBtn}
-                onClick={() => setOpenUploadModal(true)}
+                onClick={() => {
+                  setDocumentCategory("");
+                  setSelectedFile(null);
+                  setOpenUploadModal(true);
+                }}
               >
                 Upload New Document
               </button>
@@ -316,37 +376,76 @@ const StaffDetails = () => {
               </thead>
 
               <tbody>
-                <tr>
-                  <td>Aadhar.pdf</td>
-                  <td>Identity Proof</td>
-                  <td>
-                    <span className={styles.verified}>VERIFIED</span>
-                  </td>
-                  <td>12 Jun 2025</td>
-                  <td>
-                    <div className={styles.actionIcons}>
-                      <VisibilityOutlinedIcon className={styles.actionIcon} />
+                {documents.length > 0 ? (
+                  documents.map((doc, index) => (
+                    <tr key={doc._id || index}>
+                      <td>{doc.label}</td>
 
-                      <DownloadOutlinedIcon className={styles.actionIcon} />
+                      <td>{doc.category}</td>
 
-                      <DeleteOutlineOutlinedIcon
-                        className={styles.actionIcon}
-                      />
-                    </div>
-                  </td>
-                </tr>
+                      <td>
+                        <span
+                          className={
+                            doc.status === "verified"
+                              ? styles.verified
+                              : styles.pending
+                          }
+                        >
+                          {doc.status?.toUpperCase()}
+                        </span>
+                      </td>
 
-                <tr>
-                  <td>PAN Card.pdf</td>
-                  <td>Identity Proof</td>
-                  <td>
-                    <span className={styles.pending}>PENDING</span>
-                  </td>
-                  <td>--</td>
-                  <td>
-                    <button className={styles.uploadSmallBtn}>Upload</button>
-                  </td>
-                </tr>
+                      <td>
+                        {doc.uploadedDate
+                          ? new Date(doc.uploadedDate).toLocaleDateString()
+                          : "--"}
+                      </td>
+
+                      <td>
+                        {doc.url ? (
+                          <div className={styles.actionIcons}>
+                            <VisibilityOutlinedIcon
+                              className={styles.actionIcon}
+                              onClick={() => window.open(doc.url, "_blank")}
+                            />
+
+                            <DownloadOutlinedIcon
+                              className={styles.actionIcon}
+                              onClick={() => handleDownload(doc)}
+                            />
+
+                            <DeleteOutlineOutlinedIcon
+                              className={styles.actionIcon}
+                              onClick={() => handleDeleteDocument(doc)}
+                            />
+                          </div>
+                        ) : (
+                          <button
+                            className={styles.uploadSmallBtn}
+                            onClick={() => {
+                              setDocumentCategory(doc.type);
+                              setOpenUploadModal(true);
+                            }}
+                          >
+                            Upload
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5">
+                      <div className={styles.noData}>
+                        <img
+                          src="/critic_no_found.svg"
+                          alt="No Documents Found"
+                        />
+                        <p>No Documents Found</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -450,32 +549,32 @@ const StaffDetails = () => {
                 )}
               </tbody>
             </table>
-            <div className={styles.paginationWrapper}>
-              <Pagination
-                count={attendanceTotalPages}
-                page={attendancePage}
-                shape="rounded"
-                onChange={(event, value) => {
-                  setAttendancePage(value);
-                }}
-                sx={{
-                  "& .MuiPaginationItem-root": {
-                    borderRadius: "12px",
-                    border: "1px solid #e5e7eb",
-                  },
-
-                  "& .Mui-selected": {
-                    backgroundColor: "#2F64E1 !important",
-                    color: "#fff",
-                    borderRadius: "12px",
-                  },
-
-                  "& .MuiPaginationItem-root:hover": {
-                    backgroundColor: "#f3f4f6",
-                  },
-                }}
-              />
-            </div>
+            {leaveData.length > 0 && (
+              <div className={styles.paginationWrapper}>
+                <Pagination
+                  count={leaveTotalPages}
+                  page={leavePage}
+                  shape="rounded"
+                  onChange={(event, value) => {
+                    setLeavePage(value);
+                  }}
+                  sx={{
+                    "& .MuiPaginationItem-root": {
+                      borderRadius: "12px",
+                      border: "1px solid #e5e7eb",
+                    },
+                    "& .Mui-selected": {
+                      backgroundColor: "#2F64E1 !important",
+                      color: "#fff",
+                      borderRadius: "12px",
+                    },
+                    "& .MuiPaginationItem-root:hover": {
+                      backgroundColor: "#f3f4f6",
+                    },
+                  }}
+                />
+              </div>
+            )}
           </div>
         )}
 
@@ -537,43 +636,43 @@ const StaffDetails = () => {
               </tbody>
             </table>
 
-            <div className={styles.paginationWrapper}>
-              <Pagination
-                count={leaveTotalPages}
-                page={leavePage}
-                shape="rounded"
-                onChange={(event, value) => {
-                  setLeavePage(value);
-                }}
-                sx={{
-                  "& .MuiPaginationItem-root": {
-                    borderRadius: "12px",
-                    border: "1px solid #e5e7eb",
-                  },
-
-                  "& .Mui-selected": {
-                    backgroundColor: "#2F64E1 !important",
-                    color: "#fff",
-                    borderRadius: "12px",
-                  },
-
-                  "& .MuiPaginationItem-root:hover": {
-                    backgroundColor: "#f3f4f6",
-                  },
-                }}
-              />
-            </div>
+            {leaveData.length > 0 && (
+              <div className={styles.paginationWrapper}>
+                <Pagination
+                  count={leaveTotalPages}
+                  page={leavePage}
+                  shape="rounded"
+                  onChange={(event, value) => {
+                    setLeavePage(value);
+                  }}
+                  sx={{
+                    "& .MuiPaginationItem-root": {
+                      borderRadius: "12px",
+                      border: "1px solid #e5e7eb",
+                    },
+                    "& .Mui-selected": {
+                      backgroundColor: "#2F64E1 !important",
+                      color: "#fff",
+                      borderRadius: "12px",
+                    },
+                    "& .MuiPaginationItem-root:hover": {
+                      backgroundColor: "#f3f4f6",
+                    },
+                  }}
+                />
+              </div>
+            )}
           </div>
         )}
       </div>
       <UploadDocumentModal
         open={openUploadModal}
         handleClose={() => setOpenUploadModal(false)}
-        // handleUpload={handleDocumentUpload}
         category={documentCategory}
         setCategory={setDocumentCategory}
         selectedFile={selectedFile}
         setSelectedFile={setSelectedFile}
+        documents={documents}
       />
       <DeleteStaffModal
         open={deleteOpen}

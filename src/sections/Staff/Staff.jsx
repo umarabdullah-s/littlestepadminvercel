@@ -84,139 +84,148 @@ const handleDeleteConfirm = async () => {
                 <th>ACTION</th>
               </tr>
             </thead>
-
             <tbody>
-              {loading
-                ? [...Array(5)].map((_, index) => (
-                    <tr key={index}>
-                      <td>
-                        <Skeleton width={120} />
-                      </td>
-                      <td>
-                        <Skeleton width={80} />
-                      </td>
-                      <td>
-                        <Skeleton width={100} />
-                      </td>
-                      <td>
-                        <Skeleton width={100} />
-                      </td>
-                      <td>
-                        <Skeleton width={80} />
-                      </td>
-                      <td>
-                        <Skeleton width={150} />
-                      </td>
-                      <td>
-                        <Skeleton width={120} />
-                      </td>
-                      <td>
-                        <Skeleton width={100} />
-                      </td>
-                    </tr>
-                  ))
-                : staffData.map((staff) => (
-                    <tr
-                      key={staff._id}
-                      onClick={() => navigate(`/staff/${staff._id}`)}
-                      className={styles.clickableRow}
-                    >
-                      <td>
-                        <div className={styles.staffNameWrapper}>
-                          <div className={styles.staffAvatar}>
-                            {staff.name
-                              ?.split(" ")
-                              .map((word) => word[0])
-                              .join("")
-                              .slice(0, 2)
-                              .toUpperCase()}
-                          </div>
-
-                          <span>{staff.name}</span>
+              {loading ? (
+                [...Array(5)].map((_, index) => (
+                  <tr key={index}>
+                    <td>
+                      <Skeleton width={120} />
+                    </td>
+                    <td>
+                      <Skeleton width={80} />
+                    </td>
+                    <td>
+                      <Skeleton width={100} />
+                    </td>
+                    <td>
+                      <Skeleton width={100} />
+                    </td>
+                    <td>
+                      <Skeleton width={80} />
+                    </td>
+                    <td>
+                      <Skeleton width={150} />
+                    </td>
+                    <td>
+                      <Skeleton width={120} />
+                    </td>
+                    <td>
+                      <Skeleton width={100} />
+                    </td>
+                  </tr>
+                ))
+              ) : staffData.length === 0 ? (
+                <tr>
+                  <td colSpan="9" className={styles.noDataCell}>
+                    <img
+                      src="/critic_no_found.svg"
+                      alt="No Data Found"
+                      className={styles.noDataImage}
+                    />
+                    <p>No Data Found</p>
+                  </td>
+                </tr>
+              ) : (
+                staffData.map((staff) => (
+                  <tr
+                    key={staff._id}
+                    onClick={() => navigate(`/staff/${staff._id}`)}
+                    className={styles.clickableRow}
+                  >
+                    <td>
+                      <div className={styles.staffNameWrapper}>
+                        <div className={styles.staffAvatar}>
+                          <img src={staff.profileUrl} alt="" />
                         </div>
-                      </td>
 
-                      <td>{staff.staffId}</td>
+                        <span>{staff.name}</span>
+                      </div>
+                    </td>
 
-                      <td>{staff.role || "--"}</td>
+                    <td>{staff.staffId}</td>
 
-                      <td>
-                        {new Date(staff.dateOfJoining).toLocaleDateString(
-                          "en-GB",
-                        )}
-                      </td>
+                    <td>{staff.role || "--"}</td>
 
-                      <td>{staff.noOfMonths || "--"}</td>
+                    <td>
+                      {new Date(staff.dateOfJoining).toLocaleDateString(
+                        "en-GB",
+                      )}
+                    </td>
 
-                      <td>{staff.email}</td>
+                    <td>{staff.noOfMonths || "--"}</td>
 
-                      <td>{staff.phone}</td>
+                    <td>{staff.email}</td>
 
-                      <td>
-                        <span
-                          className={`${styles.status} ${
-                            staff.status?.toLowerCase() === "checked in"
-                              ? styles.in
-                              : staff.status === "not yet checked in"
-                                ? styles.out
-                                : styles.leave
-                          }`}
-                        >
-                          {staff.status || "--"}
-                        </span>
-                      </td>
-                      <td
-                        onClick={(e) => {
-                          e.stopPropagation();
+                    <td>{staff.phone}</td>
+
+                    <td>
+                      <span
+                        className={`${styles.status} ${
+                          staff.status?.toLowerCase() === "checked in"
+                            ? styles.in
+                            : staff.status === "not yet checked in"
+                              ? styles.out
+                              : styles.leave
+                        }`}
+                      >
+                        {staff.status || "--"}
+                      </span>
+                    </td>
+                    <td
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "10px",
                         }}
                       >
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "10px",
+                        <EditOutlinedIcon
+                          onClick={() => navigate(`/staff/edit/${staff._id}`)}
+                          sx={{
+                            color: "#2563eb",
+                            cursor: "pointer",
                           }}
-                        >
-                          <EditOutlinedIcon
-                            onClick={() => navigate(`/staff/edit/${staff._id}`)}
-                            sx={{
-                              color: "#2563eb",
-                              cursor: "pointer",
-                            }}
-                          />
+                        />
 
-                          <DeleteOutlineOutlinedIcon
-                            onClick={() => handleDeleteClick(staff._id)}
-                            sx={{
-                              color: "#ef4444",
-                              cursor: "pointer",
-                            }}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                        <DeleteOutlineOutlinedIcon
+                          onClick={() => handleDeleteClick(staff._id)}
+                          sx={{
+                            color: "#ef4444",
+                            cursor: "pointer",
+                          }}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
 
-          <div className={styles.paginationWrapper}>
-            <Pagination
-              count={totalPages}
-              page={page}
-              shape="rounded"
-              onChange={(event, value) => setPage(value)}
-              sx={{
-                "& .MuiPaginationItem-root": {
-                  borderRadius: "10px",
-                  border: "1px solid #e5e7eb",
-                },
-                "& .Mui-selected": {
-                  backgroundColor: "#2F64E1 !important",
-                  color: "#fff",
-                },
-              }}
-            />
-          </div>
+          {!loading && staffData.length > 0 && (
+            <div className={styles.paginationWrapper}>
+              <Pagination
+                count={totalPages}
+                page={page}
+                shape="rounded"
+                onChange={(event, value) => setPage(value)}
+                sx={{
+                  "& .MuiPaginationItem-root": {
+                    borderRadius: "10px",
+                    border: "1px solid #e5e7eb",
+                  },
+                  "& .Mui-selected": {
+                    backgroundColor: "#2F64E1 !important",
+                    color: "#fff",
+                  },
+                }}
+              />
+            </div>
+          )}
         </div>
       </div>
       <DeleteStaffModal

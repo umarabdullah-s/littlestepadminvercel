@@ -46,11 +46,21 @@ export const createStaff = (data) => {
 };export const deleteStaff = (id) => {
   return apiService.delete(`/staffs/${id}`);
 };
+
 export const updateStaff = (id, data) => {
   return apiService.put(`/staffs/${id}`, data);
 };
 
-export const uploadFile = (file) => {
+export const getStaffDocuments = (staffId) => {
+  return apiService.get(`/document/${staffId}`);
+};
+export const downloadDocument = (staffId, documentId) => {
+  return apiService.get(`/document/${staffId}/${documentId}/download`);
+};
+export const deleteDocument = (staffId, documentId) => {
+  return apiService.delete(`/document/${staffId}/${documentId}`);
+};
+export const uploadFile = (file) => {            
   const formData = new FormData();
   formData.append("file", file);
 
@@ -60,6 +70,7 @@ export const uploadFile = (file) => {
     },
   });
 };
+
 export const getStaffAttendanceSummaryById = (id) => {
   return apiService.get(`/attendance/summary/${id}`);
 };
@@ -73,6 +84,7 @@ export const getStaffAttendanceByMonth = (id, month, year, page = 1) => {
 export const getStaffLeaveById = (id, page = 1) => {
   return apiService.get(`/leave/me/${id}?page=${page}`);
 };
+
 export const getAnnouncement = () => {
   return apiService.get("/announcement");
 };

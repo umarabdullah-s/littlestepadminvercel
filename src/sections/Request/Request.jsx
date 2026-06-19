@@ -154,13 +154,7 @@ const Request = () => {
                   <div className={styles.cardTop}>
                     <div className={styles.userInfo}>
                       <div className={styles.avatar}>
-                        {item.staff?.staffName
-                          ? item.staff.staffName
-                              .split(" ")
-                              .map((word) => word[0])
-                              .join("")
-                              .toUpperCase()
-                          : "NA"}
+                        <img src={item.staff?.profileUrl} alt="img" />
                       </div>
 
                       <div>

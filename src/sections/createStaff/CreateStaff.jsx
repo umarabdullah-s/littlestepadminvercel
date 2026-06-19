@@ -29,6 +29,9 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import Fade from "@mui/material/Fade";
 
 const CreateStaff = () => {
   const { id } = useParams();
@@ -72,7 +75,9 @@ const CreateStaff = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   
 useEffect(() => {
   const fetchStaffDetails = async () => {
@@ -291,47 +296,47 @@ const handleSave = async () => {
   if (!validateForm()) return;
    setLoading(true);
   try {
-  const profileUrl =
-    typeof formData.profile === "string"
-      ? formData.profile
-      : formData.profile
-        ? (await uploadFile(formData.profile)).data.data.url
-        : "";
+    const profileUrl =
+      typeof formData.profile === "string"
+        ? formData.profile
+        : formData.profile
+          ? (await uploadFile(formData.profile)).data.data.url
+          : "";
 
-  const aadharCardUrl =
-    typeof formData.aadharCard === "string"
-      ? formData.aadharCard
-      : formData.aadharCard
-        ? (await uploadFile(formData.aadharCard)).data.data.url
-        : "";
+    const aadharCardUrl =
+      typeof formData.aadharCard === "string"
+        ? formData.aadharCard
+        : formData.aadharCard
+          ? (await uploadFile(formData.aadharCard)).data.data.url
+          : "";
 
-  const panCardUrl =
-    typeof formData.panCard === "string"
-      ? formData.panCard
-      : formData.panCard
-        ? (await uploadFile(formData.panCard)).data.data.url
-        : "";
+    const panCardUrl =
+      typeof formData.panCard === "string"
+        ? formData.panCard
+        : formData.panCard
+          ? (await uploadFile(formData.panCard)).data.data.url
+          : "";
 
-  const educationCertificateUrl =
-    typeof formData.educationCertificate === "string"
-      ? formData.educationCertificate
-      : formData.educationCertificate
-        ? (await uploadFile(formData.educationCertificate)).data.data.url
-        : "";
+    const educationCertificateUrl =
+      typeof formData.educationCertificate === "string"
+        ? formData.educationCertificate
+        : formData.educationCertificate
+          ? (await uploadFile(formData.educationCertificate)).data.data.url
+          : "";
 
-  const offerLetterUrl =
-    typeof formData.offerLetter === "string"
-      ? formData.offerLetter
-      : formData.offerLetter
-        ? (await uploadFile(formData.offerLetter)).data.data.url
-        : "";
+    const offerLetterUrl =
+      typeof formData.offerLetter === "string"
+        ? formData.offerLetter
+        : formData.offerLetter
+          ? (await uploadFile(formData.offerLetter)).data.data.url
+          : "";
 
-  const experienceLetterUrl =
-    typeof formData.experienceLetter === "string"
-      ? formData.experienceLetter
-      : formData.experienceLetter
-        ? (await uploadFile(formData.experienceLetter)).data.data.url
-        : "";
+    const experienceLetterUrl =
+      typeof formData.experienceLetter === "string"
+        ? formData.experienceLetter
+        : formData.experienceLetter
+          ? (await uploadFile(formData.experienceLetter)).data.data.url
+          : "";
 
     const payload = {
       name: formData.name,
@@ -370,24 +375,24 @@ const handleSave = async () => {
 
     if (isEditMode) {
       response = await updateStaff(id, payload);
-      alert("Staff Updated Successfully");
+
+      setSnackbarMessage("Staff Updated Successfully");
+      setOpenSnackbar(true);
     } else {
       response = await createStaff(payload);
-      alert("Staff Created Successfully");
+
+      setSnackbarMessage("Staff Created Successfully");
+      setOpenSnackbar(true);
     }
 
-    console.log(response.data);
-   
-    console.log(response.data);
-    navigate("/staff");
-  } 
-  catch (error) {
-     console.log("FULL ERROR", error.response);
-     console.log("DATA", error.response?.data);
-     console.log("STATUS", error.response?.status);
-    alert(error.response?.data?.message || "Failed to create staff");
-  } 
-  finally {
+    setTimeout(() => {
+      navigate("/staff");
+    }, 1000);
+  } catch (error) {
+    setSnackbarSeverity("error");
+    setSnackbarMessage(error.response?.data?.message || "Failed to save staff");
+    setOpenSnackbar(true);
+  } finally {
     setLoading(false);
   }
 };
@@ -1044,9 +1049,9 @@ return (
                         let fileUrl;
 
                         if (typeof doc.file === "string") {
-                          fileUrl = doc.file; 
+                          fileUrl = doc.file;
                         } else {
-                          fileUrl = URL.createObjectURL(doc.file); 
+                          fileUrl = URL.createObjectURL(doc.file);
                         }
 
                         window.open(fileUrl, "_blank");
@@ -1245,6 +1250,32 @@ return (
         </div>
       </div>
     </div>
+    <Snackbar
+      open={openSnackbar}
+      autoHideDuration={2000}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "center",
+      }}
+      TransitionComponent={Fade}
+      onClose={() => setOpenSnackbar(false)}
+    >
+      <Alert
+        severity={snackbarSeverity}
+        variant="filled"
+        elevation={6}
+        sx={{
+          backgroundColor: "#ffffff",
+          color: "#111827",
+          borderRadius: "12px",
+          fontWeight: 500,
+          minWidth: "260px",
+          boxShadow: "0 8px 20px rgba(0,0,0,0.12)",
+        }}
+      >
+        {snackbarMessage}
+      </Alert>
+    </Snackbar>
   </MainLayout>
 );
 };

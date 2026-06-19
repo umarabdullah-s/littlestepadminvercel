@@ -17,11 +17,11 @@ import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 const UploadDocumentModal = ({
   open,
   handleClose,
-  handleUpload,
   category,
   setCategory,
   selectedFile,
   setSelectedFile,
+  documents,
 }) => {
   return (
     <Dialog
@@ -65,20 +65,27 @@ const UploadDocumentModal = ({
           Document Category
         </Typography>
 
-        <input
-          type="text"
+        <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          placeholder="Enter"
           style={{
             width: "100%",
             padding: "16px",
             borderRadius: "12px",
             border: "1px solid #E5E7EB",
             marginBottom: "30px",
-            outline: "none",
           }}
-        />
+        >
+          <option value="">Select Document</option>
+
+          {documents
+            .filter((doc) => !doc.url)
+            .map((doc) => (
+              <option key={doc.type} value={doc.type}>
+                {doc.label}
+              </option>
+            ))}
+        </select>
 
         <Typography
           sx={{
@@ -180,7 +187,6 @@ const UploadDocumentModal = ({
 
         <Button
           variant="contained"
-          onClick={handleUpload}
           sx={{
             minWidth: 150,
             borderRadius: "12px",

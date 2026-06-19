@@ -222,12 +222,8 @@ const handleNotificationClick = async (notificationId) => {
                       <td>
                         <div className={styles.staffNameWrapper}>
                           <div className={styles.staffAvatar}>
-                            {staff.name
-                              ?.split(" ")
-                              .map((word) => word[0])
-                              .join("")
-                              .slice(0, 2)
-                              .toUpperCase()}
+                            <img src=  {staff.profileUrl} alt="img"/>
+                          
                           </div>
 
                           <span>{staff.name}</span>
@@ -333,7 +329,7 @@ const handleNotificationClick = async (notificationId) => {
                   >
                     <div className={styles.requestTop}>
                       <div className={styles.avatar}>
-                        {item.staffName?.charAt(0).toUpperCase()}
+                        <img src={item.profileUrl} alt=""/>
                       </div>
 
                       <div>
