@@ -60,6 +60,19 @@ export const downloadDocument = (staffId, documentId) => {
 export const deleteDocument = (staffId, documentId) => {
   return apiService.delete(`/document/${staffId}/${documentId}`);
 };
+
+export const uploadDocument = (staffId, fileData) => {
+  const formData = new FormData();
+
+  formData.append("type", fileData.type); 
+  formData.append("url", fileData.url); 
+
+  return apiService.post(`/document/${staffId}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
 export const uploadFile = (file) => {            
   const formData = new FormData();
   formData.append("file", file);
@@ -70,7 +83,7 @@ export const uploadFile = (file) => {
     },
   });
 };
-
+                       
 export const getStaffAttendanceSummaryById = (id) => {
   return apiService.get(`/attendance/summary/${id}`);
 };

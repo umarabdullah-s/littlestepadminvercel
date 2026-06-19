@@ -17,6 +17,8 @@ import {
   getStaffDocuments,
   downloadDocument,
   deleteDocument,
+  uploadFile,
+  uploadDocument,
 } from "../../api/serviceapi";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -25,6 +27,9 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Pagination from "@mui/material/Pagination";
 import DeleteStaffModal from "../../components/Modals/DeleteStaffModal";
 import UploadDocumentModal from "../../components/Modals/UploadDocumentModal";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+
 
 
 const StaffDetails = () => {
@@ -52,6 +57,12 @@ const StaffDetails = () => {
   const [documents, setDocuments] = useState([]);
   const [attendancePage, setAttendancePage] = useState(1);
   const [attendanceTotalPages, setAttendanceTotalPages] = useState(1);
+  const [snackbar, setSnackbar] = useState({
+  open: false,
+  message: "",
+  severity: "success",
+});
+const [uploadLoading, setUploadLoading] = useState(false);
 
  useEffect(() => {
    const tab = location.state?.activeTab;
@@ -97,8 +108,8 @@ const StaffDetails = () => {
        setLeaveData(leaveResponse.data.data.data);
        setLeaveTotalPages(leaveResponse.data.data.totalPages);
        const documentResponse = await getStaffDocuments(id);
-       setDocuments(documentResponse.data.data);
        console.log("hjk", documentResponse.data.data);
+       setDocuments(documentResponse.data.data);
      } catch (error) {
        console.error("Error fetching data:", error);
      }
@@ -132,13 +143,49 @@ const handleDownload = async (doc) => {
 
 const handleDeleteDocument = async (doc) => {
   try {
+    console.log(doc._id);
     await deleteDocument(id, doc._id);
-
+    
     const documentResponse = await getStaffDocuments(id);
 
     setDocuments(documentResponse.data.data);
   } catch (error) {
     console.log(error);
+  }
+};
+const handleUploadDocument = async () => {
+  try {
+    setUploadLoading(true);
+
+    const uploadResponse = await uploadFile(selectedFile);
+
+    const fileUrl = uploadResponse.data.data.url;
+
+    await uploadDocument(id, {
+      type: documentCategory,
+      url: fileUrl,
+    });
+
+    const documentResponse = await getStaffDocuments(id);
+    setDocuments(documentResponse.data.data);
+
+    setOpenUploadModal(false);
+    setSelectedFile(null);
+    setDocumentCategory("");
+
+    setSnackbar({
+      open: true,
+      message: "Document uploaded successfully",
+      severity: "success",
+    });
+  } catch (error) {
+    setSnackbar({
+      open: true,
+      message: "Failed to upload document",
+      severity: "error",
+    });
+  } finally {
+    setUploadLoading(false);
   }
 };
   return (
@@ -644,12 +691,41 @@ const handleDeleteDocument = async (doc) => {
         selectedFile={selectedFile}
         setSelectedFile={setSelectedFile}
         documents={documents}
+        onUpload={handleUploadDocument}
+        uploadLoading={uploadLoading}
       />
       <DeleteStaffModal
         open={deleteOpen}
         handleClose={() => setDeleteOpen(false)}
         handleDelete={handleDeleteStaff}
       />
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={() =>
+          setSnackbar((prev) => ({
+            ...prev,
+            open: false,
+          }))
+        }
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <Alert
+          severity={snackbar.severity}
+          variant="filled"
+          onClose={() =>
+            setSnackbar((prev) => ({
+              ...prev,
+              open: false,
+            }))
+          }
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </MainLayout>
   );
 };

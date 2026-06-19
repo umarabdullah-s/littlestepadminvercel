@@ -13,6 +13,7 @@ import {
 
 import CloseIcon from "@mui/icons-material/Close";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const UploadDocumentModal = ({
   open,
@@ -22,6 +23,8 @@ const UploadDocumentModal = ({
   selectedFile,
   setSelectedFile,
   documents,
+  onUpload,
+  uploadLoading,
 }) => {
   return (
     <Dialog
@@ -187,13 +190,19 @@ const UploadDocumentModal = ({
 
         <Button
           variant="contained"
+          onClick={onUpload}
+          disabled={!category || !selectedFile || uploadLoading}
           sx={{
             minWidth: 150,
             borderRadius: "12px",
             py: 1.5,
           }}
         >
-          Upload
+          {uploadLoading ? (
+            <CircularProgress size={22} color="inherit" />
+          ) : (
+            "Upload"
+          )}
         </Button>
       </DialogActions>
     </Dialog>
