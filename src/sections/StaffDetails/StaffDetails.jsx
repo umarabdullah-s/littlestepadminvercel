@@ -326,7 +326,7 @@ const handleUploadDocument = async () => {
           </div>
 
           <div className={styles.detailCard}>
-            <h4>Payment Mode</h4>
+            <h4>BANK NAME</h4>
             <p>{staff?.bankName || "N/A"}</p>
           </div>
 

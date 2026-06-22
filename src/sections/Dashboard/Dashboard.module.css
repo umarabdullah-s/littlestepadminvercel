@@ -287,6 +287,7 @@ td {
   justify-content: center;
   border-radius: 50%;
   overflow: hidden;
+  flex-shrink: 0;
 }
 .avatar img{
     width: 100%;
