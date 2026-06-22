@@ -18,6 +18,7 @@ const Staff = () => {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedStaffId, setSelectedStaffId] = useState(null);
   const [statusFilter, setStatusFilter] = useState("all");
+  const [deleting, setDeleting] = useState(false);
   
  const fetchStaffs = async (pageNumber = 1, filter = "") => {
    try {
@@ -44,14 +45,18 @@ const handleDeleteClick = (staffId) => {
 
 const handleDeleteConfirm = async () => {
   try {
+    setDeleting(true);
+
     await deleteStaff(selectedStaffId);
 
     setDeleteOpen(false);
     setSelectedStaffId(null);
 
-    fetchStaffs(page); // refresh table
+    fetchStaffs(page);
   } catch (error) {
     console.log(error);
+  } finally {
+    setDeleting(false);
   }
 };
   return (
@@ -261,6 +266,7 @@ const handleDeleteConfirm = async () => {
           setSelectedStaffId(null);
         }}
         handleDelete={handleDeleteConfirm}
+        deleting={deleting}
       />
     </MainLayout>
   );

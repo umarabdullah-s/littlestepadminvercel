@@ -195,7 +195,7 @@ td {
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
 
   /* height: 750px; */
-  height: 900px;
+  /* height: 900px; */
   display: flex;
   flex-direction: column;
 }

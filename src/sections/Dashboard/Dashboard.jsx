@@ -265,40 +265,37 @@ const handleNotificationClick = async (notificationId) => {
                 )}
               </tbody>
             </table>
-            <div className={styles.paginationWrapper}>
-              <Pagination
-                count={totalPages || 1}
-                page={page}
-                shape="rounded"
-                onChange={(event, value) => {
-                  if (value === page) return;
+            {!tableLoading && staffData.length > 0 && (
+              <div className={styles.paginationWrapper}>
+                <Pagination
+                  count={totalPages || 1}
+                  page={page}
+                  shape="rounded"
+                  onChange={(event, value) => {
+                    if (value === page) return;
 
-                  setPage(value);
+                    setPage(value);
 
-                  fetchAttendanceList(
-                    statusFilter === "all" ? "" : statusFilter,
-                    value,
-                  );
-                }}
-                sx={{
-                  "& .MuiPaginationItem-root": {
-                    borderRadius: "12px",
-                    border: "1px solid #e5e7eb",
-                  },
+                    fetchAttendanceList(
+                      statusFilter === "all" ? "" : statusFilter,
+                      value,
+                    );
+                  }}
+                  sx={{
+                    "& .MuiPaginationItem-root": {
+                      borderRadius: "12px",
+                      border: "1px solid #e5e7eb",
+                    },
 
-                  "& .Mui-selected": {
-                    backgroundColor: "#2F64E1 !important",
-                    color: "#fff",
-                    borderRadius: "12px",
-                    pointerEvents: totalPages === 1 ? "none" : "auto",
-                  },
-
-                  "& .MuiPaginationItem-root:hover": {
-                    backgroundColor: "#f3f4f6",
-                  },
-                }}
-              />
-            </div>
+                    "& .Mui-selected": {
+                      backgroundColor: "#2F64E1 !important",
+                      color: "#fff",
+                      borderRadius: "12px",
+                    },
+                  }}
+                />
+              </div>
+            )}
           </div>
 
           <div className={styles.requestSection}>

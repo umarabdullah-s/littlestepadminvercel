@@ -10,8 +10,9 @@ import {
 } from "@mui/material";
 
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
+import CircularProgress from "@mui/material/CircularProgress";
 
-const DeleteStaffModal = ({ open, handleClose, handleDelete }) => {
+const DeleteStaffModal = ({ open, handleClose, handleDelete, deleting }) => {
   return (
     <Dialog
       open={open}
@@ -86,8 +87,12 @@ const DeleteStaffModal = ({ open, handleClose, handleDelete }) => {
       >
         <Button
           onClick={handleClose}
+          disabled={deleting}
           variant="outlined"
           sx={{
+            "&.Mui-disabled": {
+              cursor: "not-allowed",
+            },
             borderRadius: "10px",
             textTransform: "none",
             padding: "10px 24px",
@@ -101,17 +106,31 @@ const DeleteStaffModal = ({ open, handleClose, handleDelete }) => {
         <Button
           onClick={handleDelete}
           variant="contained"
+          disabled={deleting}
           sx={{
             borderRadius: "10px",
             textTransform: "none",
             padding: "10px 24px",
             background: "#dc2626",
+            minWidth: "110px",
+
             "&:hover": {
               background: "#b91c1c",
             },
+
+            "&.Mui-disabled": {
+              background: "#dc2626",
+              opacity: 0.7,
+              cursor: "not-allowed",
+              color: "#fff",
+            },
           }}
         >
-          Delete
+          {deleting ? (
+            <CircularProgress size={20} sx={{ color: "#fff" }} />
+          ) : (
+            "Delete"
+          )}
         </Button>
       </DialogActions>
     </Dialog>
