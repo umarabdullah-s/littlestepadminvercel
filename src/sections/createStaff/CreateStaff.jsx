@@ -937,7 +937,7 @@ return (
                   <span>*</span>
                 </h4>
 
-                <p>PDF, JPG - max 10 MB</p>
+                <p>PDF, JPG - max 5 MB</p>
               </label>
 
               {errors.educationCertificate && (

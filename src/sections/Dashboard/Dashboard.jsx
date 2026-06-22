@@ -222,8 +222,7 @@ const handleNotificationClick = async (notificationId) => {
                       <td>
                         <div className={styles.staffNameWrapper}>
                           <div className={styles.staffAvatar}>
-                            <img src=  {staff.profileUrl} alt="img"/>
-                          
+                            <img src={staff.profileUrl} alt="img" />
                           </div>
 
                           <span>{staff.name}</span>
@@ -268,11 +267,14 @@ const handleNotificationClick = async (notificationId) => {
             </table>
             <div className={styles.paginationWrapper}>
               <Pagination
-                count={totalPages}
+                count={totalPages || 1}
                 page={page}
                 shape="rounded"
                 onChange={(event, value) => {
+                  if (value === page) return;
+
                   setPage(value);
+
                   fetchAttendanceList(
                     statusFilter === "all" ? "" : statusFilter,
                     value,
@@ -288,6 +290,7 @@ const handleNotificationClick = async (notificationId) => {
                     backgroundColor: "#2F64E1 !important",
                     color: "#fff",
                     borderRadius: "12px",
+                    pointerEvents: totalPages === 1 ? "none" : "auto",
                   },
 
                   "& .MuiPaginationItem-root:hover": {
@@ -329,7 +332,7 @@ const handleNotificationClick = async (notificationId) => {
                   >
                     <div className={styles.requestTop}>
                       <div className={styles.avatar}>
-                        <img src={item.profileUrl} alt=""/>
+                        <img src={item.profileUrl} alt="" />
                       </div>
 
                       <div>

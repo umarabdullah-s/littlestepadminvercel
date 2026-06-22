@@ -17,6 +17,7 @@ const Staff = () => {
   const navigate = useNavigate();
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedStaffId, setSelectedStaffId] = useState(null);
+  
  const fetchStaffs = async (pageNumber = 1) => {
    try {
      setLoading(true);

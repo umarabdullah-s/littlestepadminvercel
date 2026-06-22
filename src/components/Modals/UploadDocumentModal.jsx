@@ -150,7 +150,7 @@ const UploadDocumentModal = ({
           </Typography>
 
           <Typography color="text.secondary">
-            PDF, JPG, or PNG (Max 10MB)
+            PDF, JPG, or PNG (Max 5MB)
           </Typography>
 
           {selectedFile && (
