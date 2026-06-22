@@ -11,12 +11,9 @@ import { getLeaveRequests, respondLeaveRequest } from "../../api/serviceapi";
 import Skeleton from "@mui/material/Skeleton";
 import { useNavigate } from "react-router-dom";
 
-const filters = ["All requests", "Leave", "Permission", "Pending", "Resolved"];
+const filters = ["All requests", "Leave", "Permission", "Resolved"];
 const getStatusFromFilter = (filter) => {
   switch (filter) {
-    case "Pending":
-      return "pending";
-
     case "Resolved":
       return "resolved";
 
@@ -94,7 +91,7 @@ const Request = () => {
           </p>
 
           <p className={styles.subtitle}>
-            Review and take action on pending staff requests.
+            Review and take action on staff requests.
           </p>
         </div>
 
