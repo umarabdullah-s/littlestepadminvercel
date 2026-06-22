@@ -27,7 +27,11 @@ const Sidebar = () => {
     <>
       <div className={styles.sidebar}>
         <div>
-          <div className={styles.logoContainer}>
+          <div
+            className={styles.logoContainer}
+            onClick={() => navigate("/dashboard")}
+            style={{ cursor: "pointer" }}
+          >
             <img src="/logo.png" alt="logo" className={styles.logo} />
           </div>
 

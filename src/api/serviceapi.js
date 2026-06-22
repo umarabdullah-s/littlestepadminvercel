@@ -31,9 +31,9 @@ export const respondLeaveRequest = (id, data) => {
   return apiService.put(`/leave/${id}/respond`, data);
 };
 
-export const getStaffs = (page = 1, search = "") => {
+export const getStaffs = (page = 1, search = "",filter="") => {
   return apiService.get(
-    `/staffs?page=${page}${search ? `&search=${search}` : ""}`,
+    `/staffs?page=${page}${search ? `&search=${search}` : ""}${filter ? `&filter=${filter}` : ""}`,
   );
 };
 

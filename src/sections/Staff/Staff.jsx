@@ -17,12 +17,13 @@ const Staff = () => {
   const navigate = useNavigate();
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedStaffId, setSelectedStaffId] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("all");
   
- const fetchStaffs = async (pageNumber = 1) => {
+ const fetchStaffs = async (pageNumber = 1, filter = "") => {
    try {
      setLoading(true);
 
-     const response = await getStaffs(pageNumber);
+     const response = await getStaffs(pageNumber, "", filter);
 
      setStaffData(response.data.data.data);
      setTotalRecords(response.data.data.totalRecords);
@@ -34,8 +35,8 @@ const Staff = () => {
    }
  };
 useEffect(() => {
-  fetchStaffs(page);
-}, [page]);
+  fetchStaffs(page, statusFilter === "all" ? "" : statusFilter);
+}, [page, statusFilter]);
 const handleDeleteClick = (staffId) => {
   setSelectedStaffId(staffId);
   setDeleteOpen(true);
@@ -59,7 +60,31 @@ const handleDeleteConfirm = async () => {
         <div className={styles.top}>
           <div>
             <h1 className={styles.title}>Staff Directory</h1>
-            <p className={styles.subtitle}>Total staff : {totalRecords} </p>
+
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "12px",
+                marginTop: "8px",
+              }}
+            >
+              <p className={styles.subtitle}>Total staff : {totalRecords}</p>
+
+              <select
+                className={styles.filterSelect}
+                value={statusFilter}
+                onChange={(e) => {
+                  setPage(1);
+                  setStatusFilter(e.target.value);
+                }}
+              >
+                <option value="all">All</option>
+                <option value="checked in">Checked In</option>
+                <option value="not checked in">Not Checked In</option>
+                <option value="on leave">On Leave</option>
+              </select>
+            </div>
           </div>
 
           <button
@@ -164,7 +189,7 @@ const handleDeleteConfirm = async () => {
                         className={`${styles.status} ${
                           staff.status?.toLowerCase() === "checked in"
                             ? styles.in
-                            : staff.status === "not yet checked in"
+                            : staff.status === "not checked in"
                               ? styles.out
                               : styles.leave
                         }`}

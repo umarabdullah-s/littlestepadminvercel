@@ -106,7 +106,7 @@ const handleNotificationClick = async (notificationId) => {
     {
       id: 3,
       count: summary.notCheckedInStaffs,
-      title: "Not Yet Checked In",
+      title: "Not Checked In",
       subtitle: "awaiting check-in",
     },
     {
@@ -170,7 +170,7 @@ const handleNotificationClick = async (notificationId) => {
               >
                 <option value="all">All</option>
                 <option value="checked in">Checked In</option>
-                <option value="not yet checked in">Not Yet Checked In</option>
+                <option value="not checked in">Not Checked In</option>
                 <option value="on leave">On Leave</option>
               </select>
             </div>
@@ -242,7 +242,7 @@ const handleNotificationClick = async (notificationId) => {
                           className={`${styles.status} ${
                             staff.status === "checked in"
                               ? styles.in
-                              : staff.status === "not yet checked in"
+                              : staff.status === "not checked in"
                                 ? styles.out
                                 : styles.leave
                           }`}
