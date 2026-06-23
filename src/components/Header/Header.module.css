@@ -137,7 +137,7 @@
   background: #94a3b8;
 }
 
-/* Firefox */
+
 .searchResultBox {
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 transparent;
@@ -183,6 +183,146 @@
   justify-content: center;
   align-items: center;
   padding: 20px;
+}
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.notificationWrapper {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.notificationWrapper:hover {
+  background: #e5e7eb;
+}
+
+.bellIcon {
+  font-size: 20px;
+  color: #4b5563;
+}
+
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  background: #ef4444;
+  color: white;
+  border-radius: 50%;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+}
+.notificationList {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Chrome, Edge, Safari */
+.notificationList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notificationList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.notificationList::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 20px;
+}
+
+.notificationList::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Firefox */
+.notificationList {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+.notificationItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+
+  padding: 10px 20px;
+
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.notificationItem:last-child {
+  border-bottom: none;
+}
+
+.notificationItem:hover {
+  background: #f8fafc;
+}
+
+.unreadNotification {
+  background: #f8fafc;
+}
+
+.notificationAvatar {
+  width: 45px;
+  height: 45px;
+
+  border-radius: 50%;
+  object-fit: cover;
+
+  flex-shrink: 0;
+}
+
+.notificationContent {
+  flex: 1;
+}
+
+.notificationName {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.notificationMessage {
+  margin-top: 4px;
+
+  font-size: 12px;
+  line-height: 1.5;
+
+  color: #64748b;
+}
+
+.unreadNotification .notificationName::after {
+  content: "";
+
+  display: inline-block;
+
+  width: 8px;
+  height: 8px;
+
+  margin-left: 8px;
+
+  border-radius: 50%;
+
+  background: #2563eb;
 }
 @media (max-width: 576px) {
   .container {

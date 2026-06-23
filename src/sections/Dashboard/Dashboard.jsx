@@ -6,8 +6,6 @@ import styles from "./Dashboard.module.css";
 import {
   getAttendanceSummary,
   getAttendanceList,
-  getNotifications,
-  updateNotification,
 } from "../../api/serviceapi";
 import Skeleton from "@mui/material/Skeleton";
 import { useNavigate } from "react-router-dom";
@@ -25,15 +23,11 @@ const Dashboard = () => {
   const [staffData, setStaffData] = useState([]);
   const [tableLoading, setTableLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("all");
-  const [notifications, setNotifications] = useState([]);
-  const [notificationLoading, setNotificationLoading] = useState(true);
-  const [unreadCount, setUnreadCount] = useState(0);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
  useEffect(() => {
    fetchAttendanceSummary();
    fetchAttendanceList();
-   fetchNotifications();
  }, []);
  const fetchAttendanceSummary = async () => {
    try {
@@ -64,32 +58,7 @@ const fetchAttendanceList = async (filter = "", currentPage = 1) => {
     setTableLoading(false);
   }
 };
-const fetchNotifications = async () => {
-  try {
-    setNotificationLoading(true);
 
-    const response = await getNotifications();
-
-    setNotifications(response.data.data.notifications);
-    setUnreadCount(response.data.data.unreadCount);
-  } catch (error) {
-    console.error(error);
-  } finally {
-    setNotificationLoading(false);
-  }
-};
-
-const handleNotificationClick = async (notificationId) => {
-  try {
-    const response = await updateNotification(notificationId, {
-      isRead: true,
-    });
-    await fetchNotifications();
-    console.log(response.data);
-  } catch (error) {
-    console.error(error);
-  }
-};
   const stats = [
     {
       id: 1,
@@ -298,56 +267,7 @@ const handleNotificationClick = async (notificationId) => {
             )}
           </div>
 
-          <div className={styles.requestSection}>
-            <div className={styles.requestHeader}>
-              <p>Notification ({unreadCount})</p>
-
-              <span
-                onClick={() => navigate("/request")}
-                style={{ cursor: "pointer" }}
-              >
-                View all →
-              </span>
-            </div>
-
-            <div className={styles.requestList}>
-              {notificationLoading ? (
-                [...Array(3)].map((_, index) => (
-                  <div key={index} className={styles.requestCard}>
-                    <Skeleton variant="text" width={120} />
-                    <Skeleton variant="text" width="100%" />
-                  </div>
-                ))
-              ) : notifications.length > 0 ? (
-                notifications.map((item) => (
-                  <div
-                    key={item._id}
-                    className={`${styles.requestCard} ${
-                      !item.isRead ? styles.unreadCard : ""
-                    }`}
-                    onClick={() => handleNotificationClick(item._id)}
-                  >
-                    <div className={styles.requestTop}>
-                      <div className={styles.avatar}>
-                        <img src={item.profileUrl} alt="" />
-                      </div>
-
-                      <div>
-                        <p className={styles.requestName}>{item.staffName}</p>
-
-                        <p className={styles.requestText}>{item.message}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className={styles.noData}>
-                  <img src="/critic_no_found.svg" alt="No Notifications" />
-                  <p>No Notifications Found</p>
-                </div>
-              )}
-            </div>
-          </div>
+          
         </div>
       </div>
     </MainLayout>

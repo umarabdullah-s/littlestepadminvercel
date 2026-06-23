@@ -7,7 +7,12 @@ import IconButton from "@mui/material/IconButton";
 import { useNavigate } from "react-router-dom";
 import LogoutModal from "../Modals/LogoutModal";
 import CircularProgress from "@mui/material/CircularProgress";
-import { getStaffs } from "../../api/serviceapi";
+import {
+  getStaffs,
+  getNotifications,
+  updateNotification,
+} from "../../api/serviceapi";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 
 const Header = () => {
   const searchRef = useRef(null);
@@ -17,6 +22,10 @@ const Header = () => {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
+  const [notificationAnchor, setNotificationAnchor] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+  const [notificationLoading, setNotificationLoading] = useState(true);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -70,6 +79,36 @@ const Header = () => {
       setSearchResults([]);
     } finally {
       setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  const fetchNotifications = async () => {
+    try {
+      setNotificationLoading(true);
+
+      const response = await getNotifications();
+
+      setNotifications(response.data.data.notifications);
+      setUnreadCount(response.data.data.unreadCount);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setNotificationLoading(false);
+    }
+  };
+
+  const handleNotificationClick = async (id) => {
+    try {
+      await updateNotification(id, {
+        isRead: true,
+      });
+
+      fetchNotifications();
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
@@ -130,15 +169,27 @@ const Header = () => {
             </div>
           )}
         </div>
+        <div className={styles.rightSection}>
+          <div
+            className={styles.notificationWrapper}
+            onClick={(e) => setNotificationAnchor(e.currentTarget)}
+          >
+            <NotificationsIcon className={styles.bellIcon} />
 
-        <div
-          className={`${styles.profile} ${
-            anchorEl ? styles.profileActive : ""
-          }`}
-          onClick={handleOpen}
-        >
-          <span>Admin</span>
-          <div className={styles.avatar}>A</div>
+            {unreadCount > 0 && (
+              <span className={styles.badge}>{unreadCount}</span>
+            )}
+          </div>
+
+          <div
+            className={`${styles.profile} ${
+              anchorEl ? styles.profileActive : ""
+            }`}
+            onClick={handleOpen}
+          >
+            <span>Admin</span>
+            <div className={styles.avatar}>A</div>
+          </div>
         </div>
       </div>
       <Menu
@@ -224,6 +275,102 @@ const Header = () => {
             Sign Out
           </Button>
         </div>
+      </Menu>
+      <Menu
+        anchorEl={notificationAnchor}
+        open={Boolean(notificationAnchor)}
+        onClose={() => setNotificationAnchor(null)}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        slotProps={{
+          paper: {
+            sx: {
+              width: 450,
+              maxHeight: 550,
+              borderRadius: "20px",
+              mt: 1.5,
+              boxShadow: "0 12px 40px rgba(15,23,42,.12)",
+              overflow: "hidden",
+            },
+          },
+        }}
+      >
+        <div
+          style={{
+            padding: "14px 20px",
+            borderBottom: "1px solid #f1f5f9",
+            background: "#fff",
+            position: "sticky",
+            top: 0,
+            zIndex: 10,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <p
+            style={{
+              margin: 0,
+              fontSize: "16px",
+              fontWeight: 700,
+              color: "#0f172a",
+            }}
+          >
+            Notifications ({unreadCount})
+          </p>
+
+          <IconButton size="small" onClick={() => setNotificationAnchor(null)}>
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </div>
+
+        <Divider />
+
+        {notificationLoading ? (
+          <div style={{ padding: "30px", textAlign: "center" }}>
+            <CircularProgress size={24} />
+          </div>
+        ) : notifications.length > 0 ? (
+          <div className={styles.notificationList}>
+            {notifications.map((item) => (
+              <div
+                key={item._id}
+                className={`${styles.notificationItem} ${
+                  !item.isRead ? styles.unreadNotification : ""
+                }`}
+                onClick={() => handleNotificationClick(item._id)}
+              >
+                <img
+                  src={item.profileUrl}
+                  alt=""
+                  className={styles.notificationAvatar}
+                />
+
+                <div className={styles.notificationContent}>
+                  <p className={styles.notificationName}>{item.staffName}</p>
+
+                  <p className={styles.notificationMessage}>{item.message}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p
+            style={{
+              textAlign: "center",
+              padding: "30px",
+              color: "#64748b",
+            }}
+          >
+            No Notifications Found
+          </p>
+        )}
       </Menu>
       <LogoutModal
         open={openLogout}
