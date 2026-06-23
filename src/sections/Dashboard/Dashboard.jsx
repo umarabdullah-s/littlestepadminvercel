@@ -8,7 +8,6 @@ import {
   getAttendanceList,
 } from "../../api/serviceapi";
 import Skeleton from "@mui/material/Skeleton";
-import { useNavigate } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
 
 const Dashboard = () => {
