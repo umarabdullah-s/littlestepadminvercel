@@ -11,7 +11,6 @@ import Skeleton from "@mui/material/Skeleton";
 import Pagination from "@mui/material/Pagination";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
   const [summary, setSummary] = useState({
     checkedInStaffs: 0,
     onLeaveStaffs: 0,
