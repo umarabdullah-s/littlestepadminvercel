@@ -361,15 +361,15 @@ const Header = () => {
             ))}
           </div>
         ) : (
-          <p
-            style={{
-              textAlign: "center",
-              padding: "30px",
-              color: "#64748b",
-            }}
-          >
-            No Notifications Found
-          </p>
+          <div className={styles.noNotification}>
+            <img
+              src="/critic_no_found.svg"
+              alt="No Notifications"
+              className={styles.noNotificationImage}
+            />
+
+            <p className={styles.noNotificationText}>No Notifications Found</p>
+          </div>
         )}
       </Menu>
       <LogoutModal

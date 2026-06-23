@@ -68,6 +68,7 @@ const [uploadLoading, setUploadLoading] = useState(false);
 const [deleteDocumentOpen, setDeleteDocumentOpen] = useState(false);
 const [selectedDocument, setSelectedDocument] = useState(null);
 const [deletingDocument, setDeletingDocument] = useState(false);
+const availableDocuments = documents.filter((doc) => !doc.url);
 
  useEffect(() => {
    const tab = location.state?.activeTab;
@@ -398,6 +399,7 @@ const handleUploadDocument = async () => {
 
               <button
                 className={styles.uploadBtn}
+                disabled={availableDocuments.length === 0}
                 onClick={() => {
                   setDocumentCategory("");
                   setSelectedFile(null);
@@ -711,7 +713,11 @@ const handleUploadDocument = async () => {
       </div>
       <UploadDocumentModal
         open={openUploadModal}
-        handleClose={() => setOpenUploadModal(false)}
+        handleClose={() => {
+          setOpenUploadModal(false);
+          setSelectedFile(null);
+          setDocumentCategory("");
+        }}
         category={documentCategory}
         setCategory={setDocumentCategory}
         selectedFile={selectedFile}
