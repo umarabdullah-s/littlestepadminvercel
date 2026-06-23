@@ -187,17 +187,34 @@ useEffect(() => {
     }));
   };
 
-  const handleFileChange = async (e) => {
+  const handleFileChange = (e) => {
     const { name, files } = e.target;
 
+    if (!files?.[0]) return;
+
+    const file = files[0];
+
+    // Profile image max 2 MB
+    const maxSize = name === "profile" ? 2 * 1024 * 1024 : 5 * 1024 * 1024;
+
+    // Always store the selected file
     setFormData((prev) => ({
       ...prev,
-      [name]: files[0],
+      [name]: file,
     }));
-    
+
+    let error = "";
+
+    if (file.size > maxSize) {
+      error =
+        name === "profile"
+          ? "File size should not exceed 2 MB"
+          : "File size should not exceed 5 MB";
+    }
+
     setErrors((prev) => ({
       ...prev,
-      [name]: files[0] ? "" : `${name} is required`,
+      [name]: error,
     }));
   };
 
@@ -206,7 +223,10 @@ useEffect(() => {
       ...prev,
       [fieldName]: null,
     }));
-
+     setErrors((prev) => ({
+       ...prev,
+       [fieldName]: "",
+     }));
     const input = document.getElementById(fieldName);
 
     if (input) {
@@ -228,69 +248,97 @@ useEffect(() => {
   if (input) input.value = "";
 });
   };
- const validateForm = () => {
-   const newErrors = {};
+const validateForm = () => {
+  const newErrors = {};
 
- const requiredFields = [
-   "name",
-   "gender",
-   "dateOfBirth",
-   "phone",
-   "email",
-   "address",
-   "role",
-   "classAssigned",
-   "joiningDate",
- ];
+  const requiredFields = [
+    "name",
+    "gender",
+    "dateOfBirth",
+    "phone",
+    "email",
+    "address",
+    "role",
+    "classAssigned",
+    "joiningDate",
+  ];
 
- if (!isEditMode) {
-   requiredFields.push("password", "confirmPassword");
- }
+  if (!isEditMode) {
+    requiredFields.push("password", "confirmPassword");
+  }
 
-   requiredFields.forEach((field) => {
-     if (!String(formData[field] || "").trim()) {
-       const label = field
-         .replace(/([A-Z])/g, " $1")
-         .replace(/^./, (str) => str.toUpperCase());
+  requiredFields.forEach((field) => {
+    if (!String(formData[field] || "").trim()) {
+      const label = field
+        .replace(/([A-Z])/g, " $1")
+        .replace(/^./, (str) => str.toUpperCase());
 
-       newErrors[field] = `${label} is required`;
-     }
-   });
+      newErrors[field] = `${label} is required`;
+    }
+  });
 
-   if (!formData.aadharCard) {
-     newErrors.aadharCard = "Aadhaar Card is required";
-   }
+  if (!formData.aadharCard) {
+    newErrors.aadharCard = "Aadhaar Card is required";
+  }
 
-   if (!formData.panCard) {
-     newErrors.panCard = "PAN Card is required";
-   }
+  if (!formData.panCard) {
+    newErrors.panCard = "PAN Card is required";
+  }
 
-   if (!formData.educationCertificate) {
-     newErrors.educationCertificate = "Education Certificate is required";
-   }
+  if (!formData.educationCertificate) {
+    newErrors.educationCertificate = "Education Certificate is required";
+  }
 
-   if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-     newErrors.email = "Invalid email address";
-   }
+  // File size validation
+  const fileFields = [
+    "aadharCard",
+    "panCard",
+    "educationCertificate",
+    "offerLetter",
+    "experienceLetter",
+  ];
 
-   if (formData.phone && !/^\d{10}$/.test(formData.phone)) {
-     newErrors.phone = "Phone number must be 10 digits";
-   }
-   if (!isEditMode && formData.password && formData.password.length < 6) {
-     newErrors.password = `Password must be 6 characters (${formData.password.length}/6)`;
-   }
-   if (
-     formData.password &&
-     formData.confirmPassword &&
-     formData.password !== formData.confirmPassword
-   ) {
-     newErrors.confirmPassword = "Passwords do not match";
-   }
+  fileFields.forEach((field) => {
+    const file = formData[field];
 
-   setErrors(newErrors);
+    if (file && typeof file !== "string") {
+      if (file.size > 5 * 1024 * 1024) {
+        newErrors[field] = "File size should not exceed 5 MB";
+      }
+    }
+  });
 
-   return Object.keys(newErrors).length === 0;
- };
+  // Profile image validation (2 MB)
+  if (formData.profile && typeof formData.profile !== "string") {
+    if (formData.profile.size > 2 * 1024 * 1024) {
+      newErrors.profile = "File size should not exceed 2 MB";
+    }
+  }
+
+  if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    newErrors.email = "Invalid email address";
+  }
+
+  if (formData.phone && !/^\d{10}$/.test(formData.phone)) {
+    newErrors.phone = "Phone number must be 10 digits";
+  }
+
+  if (!isEditMode && formData.password && formData.password.length < 6) {
+    newErrors.password = `Password must be 6 characters (${formData.password.length}/6)`;
+  }
+
+  if (
+    formData.password &&
+    formData.confirmPassword &&
+    formData.password !== formData.confirmPassword
+  ) {
+    newErrors.confirmPassword = "Passwords do not match";
+  }
+
+  setErrors(newErrors);
+
+  return Object.keys(newErrors).length === 0;
+};
 const handleSave = async () => {
   console.log("Form Data:", formData);
   if (!validateForm()) return;
@@ -434,6 +482,24 @@ const uploadedDocuments = [
     field: "experienceLetter",
   },
 ].filter((item) => item.file);
+
+const isFormValid =
+  formData.name.trim() &&
+  formData.gender.trim() &&
+  formData.dateOfBirth.trim() &&
+  formData.phone.trim() &&
+  formData.email.trim() &&
+  formData.address.trim() &&
+  formData.role.trim() &&
+  formData.classAssigned.trim() &&
+  formData.joiningDate.trim() &&
+  (isEditMode ||
+    (formData.password.trim() && formData.confirmPassword.trim())) &&
+  formData.profile &&
+  formData.aadharCard &&
+  formData.panCard &&
+  formData.educationCertificate &&
+  !Object.values(errors).some((error) => error);
 return (
   <MainLayout>
     <div className={styles.container}>
@@ -848,7 +914,7 @@ return (
                     ? typeof formData.aadharCard === "string"
                       ? "Existing Document"
                       : formData.aadharCard.name
-                    : "Click to upload Aadhaar Card"}
+                    : "Upload Aadhaar Card"}
                   <span>*</span>
                 </h4>
 
@@ -889,7 +955,7 @@ return (
                     ? typeof formData.panCard === "string"
                       ? "Existing Document"
                       : formData.panCard.name
-                    : "Click to upload PAN Card"}
+                    : "Upload PAN Card"}
                   <span>*</span>
                 </h4>
 
@@ -933,7 +999,7 @@ return (
                     ? typeof formData.educationCertificate === "string"
                       ? "Existing Document"
                       : formData.educationCertificate.name
-                    : "Click to upload Education Certificate"}
+                    : "Upload Education Certificate"}
                   <span>*</span>
                 </h4>
 
@@ -976,7 +1042,7 @@ return (
                     ? typeof formData.offerLetter === "string"
                       ? "Existing Document"
                       : formData.offerLetter.name
-                    : "Click to upload Offer Letter"}
+                    : "Upload Offer Letter"}
                 </h4>
 
                 <p>PDF - max 5 MB</p>
@@ -1012,7 +1078,7 @@ return (
                     ? typeof formData.experienceLetter === "string"
                       ? "Existing Document"
                       : formData.experienceLetter.name
-                    : "Click to upload Experience Letter"}
+                    : "Upload Experience Letter"}
                 </h4>
 
                 <p>PDF - max 5 MB</p>
@@ -1125,7 +1191,20 @@ return (
                   : formData.profile.name
               : "No file selected"}
           </p>
+
           <p className={styles.uploadInfo}>JPG, PNG - max 2 MB</p>
+
+          {errors.profile && (
+            <small
+              className={styles.error}
+              style={{
+                display: "block",
+                textAlign: "center",
+              }}
+            >
+              {errors.profile}
+            </small>
+          )}
 
           <label htmlFor="profile" className={styles.uploadBtn}>
             <UploadOutlinedIcon className={styles.uploadBtnIcon} />
@@ -1230,7 +1309,7 @@ return (
           <button
             className={styles.saveBtn}
             onClick={handleSave}
-            disabled={loading}
+            disabled={loading || !isFormValid}
           >
             {loading ? (
               <>

@@ -534,6 +534,10 @@
   cursor: pointer;
   font-size: 22px !important;
 }
+.saveBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 @media (max-width: 576px) {
   .container {
     flex-direction: column;
