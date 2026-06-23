@@ -5,7 +5,6 @@ import Login from "./sections/Login/Login";
 import Dashboard from "./sections/Dashboard/Dashboard";
 import Request from "./sections/Request/Request";
 import Staff from "./sections/Staff/Staff";
-import Attendance from "./sections/Attendance/Attendance";
 import Announcement from "./sections/Announcement/Announcement";
 import ProtectedRoute from "./components/layouts/ProtectedRoute";
 import StaffDetails from "./sections/StaffDetails/StaffDetails";
@@ -43,14 +42,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/attendance"
-          element={
-            <ProtectedRoute>
-              <Attendance />
-            </ProtectedRoute>
-          }
-        />
+      
         <Route
           path="/announcement"
           element={
