@@ -234,9 +234,6 @@ const Request = () => {
 
                     <button
                       className={styles.recordBtn}
-                      // onClick={() =>
-                      //   item.staff?.id && navigate(`/staff/${item.staff.id}`)
-                      // }
                       onClick={() =>
                         navigate(`/staff/${item.staff.id}`, {
                           state: {

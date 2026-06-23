@@ -112,7 +112,6 @@
   overflow-y: auto;
 }
 
-/* Chrome, Edge, Safari */
 .searchResultBox::-webkit-scrollbar {
   width: 6px;
 }
@@ -221,7 +220,7 @@
   overflow-y: auto;
 }
 
-/* Chrome, Edge, Safari */
+
 .notificationList::-webkit-scrollbar {
   width: 6px;
 }
@@ -239,7 +238,6 @@
   background: #9ca3af;
 }
 
-/* Firefox */
 .notificationList {
   scrollbar-width: thin;
   scrollbar-color: #d1d5db transparent;

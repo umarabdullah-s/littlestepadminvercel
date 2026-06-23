@@ -194,10 +194,10 @@ useEffect(() => {
 
     const file = files[0];
 
-    // Profile image max 2 MB
+    
     const maxSize = name === "profile" ? 2 * 1024 * 1024 : 5 * 1024 * 1024;
 
-    // Always store the selected file
+    
     setFormData((prev) => ({
       ...prev,
       [name]: file,
@@ -289,7 +289,7 @@ const validateForm = () => {
     newErrors.educationCertificate = "Education Certificate is required";
   }
 
-  // File size validation
+
   const fileFields = [
     "aadharCard",
     "panCard",
@@ -308,7 +308,7 @@ const validateForm = () => {
     }
   });
 
-  // Profile image validation (2 MB)
+ 
   if (formData.profile && typeof formData.profile !== "string") {
     if (formData.profile.size > 2 * 1024 * 1024) {
       newErrors.profile = "File size should not exceed 2 MB";
@@ -885,7 +885,7 @@ return (
           </h3>
 
           <div className={styles.documentGrid}>
-            {/* Aadhaar Card */}
+          
             <div className={styles.uploadWrapper}>
               {formData.aadharCard && (
                 <CloseIcon
@@ -926,7 +926,7 @@ return (
               )}
             </div>
 
-            {/* PAN Card */}
+            
             <div className={styles.uploadWrapper}>
               {formData.panCard && (
                 <CloseIcon
@@ -967,7 +967,7 @@ return (
               )}
             </div>
 
-            {/* Education Certificate */}
+            
             <div className={styles.uploadWrapper}>
               {formData.educationCertificate && (
                 <CloseIcon
@@ -1013,7 +1013,7 @@ return (
               )}
             </div>
 
-            {/* Offer Letter */}
+            
             <div className={styles.uploadWrapper}>
               {formData.offerLetter && (
                 <CloseIcon
@@ -1049,7 +1049,7 @@ return (
               </label>
             </div>
 
-            {/* Experience Letter */}
+        
             <div className={styles.uploadWrapper}>
               {formData.experienceLetter && (
                 <CloseIcon
