@@ -538,11 +538,11 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
-@media (max-width: 576px) {
+@media screen and (max-width: 576px) {
   .container {
     flex-direction: column;
     gap: 16px;
-    padding: 0px;
+    padding: 12px;
   }
 
   .header {
@@ -551,71 +551,70 @@
     gap: 12px;
   }
 
-  .formSection,
-  .sidebar {
-    width: 100%;
-  }
-
-  .sidebar {
-    order: 2;
-  }
-
   .title {
     font-size: 18px;
   }
 
   .subtitle {
     font-size: 12px;
+    margin-bottom: 0;
+  }
+
+  .backBtn {
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+  }
+
+  .sidebar {
+    width: 100%;
   }
 
   .card,
   .photoCard {
-    padding: 15px;
-    margin-bottom: 15px;
+    padding: 16px;
+    border-radius: 10px;
   }
 
   .sectionTitle {
     font-size: 16px;
+    align-items: flex-start;
   }
 
-  .stepBadge {
-    width: 30px;
-    height: 30px;
-    font-size: 14px;
-    margin-right: 8px;
-  }
-
+  .stepBadge,
   .iconCircle {
-    width: 28px;
-    height: 28px;
-  }
-
-  .iconCircle svg {
-    font-size: 18px;
+    width: 32px;
+    height: 32px;
   }
 
   .grid {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 14px;
   }
 
   .documentGrid {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 14px;
+  }
+
+  .field label {
+    font-size: 12px;
   }
 
   .field input,
   .field select,
   .field textarea {
     font-size: 14px;
+    padding: 10px;
   }
 
   .uploadBox {
-    height: 130px;
+    height: 140px;
+    padding: 12px;
   }
 
   .uploadIcon {
-    font-size: 32px !important;
+    font-size: 34px !important;
   }
 
   .uploadBox h4 {
@@ -627,12 +626,12 @@
   }
 
   .avatar {
-    width: 90px;
-    height: 90px;
+    width: 100px;
+    height: 100px;
   }
 
   .photoIcon {
-    font-size: 32px !important;
+    font-size: 36px !important;
   }
 
   .uploadText {
@@ -644,36 +643,27 @@
   }
 
   .uploadBtn {
-    height: 46px;
-    font-size: 14px;
+    height: 48px;
+    font-size: 13px;
   }
 
-  .uploadBtnIcon {
-    font-size: 18px !important;
+  .fileCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .fileActions {
+    width: 100%;
+    justify-content: flex-end;
   }
 
   .checkItem {
-    margin-bottom: 12px;
+    gap: 10px;
   }
 
   .checkLeft {
-    font-size: 14px;
-    gap: 8px;
-  }
-
-  .checkLeft svg {
-    font-size: 18px;
-  }
-
-  .uploaded,
-  .pending,
-  .missing {
-    font-size: 10px;
-    padding: 4px 8px;
-  }
-
-  .progress {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .actions {
@@ -684,25 +674,28 @@
   .cancelBtn,
   .saveBtn {
     width: 100%;
-    padding: 12px;
-    font-size: 15px;
+  }
+
+  .closeIcon1 {
+    right: 70px;
+    top: -5px;
+  }
+
+  .uploadedTitle {
+    font-size: 12px;
   }
 }
-@media (min-width: 577px) and (max-width: 768px) {
+@media screen and (min-width: 577px) and (max-width: 768px) {
   .container {
     flex-direction: column;
     gap: 18px;
-    padding: 15px;
-  }
-
-  .formSection,
-  .sidebar {
-    width: 100%;
+    padding: 16px;
   }
 
   .header {
     justify-content: space-between;
     align-items: center;
+    gap: 14px;
   }
 
   .title {
@@ -713,38 +706,26 @@
     font-size: 13px;
   }
 
+  .sidebar {
+    width: 100%;
+  }
+
   .card,
   .photoCard {
     padding: 18px;
-    margin-bottom: 18px;
   }
 
   .sectionTitle {
     font-size: 17px;
   }
 
-  .stepBadge {
-    width: 34px;
-    height: 34px;
-    font-size: 15px;
-  }
-
-  .iconCircle {
-    width: 32px;
-    height: 32px;
-  }
-
-  .iconCircle svg {
-    font-size: 20px;
-  }
-
   .grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
+    gap: 15px;
   }
 
   .documentGrid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     gap: 14px;
   }
 
@@ -755,7 +736,8 @@
   }
 
   .uploadBox {
-    height: 140px;
+    height: 150px;
+    padding: 14px;
   }
 
   .uploadIcon {
@@ -771,135 +753,8 @@
   }
 
   .avatar {
-    width: 100px;
-    height: 100px;
-  }
-
-  .photoIcon {
-    font-size: 36px !important;
-  }
-
-  .uploadBtn {
-    height: 48px;
-    font-size: 15px;
-  }
-
-  .uploadBtnIcon {
-    font-size: 20px !important;
-  }
-
-  .checkItem {
-    margin-bottom: 13px;
-  }
-
-  .checkLeft {
-    font-size: 14px;
-  }
-
-  .checkLeft svg {
-    font-size: 18px;
-  }
-
-  .uploaded,
-  .pending,
-  .missing {
-    font-size: 10px;
-    padding: 4px 8px;
-  }
-
-  .actions {
-    display: flex;
-    gap: 12px;
-  }
-
-  .cancelBtn,
-  .saveBtn {
-    flex: 1;
-    font-size: 15px;
-    padding: 13px;
-  }
-}
-@media (min-width: 769px) and (max-width: 992px) {
-  .container {
-    gap: 18px;
-    padding: 18px;
-  }
-
-  .formSection {
-    flex: 1;
-  }
-
-  .sidebar {
-    width: 280px;
-  }
-
-  .title {
-    font-size: 20px;
-  }
-
-  .subtitle {
-    font-size: 13px;
-  }
-
-  .card,
-  .photoCard {
-    padding: 18px;
-  }
-
-  .sectionTitle {
-    font-size: 18px;
-  }
-
-  .stepBadge {
-    width: 34px;
-    height: 34px;
-    font-size: 15px;
-  }
-
-  .iconCircle {
-    width: 34px;
-    height: 34px;
-  }
-
-  .iconCircle svg {
-    font-size: 20px;
-  }
-
-  .grid {
-    grid-template-columns: repeat(1, 1fr);
-    gap: 14px;
-  }
-
-  .documentGrid {
-    grid-template-columns: repeat(1, 1fr);
-    gap: 14px;
-  }
-
-  .field input,
-  .field select,
-  .field textarea {
-    font-size: 14px;
-  }
-
-  .uploadBox {
-    height: 145px;
-  }
-
-  .uploadIcon {
-    font-size: 36px !important;
-  }
-
-  .uploadBox h4 {
-    font-size: 15px;
-  }
-
-  .uploadBox p {
-    font-size: 12px;
-  }
-
-  .avatar {
-    width: 100px;
-    height: 100px;
+    width: 110px;
+    height: 110px;
   }
 
   .photoIcon {
@@ -911,59 +766,50 @@
   }
 
   .uploadInfo {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .uploadBtn {
-    height: 48px;
-    font-size: 15px;
+    height: 50px;
+    font-size: 14px;
   }
 
-  .uploadBtnIcon {
-    font-size: 20px !important;
+  .fileCard {
+    padding: 12px 14px;
+  }
+
+  .fileDetails h5 {
+    font-size: 14px;
   }
 
   .checkLeft {
     font-size: 14px;
   }
 
-  .checkLeft svg {
-    font-size: 18px;
-  }
-
-  .uploaded,
-  .pending,
-  .missing {
-    font-size: 10px;
-    padding: 4px 8px;
-  }
-
-  .progress {
-    font-size: 14px;
-  }
-
   .actions {
-    gap: 12px;
+    gap: 14px;
   }
 
   .cancelBtn,
   .saveBtn {
     padding: 13px;
-    font-size: 15px;
+  }
+
+  .closeIcon1 {
+    right: 80px;
   }
 }
-@media (min-width: 993px) and (max-width: 1200px) {
+@media screen and (min-width: 769px) and (max-width: 992px) {
   .container {
+    flex-direction: column;
     gap: 20px;
-    padding: 20px;
+    padding: 18px;
   }
 
-  .formSection {
-    flex: 1;
-  }
-
-  .sidebar {
-    width: 300px;
+  .header {
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
   }
 
   .title {
@@ -972,6 +818,10 @@
 
   .subtitle {
     font-size: 13px;
+  }
+
+  .sidebar {
+    width: 100%;
   }
 
   .card,
@@ -983,29 +833,130 @@
     font-size: 18px;
   }
 
-  .stepBadge {
-    width: 36px;
-    height: 36px;
-    font-size: 16px;
-  }
-
-  .iconCircle {
-    width: 36px;
-    height: 36px;
-  }
-
-  .iconCircle svg {
-    font-size: 22px;
-  }
-
   .grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
   }
 
   .documentGrid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+    gap: 16px;
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    font-size: 14px;
+  }
+
+  .uploadBox {
+    height: 155px;
+  }
+
+  .uploadIcon {
+    font-size: 38px !important;
+  }
+
+  .uploadBox h4 {
+    font-size: 15px;
+  }
+
+  .avatar {
+    width: 115px;
+    height: 115px;
+  }
+
+  .photoIcon {
+    font-size: 40px !important;
+  }
+
+  .uploadText {
+    font-size: 15px;
+  }
+
+  .uploadInfo {
+    font-size: 13px;
+  }
+
+  .uploadBtn {
+    height: 50px;
+    font-size: 14px;
+  }
+
+  .checkLeft {
+    font-size: 14px;
+  }
+
+  .fileCard {
+    padding: 14px;
+  }
+
+  .fileDetails h5 {
+    font-size: 15px;
+  }
+
+  .actions {
+    gap: 16px;
+  }
+
+  .cancelBtn,
+  .saveBtn {
+    padding: 14px;
+  }
+
+  .closeIcon1 {
+    right: 85px;
+  }
+}
+@media screen and (min-width: 993px) and (max-width: 1200px) {
+  .container {
+    gap: 18px;
+    padding: 18px;
+  }
+
+  .header {
+    gap: 16px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+  .formSection {
+    flex: 1;
+  }
+
+  .sidebar {
+    width: 300px;
+  }
+
+  .card,
+  .photoCard {
+    padding: 18px;
+  }
+
+  .sectionTitle {
+    font-size: 18px;
+  }
+
+  .stepBadge,
+  .iconCircle {
+    width: 34px;
+    height: 34px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .documentGrid {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 14px;
   }
 
   .field input,
@@ -1023,16 +974,16 @@
   }
 
   .uploadBox h4 {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .uploadBox p {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .avatar {
-    width: 110px;
-    height: 110px;
+    width: 115px;
+    height: 115px;
   }
 
   .photoIcon {
@@ -1040,7 +991,7 @@
   }
 
   .uploadText {
-    font-size: 15px;
+    font-size: 14px;
   }
 
   .uploadInfo {
@@ -1049,39 +1000,39 @@
 
   .uploadBtn {
     height: 50px;
-    font-size: 15px;
-  }
-
-  .uploadBtnIcon {
-    font-size: 21px !important;
+    font-size: 14px;
   }
 
   .checkLeft {
-    font-size: 15px;
+    font-size: 14px;
   }
 
-  .checkLeft svg {
-    font-size: 20px;
+  .fileCard {
+    padding: 12px 14px;
   }
 
-  .uploaded,
-  .pending,
-  .missing {
-    font-size: 11px;
-    padding: 5px 10px;
+  .fileDetails h5 {
+    font-size: 14px;
   }
 
-  .progress {
-    font-size: 15px;
+  .fileDetails p {
+    font-size: 12px;
+  }
+
+  .fileActions {
+    gap: 12px;
   }
 
   .actions {
-    gap: 15px;
+    gap: 16px;
   }
 
   .cancelBtn,
   .saveBtn {
     padding: 14px;
-    font-size: 15px;
+  }
+
+  .closeIcon1 {
+    right: 80px;
   }
 }

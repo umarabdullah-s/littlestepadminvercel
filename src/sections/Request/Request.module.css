@@ -315,7 +315,7 @@
   font-weight: 600;
   color: #777;
 }
-@media (max-width: 576px) {
+@media screen and (max-width: 576px) {
   .requestPage {
     padding: 8px;
   }
@@ -324,20 +324,32 @@
     font-size: 18px;
   }
 
-  .subtitle,
-  .date {
+  .date,
+  .subtitle {
     font-size: 13px;
   }
 
   .filters {
+    margin-top: 20px;
     flex-wrap: wrap;
     gap: 10px;
   }
 
   .filterBtn,
   .activeFilter {
-    padding: 10px 16px;
+    width: 100%;
+    padding: 10px 14px;
     font-size: 13px;
+    text-align: center;
+  }
+
+  .cards {
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .card {
+    border-radius: 18px;
   }
 
   .cardTop {
@@ -348,6 +360,11 @@
 
   .userInfo {
     gap: 12px;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
   }
 
   .name {
@@ -359,28 +376,37 @@
     gap: 8px;
   }
 
+  .time {
+    font-size: 13px;
+  }
+
   .details {
     flex-direction: column;
     gap: 10px;
     padding: 0 16px;
   }
 
+  .details span {
+    font-size: 13px;
+  }
+
   .description {
     padding: 16px;
     font-size: 14px;
+    line-height: 1.6;
   }
 
   .actions {
     flex-direction: column;
-    align-items: stretch;
     gap: 12px;
+    align-items: stretch;
     padding: 16px;
   }
 
   .leftActions {
-    width: 100%;
     flex-direction: column;
     gap: 10px;
+    width: 100%;
   }
 
   .approve,
@@ -389,6 +415,7 @@
   .rejectedBtn,
   .recordBtn {
     width: 100%;
+    padding: 12px;
     justify-content: center;
   }
 
@@ -398,19 +425,9 @@
     justify-content: center;
   }
 
-  .time {
-    font-size: 13px;
-  }
-
-  .avatar {
-    width: 40px;
-    height: 40px;
-    font-size: 14px;
-  }
-
   .noData img {
-    width: 220px;
-    max-width: 100%;
+    width: 150px;
+    height: 150px;
   }
 
   .noData p {
@@ -418,7 +435,7 @@
     text-align: center;
   }
 }
-@media (min-width: 577px) and (max-width: 768px) {
+@media screen and (min-width: 577px) and (max-width: 768px) {
   .requestPage {
     padding: 15px;
   }
@@ -427,7 +444,13 @@
     font-size: 19px;
   }
 
+  .date,
+  .subtitle {
+    font-size: 14px;
+  }
+
   .filters {
+    margin-top: 24px;
     flex-wrap: wrap;
     gap: 12px;
   }
@@ -438,8 +461,17 @@
     font-size: 14px;
   }
 
+  .cards {
+    gap: 18px;
+  }
+
+  .card {
+    border-radius: 20px;
+  }
+
   .cardTop {
     padding: 20px;
+    gap: 12px;
   }
 
   .userInfo {
@@ -449,7 +481,6 @@
   .avatar {
     width: 42px;
     height: 42px;
-    font-size: 15px;
   }
 
   .name {
@@ -459,6 +490,10 @@
   .badges {
     flex-wrap: wrap;
     gap: 8px;
+  }
+
+  .time {
+    font-size: 13px;
   }
 
   .details {
@@ -483,7 +518,6 @@
   }
 
   .leftActions {
-    display: flex;
     flex-wrap: wrap;
     gap: 10px;
   }
@@ -500,11 +534,16 @@
     font-size: 14px;
   }
 
-  .time {
-    font-size: 13px;
+  .noData img {
+    width: 170px;
+    height: 170px;
+  }
+
+  .noData p {
+    font-size: 15px;
   }
 }
-@media (min-width: 769px) and (max-width: 992px) {
+@media screen and (min-width: 769px) and (max-width: 992px) {
   .requestPage {
     padding: 18px;
   }
@@ -513,87 +552,14 @@
     font-size: 20px;
   }
 
-  .filters {
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  .filterBtn,
-  .activeFilter {
-    padding: 11px 20px;
+  .date,
+  .subtitle {
     font-size: 14px;
-  }
-
-  .cardTop {
-    padding: 22px;
-  }
-
-  .userInfo {
-    gap: 15px;
-  }
-
-  .avatar {
-    width: 44px;
-    height: 44px;
-    font-size: 16px;
-  }
-
-  .name {
-    font-size: 18px;
-  }
-
-  .badges {
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .details {
-    gap: 18px;
-    padding: 0 22px;
-    flex-wrap: wrap;
-  }
-
-  .details span {
-    font-size: 14px;
-  }
-
-  .description {
-    padding: 18px 22px;
-    font-size: 15px;
-  }
-
-  .actions {
-    padding: 18px 22px;
-    gap: 12px;
-  }
-
-  .leftActions {
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .approve,
-  .deny,
-  .approvedBtn,
-  .rejectedBtn {
-    padding: 11px 20px;
-    font-size: 14px;
-  }
-
-  .recordBtn {
-    font-size: 14px;
-  }
-
-  .time {
-    font-size: 14px;
-  }
-}
-@media (min-width: 993px) and (max-width: 1200px) {
-  .requestPage {
-    padding: 20px;
   }
 
   .filters {
+    margin-top: 26px;
+    flex-wrap: wrap;
     gap: 12px;
   }
 
@@ -616,13 +582,119 @@
   }
 
   .userInfo {
-    gap: 14px;
+    gap: 15px;
   }
 
   .avatar {
     width: 44px;
     height: 44px;
-    font-size: 16px;
+  }
+
+  .name {
+    font-size: 18px;
+  }
+
+  .badges {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .time {
+    font-size: 14px;
+  }
+
+  .details {
+    gap: 18px;
+    padding: 0 22px;
+    flex-wrap: wrap;
+  }
+
+  .details span {
+    font-size: 14px;
+  }
+
+  .description {
+    padding: 18px 22px;
+    font-size: 15px;
+  }
+
+  .actions {
+    padding: 18px 22px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .leftActions {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .approve,
+  .deny,
+  .approvedBtn,
+  .rejectedBtn {
+    padding: 11px 20px;
+    font-size: 14px;
+  }
+
+  .recordBtn {
+    font-size: 14px;
+  }
+
+  .noData img {
+    width: 180px;
+    height: 180px;
+  }
+
+  .noData p {
+    font-size: 15px;
+  }
+}
+@media screen and (min-width: 993px) and (max-width: 1200px) {
+  .requestPage {
+    padding: 20px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .date,
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .filters {
+    margin-top: 28px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .filterBtn,
+  .activeFilter {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  .cards {
+    gap: 20px;
+  }
+
+  .card {
+    border-radius: 24px;
+  }
+
+  .cardTop {
+    padding: 22px;
+  }
+
+  .userInfo {
+    gap: 15px;
+  }
+
+  .avatar {
+    width: 45px;
+    height: 45px;
   }
 
   .name {
@@ -633,8 +705,12 @@
     gap: 8px;
   }
 
+  .time {
+    font-size: 14px;
+  }
+
   .details {
-    gap: 18px;
+    gap: 20px;
     padding: 0 22px;
   }
 
@@ -664,10 +740,16 @@
   }
 
   .recordBtn {
+    padding: 10px 18px;
     font-size: 14px;
   }
 
-  .time {
-    font-size: 14px;
+  .noData img {
+    width: 180px;
+    height: 180px;
+  }
+
+  .noData p {
+    font-size: 16px;
   }
 }

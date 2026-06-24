@@ -21,3 +21,75 @@
 .noHeaderContent {
   padding-top: 20px;
 }
+@media (max-width: 576px) {
+  .container {
+    flex-direction: row;
+  }
+
+  .main {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .content {
+    padding: 12px;
+  }
+
+  .noHeaderContent {
+    padding-top: 12px;
+  }
+}
+@media (min-width: 577px) and (max-width: 768px) {
+  .container {
+    flex-direction: row;
+  }
+
+  .main {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .content {
+    padding: 16px;
+  }
+
+  .noHeaderContent {
+    padding-top: 16px;
+  }
+}
+@media (min-width: 769px) and (max-width: 992px) {
+  .container {
+    flex-direction: row;
+  }
+
+  .main {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .content {
+    padding: 18px;
+  }
+
+  .noHeaderContent {
+    padding-top: 18px;
+  }
+}
+@media (min-width: 993px) and (max-width: 1200px) {
+  .container {
+    flex-direction: row;
+  }
+
+  .main {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .content {
+    padding: 20px;
+  }
+
+  .noHeaderContent {
+    padding-top: 20px;
+  }
+}

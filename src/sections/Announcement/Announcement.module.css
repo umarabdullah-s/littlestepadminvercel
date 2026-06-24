@@ -253,15 +253,16 @@
   opacity: 0.7;
   cursor: not-allowed;
 }
-@media (max-width: 576px) {
+@media screen and (max-width: 576px) {
   .container {
     grid-template-columns: 1fr;
-    padding: 0px;
+    padding: 12px;
     gap: 16px;
   }
 
   .statsContainer {
     flex-direction: column;
+    gap: 12px;
   }
 
   .statCard {
@@ -273,18 +274,14 @@
     padding: 16px;
   }
 
+  .historyCard {
+    height: auto;
+    max-height: 500px;
+  }
+
   .dateTimeRow {
     flex-direction: column;
     gap: 0;
-  }
-
-  .buttonGroup {
-    flex-direction: column;
-  }
-
-  .cancelBtn,
-  .postBtn {
-    width: 100%;
   }
 
   .historyTop {
@@ -296,6 +293,20 @@
     align-self: flex-end;
   }
 
+  .buttonGroup {
+    flex-direction: column;
+  }
+
+  .cancelBtn,
+  .postBtn {
+    width: 100%;
+  }
+
+  .composeTitle,
+  .historyTitle {
+    font-size: 18px;
+  }
+
   .historyItem h4 {
     font-size: 16px;
   }
@@ -304,35 +315,24 @@
     font-size: 13px;
   }
 
-  .composeTitle,
-  .historyTitle {
-    font-size: 16px;
-  }
-
-  .historyIcon,
-  .composeIcon {
-    font-size: 20px !important;
-  }
-
   .noDataImage {
-    width: 160px;
+    width: 180px;
   }
 }
-@media (min-width: 577px) and (max-width: 768px) {
+@media screen and (min-width: 577px) and (max-width: 768px) {
   .container {
     grid-template-columns: 1fr;
-    gap: 20px;
     padding: 16px;
+    gap: 20px;
   }
 
   .statsContainer {
-    flex-wrap: wrap;
+    display: flex;
     gap: 16px;
   }
 
   .statCard {
     flex: 1;
-    min-width: 180px;
     width: auto;
   }
 
@@ -341,9 +341,14 @@
     padding: 20px;
   }
 
+  .historyCard {
+    height: auto;
+    max-height: 600px;
+  }
+
   .dateTimeRow {
     flex-direction: row;
-    gap: 12px;
+    gap: 16px;
   }
 
   .buttonGroup {
@@ -356,27 +361,23 @@
   }
 
   .historyTop {
-    flex-direction: row;
-    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .composeTitle,
+  .historyTitle {
+    font-size: 19px;
   }
 
   .historyItem h4 {
     font-size: 17px;
   }
 
-  .composeTitle {
-    font-size: 18px;
-  }
-
-  .historyTitle {
-    font-size: 17px;
-  }
-
   .noDataImage {
-    width: 180px;
+    width: 200px;
   }
 }
-@media (min-width: 769px) and (max-width: 992px) {
+@media screen and (min-width: 769px) and (max-width: 992px) {
   .container {
     grid-template-columns: 1fr;
     gap: 20px;
@@ -384,13 +385,13 @@
   }
 
   .statsContainer {
-    flex-wrap: wrap;
     gap: 12px;
   }
 
   .statCard {
-    width: 140px;
-    padding: 18px;
+    flex: 1;
+    width: auto;
+    padding: 16px;
   }
 
   .statCard h2 {
@@ -402,21 +403,21 @@
     padding: 20px;
   }
 
-  .composeTitle {
-    font-size: 18px;
-  }
-
-  .historyTitle {
-    font-size: 17px;
-  }
-
-  .historyIcon,
-  .composeIcon {
-    font-size: 24px !important;
+  .historyCard {
+    height: 600px;
   }
 
   .dateTimeRow {
     gap: 12px;
+  }
+
+  .buttonGroup {
+    gap: 12px;
+  }
+
+  .cancelBtn,
+  .postBtn {
+    padding: 10px 22px;
   }
 
   .historyItem h4 {
@@ -424,18 +425,19 @@
   }
 
   .message {
-    font-size: 13px;
+    font-size: 14px;
   }
 
-  .actionIcons svg {
-    font-size: 18px !important;
+  .composeTitle,
+  .historyTitle {
+    font-size: 19px;
   }
 }
-@media (min-width: 993px) and (max-width: 1200px) {
+@media screen and (min-width: 993px) and (max-width: 1200px) {
   .container {
     grid-template-columns: 1fr 1fr;
     gap: 20px;
-    padding: 20px;
+    padding: 18px;
   }
 
   .statsContainer {
@@ -443,7 +445,7 @@
   }
 
   .statCard {
-    width: 130px;
+    width: 140px;
     padding: 18px;
   }
 
@@ -456,21 +458,21 @@
     padding: 22px;
   }
 
-  .composeTitle {
-    font-size: 19px;
-  }
-
-  .historyTitle {
-    font-size: 18px;
-  }
-
-  .historyIcon,
-  .composeIcon {
-    font-size: 26px !important;
+  .historyCard {
+    height: 620px;
   }
 
   .dateTimeRow {
     gap: 14px;
+  }
+
+  .buttonGroup {
+    gap: 14px;
+  }
+
+  .cancelBtn,
+  .postBtn {
+    padding: 10px 24px;
   }
 
   .historyItem h4 {
@@ -481,7 +483,8 @@
     font-size: 14px;
   }
 
-  .actionIcons svg {
-    font-size: 19px !important;
+  .composeTitle,
+  .historyTitle {
+    font-size: 20px;
   }
 }

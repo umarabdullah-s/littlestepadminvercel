@@ -143,3 +143,259 @@
   font-weight: 500;
   color: #6b7280;
 }
+@media (max-width: 576px) {
+  .staffPage {
+    padding: 12px;
+  }
+
+  .top {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+  .filterSelect {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .addBtn {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .tableSection {
+    padding: 10px;
+    border-radius: 12px;
+    overflow-x: auto;
+  }
+
+  .tableSection table {
+    min-width: 850px;
+  }
+
+  .tableSection th,
+  .tableSection td {
+    padding: 12px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .staffNameWrapper {
+    gap: 8px;
+  }
+
+  .staffAvatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .status {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+
+  .paginationWrapper {
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+
+  .noDataImage {
+    width: 150px;
+  }
+
+  .noDataCell p {
+    font-size: 14px;
+  }
+}
+@media (min-width: 577px) and (max-width: 768px) {
+  .staffPage {
+    padding: 16px;
+  }
+
+  .top {
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .title {
+    font-size: 19px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .filterSelect {
+    width: 220px;
+  }
+
+  .addBtn {
+    padding: 12px 22px;
+  }
+
+  .tableSection {
+    padding: 12px;
+    border-radius: 16px;
+    overflow-x: auto;
+  }
+
+  .tableSection table {
+    min-width: 850px;
+  }
+
+  .tableSection th,
+  .tableSection td {
+    padding: 14px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .staffNameWrapper {
+    gap: 10px;
+  }
+
+  .staffAvatar {
+    width: 34px;
+    height: 34px;
+  }
+
+  .status {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+
+  .paginationWrapper {
+    justify-content: flex-end;
+  }
+
+  .noDataImage {
+    width: 180px;
+  }
+
+  .noDataCell p {
+    font-size: 15px;
+  }
+}
+@media (min-width: 769px) and (max-width: 992px) {
+  .staffPage {
+    padding: 18px;
+  }
+
+  .top {
+    align-items: center;
+    gap: 20px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .filterSelect {
+    width: 230px;
+  }
+
+  .addBtn {
+    padding: 12px 24px;
+  }
+
+  .tableSection {
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .tableSection table {
+    min-width: 900px;
+  }
+
+  .tableSection th,
+  .tableSection td {
+    padding: 15px 12px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .staffAvatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .status {
+    padding: 7px 14px;
+    font-size: 12px;
+  }
+
+  .paginationWrapper {
+    justify-content: flex-end;
+  }
+
+  .noDataImage {
+    width: 200px;
+  }
+
+  .noDataCell p {
+    font-size: 15px;
+  }
+}
+@media (min-width: 993px) and (max-width: 1200px) {
+  .staffPage {
+    padding: 20px;
+  }
+
+  .top {
+    align-items: center;
+  }
+
+  .filterSelect {
+    width: 240px;
+  }
+
+  .addBtn {
+    padding: 12px 26px;
+  }
+
+  .tableSection {
+    padding: 16px;
+  }
+
+  .tableSection table {
+    min-width: 1000px;
+  }
+
+  .tableSection th,
+  .tableSection td {
+    padding: 16px 14px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .staffAvatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .status {
+    padding: 7px 14px;
+    font-size: 12px;
+  }
+
+  .paginationWrapper {
+    justify-content: flex-end;
+  }
+
+  .noDataImage {
+    width: 220px;
+  }
+
+  .noDataCell p {
+    font-size: 16px;
+  }
+}

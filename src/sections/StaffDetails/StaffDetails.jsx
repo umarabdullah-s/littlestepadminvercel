@@ -262,7 +262,7 @@ const handleUploadDocument = async () => {
             </div>
           </div>
 
-          <div style={{ display: "flex", gap: "10px" }}>
+          <div className={styles.actionButtons}>
             <button
               className={styles.editBtn}
               onClick={() => navigate(`/staff/edit/${id}`)}
@@ -271,15 +271,8 @@ const handleUploadDocument = async () => {
             </button>
 
             <button
+              className={styles.deleteBtn}
               onClick={() => setDeleteOpen(true)}
-              style={{
-                background: "#ef4444",
-                color: "#fff",
-                border: "none",
-                padding: "10px 18px",
-                borderRadius: "10px",
-                cursor: "pointer",
-              }}
             >
               Delete Profile
             </button>

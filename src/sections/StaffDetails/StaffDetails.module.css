@@ -82,13 +82,28 @@
   color: #3b82f6;
   font-size: 20px !important;
 }
-.editBtn {
-  background: #3b82f6;
-  color: white;
-  border: none;
+.actionButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.editBtn,
+.deleteBtn {
+  width: 130px;
   padding: 10px 18px;
   border-radius: 10px;
   cursor: pointer;
+  border: none;
+}
+
+.editBtn {
+  background: #3b82f6;
+  color: white;
+}
+
+.deleteBtn {
+  background: #ef4444;
+  color: white;
 }
 
 .detailsGrid {
@@ -579,4 +594,400 @@
 .uploadBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+@media (max-width: 576px) {
+  .container {
+    padding: 12px;
+  }
+
+  .header {
+    justify-content: flex-start;
+  }
+
+  .backBtn {
+    width: 100%;
+  }
+
+  .profileCard {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    text-align: center;
+    padding: 18px;
+  }
+
+  .profileLeft {
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+  }
+
+  .avatar {
+    width: 90px;
+    height: 90px;
+  }
+
+  .infoRow {
+    justify-content: center;
+  }
+
+  .infoItem {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Edit & Delete buttons */
+  .actionButtons {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+  }
+
+  .editBtn,
+  .deleteBtn {
+    flex: 1;
+    width: auto;
+  }
+
+  .detailsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .attendanceStats {
+    grid-template-columns: 1fr;
+  }
+
+  .salaryCards {
+    grid-template-columns: 1fr;
+  }
+
+  .tabs {
+    overflow-x: auto;
+    gap: 10px;
+    padding: 0 10px;
+  }
+
+  .tab {
+    white-space: nowrap;
+  }
+
+  .tableContainer,
+  .attendanceContainer,
+  .salaryContainer {
+    overflow-x: auto;
+    padding: 16px;
+  }
+
+  .table {
+    min-width: 650px;
+  }
+
+  .table th,
+  .table td {
+    white-space: nowrap;
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  .tableHeader,
+  .attendanceHeader {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+
+  .uploadBtn {
+    width: 100%;
+  }
+
+  .paginationWrapper {
+    justify-content: center;
+  }
+
+  .noData img {
+    width: 150px;
+  }
+
+  .noData p {
+    font-size: 14px;
+  }
+}
+@media (min-width: 577px) and (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  .profileCard {
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .profileLeft {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .avatar {
+    width: 100px;
+    height: 100px;
+  }
+
+  .infoRow {
+    justify-content: center;
+  }
+
+  .infoItem {
+    justify-content: center;
+  }
+
+  /* Edit & Delete Buttons */
+  .actionButtons {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    gap: 12px;
+  }
+
+  .editBtn,
+  .deleteBtn {
+    flex: 1;
+    width: auto;
+  }
+
+  .detailsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .attendanceStats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .salaryCards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tabs {
+    overflow-x: auto;
+    gap: 15px;
+  }
+
+  .tab {
+    white-space: nowrap;
+  }
+
+  .tableContainer,
+  .attendanceContainer,
+  .salaryContainer {
+    padding: 20px;
+    overflow-x: auto;
+  }
+
+  .table {
+    min-width: 700px;
+  }
+
+  .table th,
+  .table td {
+    white-space: nowrap;
+    font-size: 13px;
+    padding: 12px;
+  }
+
+  .tableHeader,
+  .attendanceHeader {
+    gap: 20px;
+  }
+
+  .paginationWrapper {
+    justify-content: center;
+  }
+
+  .noData img {
+    width: 180px;
+  }
+}
+@media (min-width: 769px) and (max-width: 992px) {
+  .container {
+    padding: 20px;
+  }
+
+  .profileCard {
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .profileLeft {
+    gap: 16px;
+  }
+
+  .avatar {
+    width: 110px;
+    height: 110px;
+  }
+
+  .infoItem {
+    font-size: 13px;
+  }
+
+  /* Edit & Delete Buttons */
+  .actionButtons {
+    display: flex;
+    gap: 12px;
+  }
+
+  .editBtn,
+  .deleteBtn {
+    width: 140px;
+  }
+
+  /* Details & Stats */
+  .detailsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .salaryCards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .attendanceStats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tableContainer,
+  .attendanceContainer,
+  .salaryContainer {
+    padding: 20px;
+    overflow-x: auto;
+  }
+
+  .table {
+    min-width: 800px;
+  }
+
+  .table th,
+  .table td {
+    white-space: nowrap;
+    padding: 14px;
+  }
+
+  .tabs {
+    gap: 16px;
+  }
+
+  .tab {
+    font-size: 14px;
+  }
+
+  .paginationWrapper {
+    justify-content: flex-end;
+  }
+
+  .noData img {
+    width: 200px;
+  }
+}
+@media (min-width: 993px) and (max-width: 1200px) {
+  .container {
+    padding: 22px;
+  }
+
+  .profileCard {
+    padding: 22px;
+    gap: 20px;
+  }
+
+  .profileLeft {
+    gap: 18px;
+  }
+
+  .avatar {
+    width: 115px;
+    height: 115px;
+  }
+
+  .infoItem {
+    font-size: 13px;
+    padding: 10px 16px;
+  }
+
+  /* Edit & Delete Buttons */
+  .actionButtons {
+    display: flex;
+    gap: 12px;
+  }
+
+  .editBtn,
+  .deleteBtn {
+    width: 150px;
+  }
+
+  /* Details & Stats */
+  .detailsGrid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+  }
+
+  .salaryCards {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .attendanceStats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .tableContainer,
+  .attendanceContainer,
+  .salaryContainer {
+    padding: 22px;
+  }
+
+  .table {
+    width: 100%;
+  }
+
+  .table th,
+  .table td {
+    padding: 15px;
+    font-size: 13px;
+  }
+
+  .tabs {
+    gap: 18px;
+  }
+
+  .tab {
+    font-size: 14px;
+  }
+
+  .paginationWrapper {
+    justify-content: flex-end;
+  }
+
+  .noData img {
+    width: 220px;
+  }
+
+  .noData p {
+    font-size: 15px;
+  }
 }

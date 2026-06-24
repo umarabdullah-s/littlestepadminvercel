@@ -359,11 +359,7 @@ td {
   justify-content: flex-end;
   padding: 16px;
 }
-@media (max-width: 576px) {
-  
-
- 
-
+@media screen and (max-width: 576px) {
   .title {
     font-size: 22px;
   }
@@ -372,11 +368,10 @@ td {
     font-size: 12px;
   }
 
- 
-
   .statsGrid {
     grid-template-columns: 1fr;
     gap: 14px;
+    margin-top: 20px;
   }
 
   .card {
@@ -384,21 +379,26 @@ td {
   }
 
   .count {
-    font-size: 24px;
+    font-size: 26px;
   }
-
-  
 
   .bottom {
-    grid-template-columns: 1fr;
+    margin-top: 20px;
   }
 
- 
-
   .tableSection {
+    padding: 16px;
     overflow-x: auto;
+  }
 
-    padding: 14px;
+  .tableHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .tableHeader select {
+    width: 100%;
   }
 
   table {
@@ -407,76 +407,39 @@ td {
 
   th,
   td {
-    font-size: 12px;
-
-    padding: 12px;
-  }
-
-  .tableHeader {
-    flex-direction: column;
-    align-items: flex-start;
-
-    gap: 12px;
-  }
-
-  .tableHeader select {
-    width: 100%;
-  }
-
-  
-
-  .requestSection {
-    padding: 14px;
-  }
-
-  .requestHeader {
-    flex-direction: column;
-    align-items: flex-start;
-
-    gap: 10px;
-  }
-
-  .requestCard {
-    padding-bottom: 14px;
-  }
-
-  .requestTop {
-    flex-direction: column;
-  }
-
-  .avatar {
-    width: 34px;
-    height: 34px;
-
+    padding: 12px 10px;
     font-size: 13px;
   }
 
-  .requestName {
-    font-size: 13px;
+  .staffNameWrapper {
+    gap: 8px;
   }
 
-  .requestText {
+  .staffAvatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .status {
     font-size: 12px;
+    padding: 6px 10px;
   }
 
-  
-
-  .actions {
-    flex-direction: column;
+  .noData img {
+    width: 140px;
+    height: 140px;
   }
 
-  .decline,
-  .approve {
-    width: 100%;
+  .noData p {
+    font-size: 14px;
+  }
+
+  .paginationWrapper {
+    justify-content: center;
+    padding: 12px 0;
   }
 }
-@media (min-width: 577px) and (max-width: 768px) {
-  .dashboard {
-    padding: 16px;
-  }
-
-  
-
+@media screen and (min-width: 577px) and (max-width: 768px) {
   .title {
     font-size: 24px;
   }
@@ -485,11 +448,8 @@ td {
     font-size: 13px;
   }
 
- 
-
   .statsGrid {
     grid-template-columns: repeat(2, 1fr);
-
     gap: 16px;
   }
 
@@ -498,23 +458,20 @@ td {
   }
 
   .count {
-    font-size: 26px;
+    font-size: 28px;
   }
-
-  
-
-  .bottom {
-    grid-template-columns: 1fr;
-
-    gap: 18px;
-  }
-
-  
 
   .tableSection {
+    padding: 18px;
     overflow-x: auto;
+  }
 
-    padding: 16px;
+  .tableHeader {
+    gap: 16px;
+  }
+
+  .tableHeader select {
+    min-width: 180px;
   }
 
   table {
@@ -523,184 +480,40 @@ td {
 
   th,
   td {
-    font-size: 13px;
-
-    padding: 13px;
-  }
-
-  .tableHeader {
-    gap: 14px;
-  }
-
-  .tableHeader select {
-    padding: 9px 12px;
-  }
-
-  
-
-  .requestSection {
-    padding: 16px;
-  }
-
-  .requestHeader {
-    gap: 12px;
-  }
-
-  .requestCard {
-    padding-bottom: 15px;
-  }
-
-  .avatar {
-    width: 35px;
-    height: 35px;
-
-    font-size: 13px;
-  }
-
-  .requestName {
+    padding: 14px 12px;
     font-size: 14px;
   }
 
-  .requestText {
-    font-size: 13px;
+  .staffAvatar {
+    width: 34px;
+    height: 34px;
   }
 
-  
-
-  .actions {
-    flex-wrap: wrap;
+  .status {
+    font-size: 12px;
+    padding: 6px 10px;
   }
 
-  .decline,
-  .approve {
-    flex: 1;
+  .noData img {
+    width: 160px;
+    height: 160px;
+  }
+
+  .paginationWrapper {
+    justify-content: center;
   }
 }
-@media (min-width: 769px) and (max-width: 992px) {
-  .dashboard {
-    padding: 18px;
-  }
-
-  
-
+@media screen and (min-width: 769px) and (max-width: 992px) {
   .title {
-    font-size: 26px;
+    font-size: 24px;
   }
 
   .subtitle {
-    font-size: 14px;
-  }
-
-
-
-  .statsGrid {
-    grid-template-columns: repeat(2, 1fr);
-
-    gap: 18px;
-  }
-
-  .card {
-    padding: 20px;
-  }
-
-  .count {
-    font-size: 28px;
-  }
-
-  
-
-  .bottom {
-    grid-template-columns: 1fr;
-
-    gap: 20px;
-  }
-
-  
-
-  .tableSection {
-    overflow-x: auto;
-
-    padding: 18px;
-  }
-
-  table {
-    min-width: 850px;
-  }
-
-  th,
-  td {
-    font-size: 13px;
-
-    padding: 14px;
-  }
-
-  .tableHeader {
-    margin-bottom: 18px;
-  }
-
-  .tableHeader select {
-    padding: 10px 14px;
-  }
-
-  
-
-  .requestSection {
-    padding: 18px;
-  }
-
-  .requestHeader {
-    margin-bottom: 18px;
-  }
-
-  .requestCard {
-    padding-bottom: 16px;
-  }
-
-  .avatar {
-    width: 36px;
-    height: 36px;
-
-    font-size: 14px;
-  }
-  .requestName {
-    font-size: 14px;
-  }
-
-  .requestText {
     font-size: 13px;
   }
 
-  
-
-  .actions {
-    gap: 12px;
-  }
-
-  .decline,
-  .approve {
-    padding: 10px 16px;
-  }
-}
-@media (min-width: 993px) and (max-width: 1200px) {
-  .dashboard {
-    padding: 20px;
-  }
-
-  
-
-  .title {
-    font-size: 28px;
-  }
-
-  .subtitle {
-    font-size: 14px;
-  }
-
-  
-
   .statsGrid {
-    grid-template-columns: repeat(4, 1fr);
-
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
   }
 
@@ -712,77 +525,109 @@ td {
     font-size: 28px;
   }
 
-  .cardTitle {
-    font-size: 15px;
-  }
-
-  .cardSubtitle {
-    font-size: 13px;
-  }
-
-  
-
-  .bottom {
-    grid-template-columns: 1.7fr 1fr;
-
-    gap: 18px;
-  }
-
-  
-
   .tableSection {
     padding: 18px;
-
     overflow-x: auto;
   }
 
+  .tableHeader {
+    gap: 16px;
+  }
+
+  .tableHeader select {
+    min-width: 180px;
+  }
+
   table {
-    min-width: 900px;
+    min-width: 850px;
   }
 
   th,
   td {
-    padding: 14px;
-
-    font-size: 13px;
-  }
-
-  .tableHeader {
-    margin-bottom: 18px;
-  }
-
-  
-
-  .requestSection {
-    padding: 18px;
-  }
-
-  .requestHeader {
-    margin-bottom: 18px;
-  }
-
-  .requestCard {
-    padding-bottom: 15px;
-  }
-
-  .requestName {
+    padding: 14px 12px;
     font-size: 14px;
   }
 
-  .requestText {
-    font-size: 13px;
-
-    line-height: 1.5;
+  .staffAvatar {
+    width: 34px;
+    height: 34px;
   }
 
-  .actions {
-    gap: 10px;
+  .status {
+    font-size: 13px;
+    padding: 6px 12px;
   }
 
-  .decline,
-  .approve {
-    padding: 10px 14px;
+  .noData img {
+    width: 170px;
+    height: 170px;
+  }
 
+  .paginationWrapper {
+    justify-content: center;
+  }
+}
+@media screen and (min-width: 993px) and (max-width: 1200px) {
+  .title {
+    font-size: 25px;
+  }
+
+  .subtitle {
     font-size: 13px;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .count {
+    font-size: 30px;
+  }
+
+  .tableSection {
+    padding: 20px;
+    overflow-x: auto;
+  }
+
+  .tableHeader {
+    gap: 16px;
+  }
+
+  .tableHeader select {
+    min-width: 180px;
+  }
+
+  table {
+    min-width: 100%;
+  }
+
+  th,
+  td {
+    padding: 14px 12px;
+    font-size: 14px;
+  }
+
+  .staffAvatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .status {
+    font-size: 13px;
+    padding: 7px 12px;
+  }
+
+  .noData img {
+    width: 180px;
+    height: 180px;
+  }
+
+  .paginationWrapper {
+    justify-content: flex-end;
   }
 }
