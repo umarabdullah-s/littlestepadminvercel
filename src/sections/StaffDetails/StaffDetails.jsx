@@ -94,27 +94,35 @@ const availableDocuments = documents.filter((doc) => !doc.url);
  useEffect(() => {
    const fetchStaff = async () => {
      try {
-       const response = await getStaffById(id);
-       setStaff(response.data.data);
+       const [
+         staffResponse,
+         attendanceSummaryResponse,
+         attendanceTableResponse,
+         leaveResponse,
+         documentResponse,
+       ] = await Promise.all([
+         getStaffById(id),
+         getStaffAttendanceSummaryById(id),
+         getStaffAttendanceByMonth(
+           id,
+           selectedMonth,
+           selectedYear,
+           attendancePage,
+         ),
+         getStaffLeaveById(id, leavePage),
+         getStaffDocuments(id),
+       ]);
 
-       const attendanceResponse = await getStaffAttendanceSummaryById(id);
-       setAttendanceSummary(attendanceResponse.data.data);
+       setStaff(staffResponse.data.data);
 
-       const attendanceTableResponse = await getStaffAttendanceByMonth(
-         id,
-         selectedMonth,
-         selectedYear,
-         attendancePage,
-       );
-       console.log(attendanceTableResponse.data);
+       setAttendanceSummary(attendanceSummaryResponse.data.data);
+
        setAttendanceData(attendanceTableResponse.data.data.data);
        setAttendanceTotalPages(attendanceTableResponse.data.data.totalPages);
-       const leaveResponse = await getStaffLeaveById(id, leavePage);
 
        setLeaveData(leaveResponse.data.data.data);
        setLeaveTotalPages(leaveResponse.data.data.totalPages);
-       const documentResponse = await getStaffDocuments(id);
-       console.log("hjk", documentResponse.data.data);
+
        setDocuments(documentResponse.data.data);
      } catch (error) {
        console.error("Error fetching data:", error);
@@ -523,10 +531,12 @@ const handleUploadDocument = async () => {
                   label="Month & Year"
                   value={selectedDate}
                   onChange={(newValue) => {
-                    setSelectedDate(newValue);
+                    if (!newValue) return;
 
+                    setSelectedDate(newValue);
                     setSelectedMonth(newValue.month() + 1);
                     setSelectedYear(newValue.year());
+                    setAttendancePage(1);
                   }}
                   slotProps={{
                     textField: {
