@@ -626,7 +626,7 @@ const handleUploadDocument = async () => {
               <thead>
                 <tr>
                   <th>TYPE</th>
-                  <th>DATE</th>
+                  <th>DURATION </th>
                   <th>REASON</th>
                   <th>APPLIED ON</th>
                   <th>STATUS</th>
@@ -641,11 +641,30 @@ const handleUploadDocument = async () => {
                         <strong>{leave.leaveType}</strong>
                       </td>
 
-                      <td>{leave.period || "--"}</td>
+                      <td>
+                        {leave.period || "--"}
+                        {leave.duration && (
+                          <span style={{ color: "#64748b", fontSize: "12px" }}>
+                            {" "}
+                            ({leave.duration})
+                          </span>
+                        )}
+                      </td>
 
                       <td>{leave.reason || "--"}</td>
 
-                      <td>{leave.requestedOn || "--"}</td>
+                      <td>
+                        {leave.requestedOn
+                          ? new Date(leave.requestedOn).toLocaleDateString(
+                              "en-GB",
+                              {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              },
+                            )
+                          : "--"}
+                      </td>
 
                       <td>
                         <span

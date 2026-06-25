@@ -181,7 +181,10 @@ const Request = () => {
                       </div>
                     </div>
 
-                    <p className={styles.time}>{item.requestedOn}</p>
+                    <p className={styles.time}>
+                      {item.requestedOn &&
+                        new Date(item.requestedOn).toLocaleDateString("en-GB")}
+                    </p>
                   </div>
 
                   <div className={styles.details}>

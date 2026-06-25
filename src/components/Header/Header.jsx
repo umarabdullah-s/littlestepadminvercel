@@ -322,7 +322,7 @@ const Header = () => {
               color: "#0f172a",
             }}
           >
-            Notifications ({unreadCount})
+            Notifications
           </p>
 
           <IconButton size="small" onClick={() => setNotificationAnchor(null)}>
