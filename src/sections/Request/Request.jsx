@@ -32,55 +32,88 @@ const Request = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const [actionLoading, setActionLoading] = useState(null);
+ const [actionLoading, setActionLoading] = useState({
+   id: null,
+   action: null,
+ });
+  const [totalRequests, setTotalRequests] = useState(0);
 
- const leaveRequests = async (status = "") => {
-   try {
-     setLoading(true);
-     const response = await getLeaveRequests(status);
-     setRequests(response.data.data.data);
-   } catch (error) {
-     console.log(error);
-   } finally {
-     setLoading(false);
-   }
- };
+  const fetchAllRequestCount = async () => {
+    try {
+      const response = await getLeaveRequests("");
 
- const handleApprove = async (id) => {
-   try {
-     setActionLoading(id);
+      setTotalRequests(response.data.data.totalRecords);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+const leaveRequests = async (status = "") => {
+  try {
+    setLoading(true);
 
-     await respondLeaveRequest(id, {
-       status: "approved",
-     });
+    const response = await getLeaveRequests(status);
 
-     await leaveRequests(getStatusFromFilter(activeFilter));
-   } catch (error) {
-     console.error(error);
-   } finally {
-     setActionLoading(null);
-   }
- };
+    setRequests(response.data.data.data);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setLoading(false);
+  }
+};
 
- const handleReject = async (id) => {
-   try {
-     setActionLoading(id);
+const handleApprove = async (id) => {
+  try {
+    setActionLoading({
+      id,
+      action: "approve",
+    });
 
-     await respondLeaveRequest(id, {
-       status: "rejected",
-     });
+    await respondLeaveRequest(id, {
+      status: "approved",
+    });
 
-     await leaveRequests(getStatusFromFilter(activeFilter));
-   } catch (error) {
-     console.error(error);
-   } finally {
-     setActionLoading(null);
-   }
- };
+    await leaveRequests(getStatusFromFilter(activeFilter));
+    await fetchAllRequestCount();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setActionLoading({
+      id: null,
+      action: null,
+    });
+  }
+};
+
+const handleReject = async (id) => {
+  try {
+    setActionLoading({
+      id,
+      action: "reject",
+    });
+
+    await respondLeaveRequest(id, {
+      status: "rejected",
+    });
+
+    await leaveRequests(getStatusFromFilter(activeFilter));
+    await fetchAllRequestCount();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setActionLoading({
+      id: null,
+      action: null,
+    });
+  }
+};
 
   useEffect(() => {
     leaveRequests(getStatusFromFilter(activeFilter));
   }, [activeFilter]);
+
+  useEffect(() => {
+    fetchAllRequestCount();
+  }, []);
   return (
     <MainLayout>
       <div className={styles.requestPage}>
@@ -111,6 +144,10 @@ const Request = () => {
               }
             >
               {item}
+
+              {item === "All requests" && (
+                <span className={styles.count}>{totalRequests}</span>
+              )}
             </button>
           ))}
         </div>
@@ -227,9 +264,10 @@ const Request = () => {
                           <button
                             className={styles.approve}
                             onClick={() => handleApprove(item.id)}
-                            disabled={actionLoading === item.id}
+                            disabled={actionLoading.id === item.id}
                           >
-                            {actionLoading === item.id
+                            {actionLoading.id === item.id &&
+                            actionLoading.action === "approve"
                               ? "Approving..."
                               : "✓ Approve"}
                           </button>
@@ -237,10 +275,11 @@ const Request = () => {
                           <button
                             className={styles.deny}
                             onClick={() => handleReject(item.id)}
-                            disabled={actionLoading === item.id}
+                            disabled={actionLoading.id === item.id}
                           >
-                            {actionLoading === item.id
-                              ? "Processing..."
+                            {actionLoading.id === item.id &&
+                            actionLoading.action === "reject"
+                              ? "Rejecting..."
                               : "✕ Deny"}
                           </button>
                         </>
