@@ -131,10 +131,10 @@ useEffect(() => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     console.log(name, value);
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+   setFormData((prev) => ({
+     ...prev,
+     [name]: name === "panNumber" ? value.toUpperCase() : value,
+   }));
 
     let error = "";
 
@@ -169,7 +169,13 @@ useEffect(() => {
    if (name === "phone" && value && !/^\d{10}$/.test(value)) {
      error = "Phone number must be 10 digits";
    }
-
+   if (
+     name === "panNumber" &&
+     value &&
+     !/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(value.toUpperCase())
+   ) {
+     error = "Invalid PAN number";
+   }
    if (name === "password") {
      if (value.length < 6) {
        error = `Password must be 6 characters (${value.length}/6)`;
@@ -197,11 +203,10 @@ useEffect(() => {
     
     const maxSize = name === "profile" ? 2 * 1024 * 1024 : 5 * 1024 * 1024;
 
-    
-    setFormData((prev) => ({
-      ...prev,
-      [name]: file,
-    }));
+   setFormData((prev) => ({
+     ...prev,
+     [name]: file,
+   }));
 
     let error = "";
 
@@ -870,7 +875,11 @@ return (
                 value={formData.panNumber}
                 onChange={handleChange}
                 placeholder="PAN Number"
+                maxLength={10}
               />
+              {errors.panNumber && (
+                <small className={styles.error}>{errors.panNumber}</small>
+              )}
             </div>
           </div>
         </div>
@@ -885,7 +894,6 @@ return (
           </h3>
 
           <div className={styles.documentGrid}>
-          
             <div className={styles.uploadWrapper}>
               {formData.aadharCard && (
                 <CloseIcon
@@ -926,7 +934,6 @@ return (
               )}
             </div>
 
-            
             <div className={styles.uploadWrapper}>
               {formData.panCard && (
                 <CloseIcon
@@ -967,7 +974,6 @@ return (
               )}
             </div>
 
-            
             <div className={styles.uploadWrapper}>
               {formData.educationCertificate && (
                 <CloseIcon
@@ -1013,7 +1019,6 @@ return (
               )}
             </div>
 
-            
             <div className={styles.uploadWrapper}>
               {formData.offerLetter && (
                 <CloseIcon
@@ -1049,7 +1054,6 @@ return (
               </label>
             </div>
 
-        
             <div className={styles.uploadWrapper}>
               {formData.experienceLetter && (
                 <CloseIcon
