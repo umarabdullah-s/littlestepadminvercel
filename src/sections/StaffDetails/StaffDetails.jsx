@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import MainLayout from "../../components/layouts/MainLayout";
 import styles from "./StaffDetails.module.css";
@@ -34,16 +34,13 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import Fade from "@mui/material/Fade";
 
-
-
 const StaffDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
   const [openUploadModal, setOpenUploadModal] = useState(false);
-   const [activeTab, setActiveTab] = useState("attendance");
+  const [activeTab, setActiveTab] = useState("attendance");
 
-   
   const [staff, setStaff] = useState(null);
   const [attendanceSummary, setAttendanceSummary] = useState(null);
   const [attendanceTableSummary, setAttendanceTableSummary] = useState({
@@ -67,231 +64,234 @@ const StaffDetails = () => {
   const [attendancePage, setAttendancePage] = useState(1);
   const [attendanceTotalPages, setAttendanceTotalPages] = useState(1);
   const [snackbar, setSnackbar] = useState({
-  open: false,
-  message: "",
-  severity: "success",
-});
-const [uploadLoading, setUploadLoading] = useState(false);
-const [deleteDocumentOpen, setDeleteDocumentOpen] = useState(false);
-const [selectedDocument, setSelectedDocument] = useState(null);
-const [deletingDocument, setDeletingDocument] = useState(false);
-const availableDocuments = documents.filter((doc) => !doc.url);
-const [openEditModal, setOpenEditModal] = useState(false);
-const [attendanceForm, setAttendanceForm] = useState({
-  checkInTime: "",
-  breakInTime: "",
-  breakOutTime: "",
-  checkOutTime: "",
-});
+    open: false,
+    message: "",
+    severity: "success",
+  });
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const [deleteDocumentOpen, setDeleteDocumentOpen] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState(null);
+  const [deletingDocument, setDeletingDocument] = useState(false);
+  const availableDocuments = documents.filter((doc) => !doc.url);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [attendanceForm, setAttendanceForm] = useState({
+    checkInTime: "",
+    breakInTime: "",
+    breakOutTime: "",
+    checkOutTime: "",
+  });
 
-const [selectedAttendanceId, setSelectedAttendanceId] = useState(null);
-const [updateLoading, setUpdateLoading] = useState(false);
+  const [selectedAttendanceId, setSelectedAttendanceId] = useState(null);
+  const [updateLoading, setUpdateLoading] = useState(false);
 
- useEffect(() => {
-   const tab = location.state?.activeTab;
+  useEffect(() => {
+    const tab = location.state?.activeTab;
 
-   if (!tab) return;
+    if (!tab) return;
 
-   setActiveTab(tab);
+    setActiveTab(tab);
 
-   let timer;
+    let timer;
 
-   if (tab === "requests") {
-     timer = setTimeout(() => {
-       requestsRef.current?.scrollIntoView({
-         behavior: "smooth",
-         block: "start",
-       });
-     }, 300);
-   }
+    if (tab === "requests") {
+      timer = setTimeout(() => {
+        requestsRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 300);
+    }
 
-   return () => clearTimeout(timer);
- }, [location.state?.activeTab]);
+    return () => clearTimeout(timer);
+  }, [location.state?.activeTab]);
 
- const fetchAttendanceData = async () => {
-   try {
-     const attendanceTableResponse = await getStaffAttendanceByMonth(
-       id,
-       selectedMonth,
-       selectedYear,
-       attendancePage,
-     );
-
-     setAttendanceData(attendanceTableResponse.data.data.data);
-
-     setAttendanceTableSummary(
-       attendanceTableResponse.data.data.attendanceData || {},
-     );
-
-     setAttendanceTotalPages(attendanceTableResponse.data.data.totalPages);
-   } catch (error) {
-     console.log(error);
-   }
- };
-useEffect(() => {
-  const fetchStaff = async () => {
+  const fetchAttendanceData = useCallback(async () => {
     try {
-      const [
-        staffResponse,
-        attendanceSummaryResponse,
-        leaveResponse,
-        documentResponse,
-      ] = await Promise.all([
-        getStaffById(id),
+      const attendanceTableResponse = await getStaffAttendanceByMonth(
+        id,
+        selectedMonth,
+        selectedYear,
+        attendancePage,
+      );
 
-        getStaffAttendanceSummaryById(id),
+      setAttendanceData(attendanceTableResponse.data.data.data);
 
-        getStaffLeaveById(id, leavePage),
+      setAttendanceTableSummary(
+        attendanceTableResponse.data.data.attendanceData || {},
+      );
 
-        getStaffDocuments(id),
-      ]);
+      setAttendanceTotalPages(attendanceTableResponse.data.data.totalPages);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [id, selectedMonth, selectedYear, attendancePage]);
+
+useEffect(() => {
+  const fetchStaffDetails = async () => {
+    try {
+      const [staffResponse, attendanceSummaryResponse, documentResponse] =
+        await Promise.all([
+          getStaffById(id),
+          getStaffAttendanceSummaryById(id),
+          getStaffDocuments(id),
+        ]);
 
       setStaff(staffResponse.data.data);
 
       setAttendanceSummary(attendanceSummaryResponse.data.data);
 
-      setLeaveData(leaveResponse.data.data.data);
-
-      setLeaveTotalPages(leaveResponse.data.data.totalPages);
-
       setDocuments(documentResponse.data.data);
-
-      // Fetch attendance separately
-      await fetchAttendanceData();
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching staff details:", error);
     }
   };
 
-  fetchStaff();
-}, [id, selectedMonth, selectedYear, attendancePage, leavePage]);
- const handleDeleteStaff = async () => {
-   try {
-     await deleteStaff(id);
+  fetchStaffDetails();
+}, [id]);
+useEffect(() => {
+  const fetchLeaveData = async () => {
+    try {
+      const leaveResponse = await getStaffLeaveById(id, leavePage);
 
-     setDeleteOpen(false);
+      setLeaveData(leaveResponse.data.data.data);
 
-     navigate("/staff");
-   } catch (error) {
-     console.log(error);
-    
-   }
- };
-const handleDownload = async (doc) => {
-  try {
-    const response = await downloadDocument(id, doc._id);
+      setLeaveTotalPages(leaveResponse.data.data.totalPages);
+    } catch (error) {
+      console.error("Error fetching leave data:", error);
+    }
+  };
 
-    const { url } = response.data.data;
+  fetchLeaveData();
+}, [id, leavePage]);
+ useEffect(() => {
+  fetchAttendanceData();
+}, [fetchAttendanceData]);
+  const handleDeleteStaff = async () => {
+    try {
+      await deleteStaff(id);
 
-    window.location.href = url;
-  } catch (error) {
-    console.log(error);
-  }
-};
+      setDeleteOpen(false);
 
-const handleDeleteDocument = async () => {
-  try {
-    setDeletingDocument(true);
+      navigate("/staff");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleDownload = async (doc) => {
+    try {
+      const response = await downloadDocument(id, doc._id);
 
-    await deleteDocument(id, selectedDocument._id);
+      const { url } = response.data.data;
 
-    const documentResponse = await getStaffDocuments(id);
-    setDocuments(documentResponse.data.data);
+      window.location.href = url;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    setDeleteDocumentOpen(false);
-    setSelectedDocument(null);
+  const handleDeleteDocument = async () => {
+    try {
+      setDeletingDocument(true);
 
-    setSnackbar({
-      open: true,
-      message: "Document deleted successfully",
-      severity: "success",
-    });
-  } catch (error) {
-    setSnackbar({
-      open: true,
-      message: "Failed to delete document",
-      severity: "error",
-    });
-  } finally {
-    setDeletingDocument(false);
-  }
-};
-const handleUploadDocument = async () => {
-  try {
-    setUploadLoading(true);
+      await deleteDocument(id, selectedDocument._id);
 
-    const uploadResponse = await uploadFile(selectedFile);
+      const documentResponse = await getStaffDocuments(id);
+      setDocuments(documentResponse.data.data);
 
-    const fileUrl = uploadResponse.data.data.url;
-    console.log({
-      type: documentCategory,
-      url: fileUrl,
-    });
-    await uploadDocument(id, {
-      type: documentCategory,
-      url: fileUrl,
-    });
+      setDeleteDocumentOpen(false);
+      setSelectedDocument(null);
 
-    const documentResponse = await getStaffDocuments(id);
-    setDocuments(documentResponse.data.data);
+      setSnackbar({
+        open: true,
+        message: "Document deleted successfully",
+        severity: "success",
+      });
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: "Failed to delete document",
+        severity: "error",
+      });
+    } finally {
+      setDeletingDocument(false);
+    }
+  };
+  const handleUploadDocument = async () => {
+    try {
+      setUploadLoading(true);
 
-    setOpenUploadModal(false);
-    setSelectedFile(null);
-    setDocumentCategory("");
+      const uploadResponse = await uploadFile(selectedFile);
 
-   setSnackbar({
-     open: true,
-     message: "Document uploaded successfully",
-     severity: "success",
-   });
-  } catch (error) {
-    setSnackbar({
-      open: true,
-      message: "Failed to upload document",
-      severity: "error",
-    });
-  } finally {
-    setUploadLoading(false);
-  }
-};
-const handleUpdateAttendance = async () => {
-  try {
-    setUpdateLoading(true);
+      const fileUrl = uploadResponse.data.data.url;
+      console.log({
+        type: documentCategory,
+        url: fileUrl,
+      });
+      await uploadDocument(id, {
+        type: documentCategory,
+        url: fileUrl,
+      });
 
-    // Update attendance
-    await updateAttendanceByAdmin(selectedAttendanceId, attendanceForm);
+      const documentResponse = await getStaffDocuments(id);
+      setDocuments(documentResponse.data.data);
 
-    // Refresh table data
-    await fetchAttendanceData();
-    setAttendanceForm({
-      checkInTime: "",
-      breakInTime: "",
-      breakOutTime: "",
-      checkOutTime: "",
-    });
+      setOpenUploadModal(false);
+      setSelectedFile(null);
+      setDocumentCategory("");
 
-    setSelectedAttendanceId(null);
-    // Close modal
-    setOpenEditModal(false);
+      setSnackbar({
+        open: true,
+        message: "Document uploaded successfully",
+        severity: "success",
+      });
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: "Failed to upload document",
+        severity: "error",
+      });
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+  const handleUpdateAttendance = async () => {
+    try {
+      setUpdateLoading(true);
 
-    // Success message
-    setSnackbar({
-      open: true,
-      message: "Attendance updated successfully",
-      severity: "success",
-    });
-  } catch (error) {
-    console.log(error);
+      // Update attendance
+      await updateAttendanceByAdmin(selectedAttendanceId, attendanceForm);
 
-    setSnackbar({
-      open: true,
-      message: "Failed to update attendance",
-      severity: "error",
-    });
-  } finally {
-    setUpdateLoading(false);
-  }
-};
+      // Refresh table data
+      await fetchAttendanceData();
+      setAttendanceForm({
+        checkInTime: "",
+        breakInTime: "",
+        breakOutTime: "",
+        checkOutTime: "",
+      });
+
+      setSelectedAttendanceId(null);
+      // Close modal
+      setOpenEditModal(false);
+
+      // Success message
+      setSnackbar({
+        open: true,
+        message: "Attendance updated successfully",
+        severity: "success",
+      });
+    } catch (error) {
+      console.log(error);
+
+      setSnackbar({
+        open: true,
+        message: "Failed to update attendance",
+        severity: "error",
+      });
+    } finally {
+      setUpdateLoading(false);
+    }
+  };
   return (
     <MainLayout>
       <div className={styles.container}>
