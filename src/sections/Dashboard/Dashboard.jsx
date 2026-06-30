@@ -90,12 +90,20 @@ const fetchAttendanceList = async (filter = "", currentPage = 1) => {
     },
   ];
 
+  const greeting = (() => {
+    const hour = new Date().getHours();
 
+    if (hour < 12) return "Good Morning";
+    if (hour < 17) return "Good Afternoon";
+    if (hour < 21) return "Good Evening";
+
+    return "Good Night";
+  })();
   return (
     <MainLayout>
       <div className={styles.dashboard}>
         <div className={styles.top}>
-          <p className={styles.title}>Good Morning, Admin</p>
+          <p className={styles.title}>{greeting}, Admin</p>
 
           <p className={styles.subtitle}>
             Here’s what’s happening with your team today.
@@ -264,8 +272,6 @@ const fetchAttendanceList = async (filter = "", currentPage = 1) => {
               </div>
             )}
           </div>
-
-          
         </div>
       </div>
     </MainLayout>
