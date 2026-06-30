@@ -37,17 +37,9 @@ const Request = () => {
    id: null,
    action: null,
  });
-  const [totalRequests, setTotalRequests] = useState(0);
+ 
 
-  const fetchAllRequestCount = async () => {
-    try {
-      const response = await getLeaveRequests("");
 
-      setTotalRequests(response.data.data.totalRecords);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 const leaveRequests = async (status = "") => {
   try {
     setLoading(true);
@@ -75,8 +67,6 @@ const handleApprove = async (id) => {
 
     await leaveRequests(getStatusFromFilter(activeFilter));
 
-    await fetchAllRequestCount();
-
     // Update Sidebar badge
     await fetchRequestCount();
   } catch (error) {
@@ -102,8 +92,6 @@ const handleReject = async (id) => {
 
     await leaveRequests(getStatusFromFilter(activeFilter));
 
-    await fetchAllRequestCount();
-
     // Update Sidebar Request count
     await fetchRequestCount();
   } catch (error) {
@@ -120,9 +108,7 @@ const handleReject = async (id) => {
     leaveRequests(getStatusFromFilter(activeFilter));
   }, [activeFilter]);
 
-  useEffect(() => {
-    fetchAllRequestCount();
-  }, []);
+ 
   return (
     <MainLayout>
       <div className={styles.requestPage}>

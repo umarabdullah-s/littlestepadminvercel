@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./Sidebar.module.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import LogoutModal from "../Modals/LogoutModal";
