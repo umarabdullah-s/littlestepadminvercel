@@ -9,6 +9,7 @@ import Announcement from "./sections/Announcement/Announcement";
 import ProtectedRoute from "./components/layouts/ProtectedRoute";
 import StaffDetails from "./sections/StaffDetails/StaffDetails";
 import CreateStaff from "./sections/createStaff/CreateStaff";
+import AttendanceCorrection from "./sections/AttendanceCorrection/AttendanceCorrection";
 
 function App() {
   
@@ -35,6 +36,14 @@ function App() {
           }
         />
         <Route
+          path="/attendance-correction"
+          element={
+            <ProtectedRoute>
+              <AttendanceCorrection />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/staff"
           element={
             <ProtectedRoute>
@@ -42,7 +51,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-      
+
         <Route
           path="/announcement"
           element={

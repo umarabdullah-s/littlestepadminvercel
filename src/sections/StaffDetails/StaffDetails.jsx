@@ -10,8 +10,8 @@ import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import {
   getStaffById,
-  getStaffAttendanceSummaryById,
   getStaffAttendanceByMonth,
+  getStaffAttendanceSummaryById,
   getStaffLeaveById,
   deleteStaff,
   getStaffDocuments,
@@ -19,6 +19,7 @@ import {
   deleteDocument,
   uploadFile,
   uploadDocument,
+  updateAttendanceByAdmin,
 } from "../../api/serviceapi";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -27,6 +28,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Pagination from "@mui/material/Pagination";
 import DeleteStaffModal from "../../components/Modals/DeleteStaffModal";
 import UploadDocumentModal from "../../components/Modals/UploadDocumentModal";
+import EditAttendanceModal from "../../components/Modals/EditAttendanceModal";
 import DeleteDocumentModal from "../../components/Modals/DeleteDocumentModal";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
@@ -44,6 +46,11 @@ const StaffDetails = () => {
    
   const [staff, setStaff] = useState(null);
   const [attendanceSummary, setAttendanceSummary] = useState(null);
+  const [attendanceTableSummary, setAttendanceTableSummary] = useState({
+    daysPresent: 0,
+    daysLeave: 0,
+    daysPermission: 0,
+  });
   const [attendanceData, setAttendanceData] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
 
@@ -69,6 +76,16 @@ const [deleteDocumentOpen, setDeleteDocumentOpen] = useState(false);
 const [selectedDocument, setSelectedDocument] = useState(null);
 const [deletingDocument, setDeletingDocument] = useState(false);
 const availableDocuments = documents.filter((doc) => !doc.url);
+const [openEditModal, setOpenEditModal] = useState(false);
+const [attendanceForm, setAttendanceForm] = useState({
+  checkInTime: "",
+  breakInTime: "",
+  breakOutTime: "",
+  checkOutTime: "",
+});
+
+const [selectedAttendanceId, setSelectedAttendanceId] = useState(null);
+const [updateLoading, setUpdateLoading] = useState(false);
 
  useEffect(() => {
    const tab = location.state?.activeTab;
@@ -91,46 +108,63 @@ const availableDocuments = documents.filter((doc) => !doc.url);
    return () => clearTimeout(timer);
  }, [location.state?.activeTab]);
 
- useEffect(() => {
-   const fetchStaff = async () => {
-     try {
-       const [
-         staffResponse,
-         attendanceSummaryResponse,
-         attendanceTableResponse,
-         leaveResponse,
-         documentResponse,
-       ] = await Promise.all([
-         getStaffById(id),
-         getStaffAttendanceSummaryById(id),
-         getStaffAttendanceByMonth(
-           id,
-           selectedMonth,
-           selectedYear,
-           attendancePage,
-         ),
-         getStaffLeaveById(id, leavePage),
-         getStaffDocuments(id),
-       ]);
+ const fetchAttendanceData = async () => {
+   try {
+     const attendanceTableResponse = await getStaffAttendanceByMonth(
+       id,
+       selectedMonth,
+       selectedYear,
+       attendancePage,
+     );
 
-       setStaff(staffResponse.data.data);
+     setAttendanceData(attendanceTableResponse.data.data.data);
 
-       setAttendanceSummary(attendanceSummaryResponse.data.data);
+     setAttendanceTableSummary(
+       attendanceTableResponse.data.data.attendanceData || {},
+     );
 
-       setAttendanceData(attendanceTableResponse.data.data.data);
-       setAttendanceTotalPages(attendanceTableResponse.data.data.totalPages);
+     setAttendanceTotalPages(attendanceTableResponse.data.data.totalPages);
+   } catch (error) {
+     console.log(error);
+   }
+ };
+useEffect(() => {
+  const fetchStaff = async () => {
+    try {
+      const [
+        staffResponse,
+        attendanceSummaryResponse,
+        leaveResponse,
+        documentResponse,
+      ] = await Promise.all([
+        getStaffById(id),
 
-       setLeaveData(leaveResponse.data.data.data);
-       setLeaveTotalPages(leaveResponse.data.data.totalPages);
+        getStaffAttendanceSummaryById(id),
 
-       setDocuments(documentResponse.data.data);
-     } catch (error) {
-       console.error("Error fetching data:", error);
-     }
-   };
+        getStaffLeaveById(id, leavePage),
 
-   fetchStaff();
- }, [id, selectedMonth, selectedYear, attendancePage, leavePage]);
+        getStaffDocuments(id),
+      ]);
+
+      setStaff(staffResponse.data.data);
+
+      setAttendanceSummary(attendanceSummaryResponse.data.data);
+
+      setLeaveData(leaveResponse.data.data.data);
+
+      setLeaveTotalPages(leaveResponse.data.data.totalPages);
+
+      setDocuments(documentResponse.data.data);
+
+      // Fetch attendance separately
+      await fetchAttendanceData();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  fetchStaff();
+}, [id, selectedMonth, selectedYear, attendancePage, leavePage]);
  const handleDeleteStaff = async () => {
    try {
      await deleteStaff(id);
@@ -218,6 +252,44 @@ const handleUploadDocument = async () => {
     });
   } finally {
     setUploadLoading(false);
+  }
+};
+const handleUpdateAttendance = async () => {
+  try {
+    setUpdateLoading(true);
+
+    // Update attendance
+    await updateAttendanceByAdmin(selectedAttendanceId, attendanceForm);
+
+    // Refresh table data
+    await fetchAttendanceData();
+    setAttendanceForm({
+      checkInTime: "",
+      breakInTime: "",
+      breakOutTime: "",
+      checkOutTime: "",
+    });
+
+    setSelectedAttendanceId(null);
+    // Close modal
+    setOpenEditModal(false);
+
+    // Success message
+    setSnackbar({
+      open: true,
+      message: "Attendance updated successfully",
+      severity: "success",
+    });
+  } catch (error) {
+    console.log(error);
+
+    setSnackbar({
+      open: true,
+      message: "Failed to update attendance",
+      severity: "error",
+    });
+  } finally {
+    setUpdateLoading(false);
   }
 };
   return (
@@ -504,19 +576,19 @@ const handleUploadDocument = async () => {
           <div className={styles.attendanceContainer}>
             <div className={styles.attendanceStats}>
               <div className={styles.attendanceCard}>
-                <h2>{attendanceSummary?.daysLeave || 0}</h2>
+                <h2>{attendanceTableSummary?.daysLeave || 0}</h2>
                 <h4>Leave</h4>
                 <p>This Month</p>
               </div>
 
               <div className={styles.attendanceCard}>
-                <h2>{attendanceSummary?.daysPermission || 0}</h2>
+                <h2>{attendanceTableSummary?.daysPermission || 0}</h2>
                 <h4>Permission</h4>
                 <p> This Month</p>
               </div>
 
               <div className={styles.attendanceCard}>
-                <h2>{attendanceSummary?.daysPresent || 0}</h2>
+                <h2>{attendanceTableSummary?.daysPresent || 0}</h2>
                 <h4>Checked In</h4>
                 <p> This Month</p>
               </div>
@@ -555,13 +627,13 @@ const handleUploadDocument = async () => {
                   <th>CHECK-IN</th>
                   <th>CHECK-OUT</th>
                   <th>STATUS</th>
+                  <th>ACTION</th>
                 </tr>
               </thead>
-
               <tbody>
                 {attendanceData.length > 0 ? (
                   attendanceData.map((attendance) => (
-                    <tr key={attendance._id}>
+                    <tr key={attendance._id || attendance.date}>
                       <td>{attendance.date}</td>
 
                       <td>{attendance.totalHours || "--"}</td>
@@ -583,6 +655,30 @@ const handleUploadDocument = async () => {
                         >
                           {attendance.status}
                         </span>
+                      </td>
+
+                      <td>
+                        {attendance.correctionRequest ? (
+                          <button
+                            className={styles.editAttendanceBtn}
+                            onClick={() => {
+                              setSelectedAttendanceId(attendance._id);
+
+                              setAttendanceForm({
+                                checkInTime: attendance.checkInTime || "",
+                                breakInTime: attendance.breakInTime || "",
+                                breakOutTime: attendance.breakOutTime || "",
+                                checkOutTime: attendance.checkOutTime || "",
+                              });
+
+                              setOpenEditModal(true);
+                            }}
+                          >
+                            Edit Attendance
+                          </button>
+                        ) : (
+                          "--"
+                        )}
                       </td>
                     </tr>
                   ))
@@ -761,6 +857,14 @@ const handleUploadDocument = async () => {
         }}
         handleDelete={handleDeleteDocument}
         deleting={deletingDocument}
+      />
+      <EditAttendanceModal
+        open={openEditModal}
+        handleClose={() => setOpenEditModal(false)}
+        attendanceData={attendanceForm}
+        setAttendanceData={setAttendanceForm}
+        onUpdate={handleUpdateAttendance}
+        updateLoading={updateLoading}
       />
       <Snackbar
         open={snackbar.open}
