@@ -129,6 +129,7 @@
 .noDataCell {
   text-align: center;
   padding: 40px 20px;
+  border-bottom: none !important;
 }
 
 .noDataImage {
