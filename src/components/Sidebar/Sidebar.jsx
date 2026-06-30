@@ -2,18 +2,18 @@ import React, { useEffect, useState } from "react";
 import styles from "./Sidebar.module.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import LogoutModal from "../Modals/LogoutModal";
-import { getAttendanceCorrectionRequests } from "../../api/serviceapi";
+import { useCorrection } from "../../context/CorrectionContext";
+import { useRequest } from "../../context/RequestContext";
 import { MdDashboard, MdCampaign, MdLogout } from "react-icons/md";
-
 import { FaClipboardList } from "react-icons/fa";
 import { HiUserGroup } from "react-icons/hi";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 
 const Sidebar = () => {
   const navigate = useNavigate();
-  const [correctionCount, setCorrectionCount] = useState(0);
+  const { correctionCount } = useCorrection();
+  const { requestCount } = useRequest();
   const [openLogout, setOpenLogout] = useState(false);
-
   const handleLogout = () => {
     localStorage.clear();
 
@@ -23,19 +23,7 @@ const Sidebar = () => {
 
     navigate("/");
   };
-  useEffect(() => {
-    fetchCorrectionCount();
-  }, []);
 
-  const fetchCorrectionCount = async () => {
-    try {
-      const response = await getAttendanceCorrectionRequests();
-
-      setCorrectionCount(response?.data?.data?.statusCount || 0);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   return (
     <>
       <div className={styles.sidebar}>
@@ -66,7 +54,12 @@ const Sidebar = () => {
               }
             >
               <FaClipboardList className={styles.icon} />
-              Request
+
+              <span className={styles.menuText}>Request</span>
+
+              {requestCount > 0 && (
+                <span className={styles.badge}>{requestCount}</span>
+              )}
             </NavLink>
 
             <NavLink

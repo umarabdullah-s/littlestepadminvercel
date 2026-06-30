@@ -52,26 +52,7 @@
   align-items: center;
   gap: 8px;
 }
-.count {
-  min-width: 22px;
-  height: 22px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 50%;
-
-  font-size: 12px;
-  font-weight: 600;
-
-  background: rgba(0, 0, 0, 0.08);
-}
-
-.activeFilter .count {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-}
 .filterBtn {
   background: white;
 

@@ -10,7 +10,7 @@ import { getLeaveRequests, respondLeaveRequest } from "../../api/serviceapi";
 
 import Skeleton from "@mui/material/Skeleton";
 import { useNavigate } from "react-router-dom";
-
+import { useRequest } from "../../context/RequestContext";
 const filters = ["All requests", "Leave", "Permission", "Resolved"];
 const getStatusFromFilter = (filter) => {
   switch (filter) {
@@ -28,6 +28,7 @@ const getStatusFromFilter = (filter) => {
   }
 };
 const Request = () => {
+  const { fetchRequestCount } = useRequest();
   const [activeFilter, setActiveFilter] = useState("All requests");
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -73,7 +74,11 @@ const handleApprove = async (id) => {
     });
 
     await leaveRequests(getStatusFromFilter(activeFilter));
+
     await fetchAllRequestCount();
+
+    // Update Sidebar badge
+    await fetchRequestCount();
   } catch (error) {
     console.error(error);
   } finally {
@@ -96,7 +101,11 @@ const handleReject = async (id) => {
     });
 
     await leaveRequests(getStatusFromFilter(activeFilter));
+
     await fetchAllRequestCount();
+
+    // Update Sidebar Request count
+    await fetchRequestCount();
   } catch (error) {
     console.error(error);
   } finally {
@@ -144,10 +153,6 @@ const handleReject = async (id) => {
               }
             >
               {item}
-
-              {item === "All requests" && (
-                <span className={styles.count}>{totalRequests}</span>
-              )}
             </button>
           ))}
         </div>

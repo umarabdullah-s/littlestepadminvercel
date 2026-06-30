@@ -10,6 +10,7 @@ import Skeleton from "@mui/material/Skeleton";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
+import { useCorrection } from "../../context/CorrectionContext";
 
 const AttendanceCorrection = () => {
   const [requests, setRequests] = useState([]);
@@ -17,6 +18,7 @@ const AttendanceCorrection = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [tableLoading, setTableLoading] = useState(true);
   const navigate = useNavigate();
+  const { fetchCorrectionCount } = useCorrection();
 
 const fetchRequests = async (currentPage = 1) => {
   try {
@@ -43,12 +45,14 @@ const handleResponse = async (requestId, status, staffId) => {
       status,
     });
 
-    // Update UI immediately
     setRequests((prev) =>
       prev.map((req) => (req.id === requestId ? { ...req, status } : req)),
     );
 
-    // Navigate only for approved requests
+    
+    await fetchCorrectionCount();
+
+    
     if (status === "approved") {
       navigate(`/staff/${staffId}`);
     }
@@ -68,8 +72,8 @@ const handleResponse = async (requestId, status, staffId) => {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>Staff ID</th>
                 <th>Staff Name</th>
+                <th>Staff ID</th>
                 <th>Email</th>
                 <th>Request Type</th>
                 <th>Reason</th>

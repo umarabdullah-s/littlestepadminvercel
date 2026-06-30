@@ -10,82 +10,93 @@ import ProtectedRoute from "./components/layouts/ProtectedRoute";
 import StaffDetails from "./sections/StaffDetails/StaffDetails";
 import CreateStaff from "./sections/createStaff/CreateStaff";
 import AttendanceCorrection from "./sections/AttendanceCorrection/AttendanceCorrection";
+import { CorrectionProvider } from "./context/CorrectionContext";
+import { RequestProvider } from "./context/RequestContext";
 
 function App() {
-  
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/login" element={<Login />} />
+    <RequestProvider>
+    <CorrectionProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<Login />} />
 
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/request"
-          element={
-            <ProtectedRoute>
-              <Request />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/attendance-correction"
-          element={
-            <ProtectedRoute>
-              <AttendanceCorrection />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/staff"
-          element={
-            <ProtectedRoute>
-              <Staff />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/announcement"
-          element={
-            <ProtectedRoute>
-              <Announcement />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/staff/:id"
-          element={
-            <ProtectedRoute>
-              <StaffDetails />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/staff/create-staff"
-          element={
-            <ProtectedRoute>
-              <CreateStaff />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/staff/edit/:id"
-          element={
-            <ProtectedRoute>
-              <CreateStaff />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+          <Route
+            path="/request"
+            element={
+              <ProtectedRoute>
+                <Request />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/attendance-correction"
+            element={
+              <ProtectedRoute>
+                <AttendanceCorrection />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/staff"
+            element={
+              <ProtectedRoute>
+                <Staff />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/announcement"
+            element={
+              <ProtectedRoute>
+                <Announcement />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/staff/:id"
+            element={
+              <ProtectedRoute>
+                <StaffDetails />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/staff/create-staff"
+            element={
+              <ProtectedRoute>
+                <CreateStaff />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/staff/edit/:id"
+            element={
+              <ProtectedRoute>
+                <CreateStaff />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </CorrectionProvider>
+    </RequestProvider>
   );
 }
 
