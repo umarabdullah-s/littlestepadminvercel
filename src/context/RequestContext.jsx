@@ -13,6 +13,10 @@ export const RequestProvider = ({ children }) => {
   const [requestCount, setRequestCount] = useState(0);
 
   const fetchRequestCount = useCallback(async () => {
+    const token = sessionStorage.getItem("adminToken");
+
+    if (!token) return;
+
     try {
       const response = await getLeaveRequests("");
 

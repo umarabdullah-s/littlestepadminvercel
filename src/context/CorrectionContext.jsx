@@ -13,6 +13,10 @@ export const CorrectionProvider = ({ children }) => {
   const [correctionCount, setCorrectionCount] = useState(0);
 
 const fetchCorrectionCount = useCallback(async () => {
+  const token = sessionStorage.getItem("adminToken");
+
+  if (!token) return;
+
   try {
     const response = await getAttendanceCorrectionRequests();
 
