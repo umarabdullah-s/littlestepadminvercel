@@ -296,7 +296,8 @@ const Header = () => {
               borderRadius: "20px",
               mt: 1.5,
               boxShadow: "0 12px 40px rgba(15,23,42,.12)",
-              overflow: "hidden",
+              overflowX: "hidden",
+              overflowY: "hidden",
             },
           },
         }}

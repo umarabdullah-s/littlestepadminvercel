@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import MainLayout from "../../components/layouts/MainLayout";
 import styles from "./StaffDetails.module.css";
@@ -33,6 +33,9 @@ import DeleteDocumentModal from "../../components/Modals/DeleteDocumentModal";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import Fade from "@mui/material/Fade";
+import Collapse from "@mui/material/Collapse";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 
 const StaffDetails = () => {
   const navigate = useNavigate();
@@ -83,6 +86,7 @@ const StaffDetails = () => {
 
   const [selectedAttendanceId, setSelectedAttendanceId] = useState(null);
   const [updateLoading, setUpdateLoading] = useState(false);
+  const [expandedAttendance, setExpandedAttendance] = useState(null);
 
   useEffect(() => {
     const tab = location.state?.activeTab;
@@ -126,46 +130,46 @@ const StaffDetails = () => {
     }
   }, [id, selectedMonth, selectedYear, attendancePage]);
 
-useEffect(() => {
-  const fetchStaffDetails = async () => {
-    try {
-      const [staffResponse, attendanceSummaryResponse, documentResponse] =
-        await Promise.all([
-          getStaffById(id),
-          getStaffAttendanceSummaryById(id),
-          getStaffDocuments(id),
-        ]);
+  useEffect(() => {
+    const fetchStaffDetails = async () => {
+      try {
+        const [staffResponse, attendanceSummaryResponse, documentResponse] =
+          await Promise.all([
+            getStaffById(id),
+            getStaffAttendanceSummaryById(id),
+            getStaffDocuments(id),
+          ]);
 
-      setStaff(staffResponse.data.data);
+        setStaff(staffResponse.data.data);
 
-      setAttendanceSummary(attendanceSummaryResponse.data.data);
+        setAttendanceSummary(attendanceSummaryResponse.data.data);
 
-      setDocuments(documentResponse.data.data);
-    } catch (error) {
-      console.error("Error fetching staff details:", error);
-    }
-  };
+        setDocuments(documentResponse.data.data);
+      } catch (error) {
+        console.error("Error fetching staff details:", error);
+      }
+    };
 
-  fetchStaffDetails();
-}, [id]);
-useEffect(() => {
-  const fetchLeaveData = async () => {
-    try {
-      const leaveResponse = await getStaffLeaveById(id, leavePage);
+    fetchStaffDetails();
+  }, [id]);
+  useEffect(() => {
+    const fetchLeaveData = async () => {
+      try {
+        const leaveResponse = await getStaffLeaveById(id, leavePage);
 
-      setLeaveData(leaveResponse.data.data.data);
+        setLeaveData(leaveResponse.data.data.data);
 
-      setLeaveTotalPages(leaveResponse.data.data.totalPages);
-    } catch (error) {
-      console.error("Error fetching leave data:", error);
-    }
-  };
+        setLeaveTotalPages(leaveResponse.data.data.totalPages);
+      } catch (error) {
+        console.error("Error fetching leave data:", error);
+      }
+    };
 
-  fetchLeaveData();
-}, [id, leavePage]);
- useEffect(() => {
-  fetchAttendanceData();
-}, [fetchAttendanceData]);
+    fetchLeaveData();
+  }, [id, leavePage]);
+  useEffect(() => {
+    fetchAttendanceData();
+  }, [fetchAttendanceData]);
   const handleDeleteStaff = async () => {
     try {
       await deleteStaff(id);
@@ -628,59 +632,109 @@ useEffect(() => {
                   <th>CHECK-OUT</th>
                   <th>STATUS</th>
                   <th>ACTION</th>
+                  <th>
+                    <PhotoCameraIcon />
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {attendanceData.length > 0 ? (
                   attendanceData.map((attendance) => (
-                    <tr key={attendance._id || attendance.date}>
-                      <td>{attendance.date}</td>
+                    <React.Fragment key={attendance._id || attendance.date}>
+                      <tr>
+                        <td>{attendance.date}</td>
 
-                      <td>{attendance.totalHours || "--"}</td>
+                        <td>{attendance.totalHours || "--"}</td>
 
-                      <td>{attendance.checkInTime || "--"}</td>
+                        <td>{attendance.checkInTime || "--"}</td>
 
-                      <td>{attendance.checkOutTime || "--"}</td>
+                        <td>{attendance.checkOutTime || "--"}</td>
 
-                      <td>
-                        <span
-                          className={
-                            attendance.status?.toLowerCase() === "checked in"
-                              ? styles.checkedIn
-                              : attendance.status?.toLowerCase() ===
-                                  "checked out"
-                                ? styles.checkedOut
-                                : styles.onLeave
-                          }
-                        >
-                          {attendance.status}
-                        </span>
-                      </td>
-
-                      <td>
-                        {attendance.correctionRequest ? (
-                          <button
-                            className={styles.editAttendanceBtn}
-                            onClick={() => {
-                              setSelectedAttendanceId(attendance._id);
-
-                              setAttendanceForm({
-                                checkInTime: attendance.checkInTime || "",
-                                breakInTime: attendance.breakInTime || "",
-                                breakOutTime: attendance.breakOutTime || "",
-                                checkOutTime: attendance.checkOutTime || "",
-                              });
-
-                              setOpenEditModal(true);
-                            }}
+                        <td>
+                          <span
+                            className={
+                              attendance.status?.toLowerCase() === "checked in"
+                                ? styles.checkedIn
+                                : attendance.status?.toLowerCase() ===
+                                    "checked out"
+                                  ? styles.checkedOut
+                                  : styles.onLeave
+                            }
                           >
-                            Edit Attendance
-                          </button>
-                        ) : (
-                          "--"
-                        )}
-                      </td>
-                    </tr>
+                            {attendance.status}
+                          </span>
+                        </td>
+
+                        <td>
+                          {attendance.correctionRequest ? (
+                            <button
+                              className={styles.editAttendanceBtn}
+                              onClick={() => {
+                                setSelectedAttendanceId(attendance._id);
+
+                                setAttendanceForm({
+                                  checkInTime: attendance.checkInTime || "",
+                                  breakInTime: attendance.breakInTime || "",
+                                  breakOutTime: attendance.breakOutTime || "",
+                                  checkOutTime: attendance.checkOutTime || "",
+                                });
+
+                                setOpenEditModal(true);
+                              }}
+                            >
+                              Edit Attendance
+                            </button>
+                          ) : (
+                            "--"
+                          )}
+                        </td>
+
+                        <td>
+                          {attendance.imageUrl && (
+                            <button
+                              className={styles.expandBtn}
+                              onClick={() =>
+                                setExpandedAttendance(
+                                  expandedAttendance === attendance._id
+                                    ? null
+                                    : attendance._id,
+                                )
+                              }
+                            >
+                              <ExpandMoreIcon
+                                style={{
+                                  transform:
+                                    expandedAttendance === attendance._id
+                                      ? "rotate(180deg)"
+                                      : "rotate(0deg)",
+                                  transition: "transform 0.4s ease",
+                                }}
+                              />
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td colSpan="7" style={{ padding: 0, border: "none" }}>
+                          <Collapse
+                            in={expandedAttendance === attendance._id}
+                            timeout={500}
+                            unmountOnExit
+                          >
+                            <div className={styles.expandedCard}>
+                              <div className={styles.fullImageWrapper}>
+                                <img
+                                  src={attendance.imageUrl}
+                                  alt="Attendance"
+                                  className={styles.fullImage}
+                                />
+                              </div>
+                            </div>
+                          </Collapse>
+                        </td>
+                      </tr>
+                    </React.Fragment>
                   ))
                 ) : (
                   <tr>

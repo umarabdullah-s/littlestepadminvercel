@@ -65,6 +65,14 @@ const handleResponse = async (requestId, status, staffId) => {
     <MainLayout>
       <div className={styles.pageHeader}>
         <h2>Attendance Correction Requests</h2>
+        <span className={styles.currentDate}>
+          {new Date().toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          })}
+        </span>
+        <p>Review and manage attendance corrections.</p>
       </div>
 
       <div className={styles.container}>
@@ -76,6 +84,7 @@ const handleResponse = async (requestId, status, staffId) => {
                 <th>Staff ID</th>
                 <th>Email</th>
                 <th>Request Type</th>
+                <th>Date</th>
                 <th>Reason</th>
                 <th>Status</th>
               </tr>
@@ -134,6 +143,11 @@ const handleResponse = async (requestId, status, staffId) => {
                     <td>{item.staff?.staffId}</td>
                     <td>{item.staff?.email}</td>
                     <td>{item.requestType}</td>
+                    <td>
+                      {item.createdAt
+                        ? new Date(item.createdAt).toLocaleDateString("en-GB")
+                        : "-"}
+                    </td>
                     <td className={styles.reason}>{item.reason}</td>
 
                     <td>

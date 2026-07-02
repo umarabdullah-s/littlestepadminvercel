@@ -174,6 +174,27 @@
 }
 
 @media (max-width: 768px) {
+    .menuText {
+    display: none;
+  }
+
+  .badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+
+    width: 10px;
+    height: 10px;
+
+    min-width: unset;
+    padding: 0;
+
+    border-radius: 50%;
+
+    background: #ef4444;
+
+    font-size: 0; /* hides the number */
+  }
   .sidebar {
     width: 78px;
 
@@ -262,6 +283,27 @@
   }
 }
 @media (min-width: 769px) and (max-width: 992px) {
+   .menuText {
+    display: none;
+  }
+
+  .badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+
+    width: 10px;
+    height: 10px;
+
+    min-width: unset;
+    padding: 0;
+
+    border-radius: 50%;
+
+    background: #ef4444;
+
+    font-size: 0; /* hides the number */
+  }
   .sidebar {
     width: 90px;
 

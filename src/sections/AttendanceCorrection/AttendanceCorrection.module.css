@@ -3,11 +3,22 @@
 }
 
 .pageHeader h2 {
-  font-size: 20px;
-  font-weight: 700;
-  color: #111827;
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+}
+.pageHeader p {
+  margin-top: 10px;
+    color: #64748b;
+    font-size: 14px;
 }
 
+.currentDate {
+  display: block;
+  margin-top: 8px;
+    color: #64748b;
+    font-size: 14px;
+}
 .container {
   background: white;
   padding: 20px;
@@ -154,20 +165,23 @@
   background: #fee2e2;
   color: #dc2626;
 }
-/* Mobile */
-
-@media screen and (max-width: 576px) {
+@media (max-width: 576px) {
   .pageHeader h2 {
-    font-size: 22px;
+    font-size: 18px;
+  }
+
+  .pageHeader p,
+  .currentDate {
+    font-size: 13px;
   }
 
   .container {
-    padding: 16px;
-    overflow-x: auto;
+    padding: 14px;
+    border-radius: 12px;
   }
 
   .table {
-    min-width: 700px;
+    min-width: 800px;
   }
 
   .table th,
@@ -176,9 +190,32 @@
     font-size: 13px;
   }
 
-  .status {
-    font-size: 12px;
-    padding: 6px 10px;
+  .staffAvatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .staffNameWrapper {
+    gap: 8px;
+  }
+
+  .reason {
+    width: 220px;
+  }
+
+  .approveIcon,
+  .rejectIcon {
+    font-size: 30px !important;
+    padding: 4px;
+  }
+
+  .paginationWrapper {
+    justify-content: center;
+    margin-top: 12px;
+  }
+
+  .noData {
+    min-height: 300px;
   }
 
   .noData img {
@@ -189,55 +226,20 @@
   .noData p {
     font-size: 14px;
   }
-
-  .paginationWrapper {
-    justify-content: center;
-  }
 }
-
-/* Small Tablets */
-
-@media screen and (min-width: 577px) and (max-width: 768px) {
+@media (min-width: 577px) and (max-width: 768px) {
   .pageHeader h2 {
-    font-size: 24px;
+    font-size: 19px;
   }
 
-  .container {
-    padding: 18px;
-    overflow-x: auto;
-  }
-
-  .table {
-    min-width: 750px;
-  }
-
-  .table th,
-  .table td {
-    padding: 14px 12px;
+  .pageHeader p,
+  .currentDate {
     font-size: 14px;
   }
 
-  .status {
-    font-size: 12px;
-    padding: 6px 10px;
-  }
-
-  .noData img {
-    width: 160px;
-    height: 160px;
-  }
-
-  .paginationWrapper {
-    justify-content: center;
-  }
-}
-
-/* Tablets */
-
-@media screen and (min-width: 769px) and (max-width: 992px) {
   .container {
-    padding: 18px;
-    overflow-x: auto;
+    padding: 16px;
+    border-radius: 14px;
   }
 
   .table {
@@ -250,9 +252,93 @@
     font-size: 14px;
   }
 
-  .status {
-    font-size: 13px;
-    padding: 6px 12px;
+  .staffAvatar {
+    width: 34px;
+    height: 34px;
+  }
+
+  .staffNameWrapper {
+    gap: 9px;
+  }
+
+  .reason {
+    width: 250px;
+  }
+
+  .approveIcon,
+  .rejectIcon {
+    font-size: 32px !important;
+    padding: 5px;
+  }
+
+  .paginationWrapper {
+    justify-content: center;
+    margin-top: 14px;
+  }
+
+  .noData {
+    min-height: 350px;
+  }
+
+  .noData img {
+    width: 160px;
+    height: 160px;
+  }
+
+  .noData p {
+    font-size: 15px;
+  }
+}
+@media (min-width: 769px) and (max-width: 992px) {
+  .pageHeader h2 {
+    font-size: 20px;
+  }
+
+  .pageHeader p,
+  .currentDate {
+    font-size: 14px;
+  }
+
+  .container {
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .table {
+    min-width: 900px;
+  }
+
+  .table th,
+  .table td {
+    padding: 15px 13px;
+    font-size: 14px;
+  }
+
+  .staffAvatar {
+    width: 35px;
+    height: 35px;
+  }
+
+  .staffNameWrapper {
+    gap: 10px;
+  }
+
+  .reason {
+    width: 260px;
+  }
+
+  .approveIcon,
+  .rejectIcon {
+    font-size: 34px !important;
+    padding: 5px;
+  }
+
+  .paginationWrapper {
+    justify-content: flex-end;
+  }
+
+  .noData {
+    min-height: 380px;
   }
 
   .noData img {
@@ -260,27 +346,50 @@
     height: 170px;
   }
 
-  .paginationWrapper {
-    justify-content: center;
+  .noData p {
+    font-size: 15px;
   }
 }
-
-/* Small Desktop */
-
-@media screen and (min-width: 993px) and (max-width: 1200px) {
+@media (min-width: 993px) and (max-width: 1200px) {
   .container {
     padding: 20px;
   }
 
+  .table {
+    min-width: 100%;
+  }
+
   .table th,
   .table td {
-    padding: 14px 12px;
+    padding: 15px 14px;
     font-size: 14px;
   }
 
-  .status {
-    font-size: 13px;
-    padding: 7px 12px;
+  .staffAvatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .staffNameWrapper {
+    gap: 10px;
+  }
+
+  .reason {
+    width: 270px;
+  }
+
+  .approveIcon,
+  .rejectIcon {
+    font-size: 35px !important;
+    padding: 6px;
+  }
+
+  .paginationWrapper {
+    justify-content: flex-end;
+  }
+
+  .noData {
+    min-height: 400px;
   }
 
   .noData img {
@@ -288,7 +397,40 @@
     height: 180px;
   }
 
-  .paginationWrapper {
-    justify-content: flex-end;
+  .noData p {
+    font-size: 16px;
+  }
+}
+@media (min-width: 1200px) and (max-width: 1400px) {
+  .container {
+    padding: 22px;
+  }
+
+  .table th,
+  .table td {
+    padding: 16px 15px;
+  }
+
+  .reason {
+    width: 300px;
+  }
+
+  .staffAvatar {
+    width: 38px;
+    height: 38px;
+  }
+
+  .pageHeader h2 {
+    font-size: 21px;
+  }
+
+  .pageHeader p,
+  .currentDate {
+    font-size: 14px;
+  }
+
+  .approveIcon,
+  .rejectIcon {
+    font-size: 36px !important;
   }
 }

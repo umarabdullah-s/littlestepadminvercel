@@ -10,6 +10,15 @@ import {
 import Skeleton from "@mui/material/Skeleton";
 import Pagination from "@mui/material/Pagination";
 
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Avatar from "@mui/material/Avatar";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import Collapse from "@mui/material/Collapse";
+
+
 const Dashboard = () => {
   const [summary, setSummary] = useState({
     checkedInStaffs: 0,
@@ -23,6 +32,7 @@ const Dashboard = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [expandedRow, setExpandedRow] = useState(null);
  useEffect(() => {
    fetchAttendanceSummary();
    fetchAttendanceList();
@@ -159,6 +169,9 @@ const fetchAttendanceList = async (filter = "", currentPage = 1) => {
                   <th>Check-In</th>
                   <th>Check-Out</th>
                   <th>Status</th>
+                  <th>
+                    <PhotoCameraIcon />
+                  </th>
                 </tr>
               </thead>
 
@@ -193,39 +206,90 @@ const fetchAttendanceList = async (filter = "", currentPage = 1) => {
                   ))
                 ) : staffData.length > 0 ? (
                   staffData.map((staff) => (
-                    <tr key={staff.id}>
-                      <td>
-                        <div className={styles.staffNameWrapper}>
-                          <div className={styles.staffAvatar}>
-                            <img src={staff.profileUrl} alt="img" />
+                    <React.Fragment key={staff.id}>
+                      <tr>
+                        <td>
+                          <div className={styles.staffNameWrapper}>
+                            <div className={styles.staffAvatar}>
+                              <img src={staff.profileUrl} alt="img" />
+                            </div>
+
+                            <span>{staff.name}</span>
                           </div>
+                        </td>
 
-                          <span>{staff.name}</span>
-                        </div>
-                      </td>
+                        <td>{staff.staffId}</td>
 
-                      <td>{staff.staffId}</td>
+                        <td>{staff.role || "--"}</td>
 
-                      <td>{staff.role || "--"}</td>
+                        <td>{staff.checkInTime || "--"}</td>
 
-                      <td>{staff.checkInTime || "--"}</td>
+                        <td>{staff.checkOutTime || "--"}</td>
 
-                      <td>{staff.checkOutTime || "--"}</td>
+                        <td>
+                          <span
+                            className={`${styles.status} ${
+                              staff.status === "checked in"
+                                ? styles.in
+                                : staff.status === "not checked in"
+                                  ? styles.out
+                                  : styles.leave
+                            }`}
+                          >
+                            {staff.status}
+                          </span>
+                        </td>
 
-                      <td>
-                        <span
-                          className={`${styles.status} ${
-                            staff.status === "checked in"
-                              ? styles.in
-                              : staff.status === "not checked in"
-                                ? styles.out
-                                : styles.leave
-                          }`}
+                        <td>
+                          {staff.imageUrl && (
+                            <button
+                              className={styles.expandBtn}
+                              onClick={() =>
+                                setExpandedRow(
+                                  expandedRow === staff.id ? null : staff.id,
+                                )
+                              }
+                            >
+                              <ExpandMoreIcon
+                                style={{
+                                  transform:
+                                    expandedRow === staff.id
+                                      ? "rotate(180deg)"
+                                      : "rotate(0deg)",
+                                  transition: "transform 0.5s ease",
+                                }}
+                              />
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td
+                          colSpan="7"
+                          style={{
+                            padding: 0,
+                            border: "none",
+                          }}
                         >
-                          {staff.status}
-                        </span>
-                      </td>
-                    </tr>
+                          <Collapse
+                            in={expandedRow === staff.id}
+                            timeout={500}
+                            unmountOnExit
+                          >
+                            <div className={styles.expandedCard}>
+                              <div className={styles.fullImageWrapper}>
+                                <img
+                                  src={staff.imageUrl}
+                                  alt={staff.name}
+                                  className={styles.fullImage}
+                                />
+                              </div>
+                            </div>
+                          </Collapse>
+                        </td>
+                      </tr>
+                    </React.Fragment>
                   ))
                 ) : (
                   <tr>
