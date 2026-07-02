@@ -9,11 +9,6 @@ import {
 } from "../../api/serviceapi";
 import Skeleton from "@mui/material/Skeleton";
 import Pagination from "@mui/material/Pagination";
-
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Avatar from "@mui/material/Avatar";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import Collapse from "@mui/material/Collapse";
