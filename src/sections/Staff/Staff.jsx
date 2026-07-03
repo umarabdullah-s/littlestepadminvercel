@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import DeleteStaffModal from "../../components/Modals/DeleteStaffModal";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import Collapse from "@mui/material/Collapse";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 const Staff = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -19,6 +21,7 @@ const Staff = () => {
   const [selectedStaffId, setSelectedStaffId] = useState(null);
   const [statusFilter, setStatusFilter] = useState("all");
   const [deleting, setDeleting] = useState(false);
+  const [expandedRow, setExpandedRow] = useState(null);
   
  const fetchStaffs = async (pageNumber = 1, filter = "") => {
    try {
@@ -104,6 +107,7 @@ const handleDeleteConfirm = async () => {
           <table>
             <thead>
               <tr>
+                <th></th> {/* Arrow column */}
                 <th>NAME</th>
                 <th>EM-ID</th>
                 <th>ROLE</th>
@@ -143,11 +147,14 @@ const handleDeleteConfirm = async () => {
                     <td>
                       <Skeleton width={100} />
                     </td>
+                    <td>
+                      <Skeleton width={100} />
+                    </td>
                   </tr>
                 ))
               ) : staffData.length === 0 ? (
                 <tr>
-                  <td colSpan="9" className={styles.noDataCell}>
+                  <td colSpan="10" className={styles.noDataCell}>
                     <img
                       src="/critic_no_found.svg"
                       alt="No Data Found"
@@ -158,80 +165,115 @@ const handleDeleteConfirm = async () => {
                 </tr>
               ) : (
                 staffData.map((staff) => (
-                  <tr
-                    key={staff._id}
-                    onClick={() => navigate(`/staff/${staff._id}`)}
-                    className={styles.clickableRow}
-                  >
-                    <td>
-                      <div className={styles.staffNameWrapper}>
-                        <div className={styles.staffAvatar}>
-                          <img src={staff.profileUrl} alt="" />
-                        </div>
-
-                        <span>{staff.name}</span>
-                      </div>
-                    </td>
-
-                    <td>{staff.staffId}</td>
-
-                    <td>{staff.role || "--"}</td>
-
-                    <td>
-                      {new Date(staff.dateOfJoining).toLocaleDateString(
-                        "en-GB",
-                      )}
-                    </td>
-
-                    <td>{staff.noOfMonths || "--"}</td>
-
-                    <td>{staff.email}</td>
-
-                    <td>{staff.phone}</td>
-
-                    <td>
-                      <span
-                        className={`${styles.status} ${
-                          staff.status?.toLowerCase() === "checked in"
-                            ? styles.in
-                            : staff.status === "not checked in"
-                              ? styles.out
-                              : styles.leave
-                        }`}
-                      >
-                        {staff.status || "--"}
-                      </span>
-                    </td>
-                    <td
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
+                  <React.Fragment key={staff._id}>
+                    <tr
+                      onClick={() => navigate(`/staff/${staff._id}`)}
+                      className={styles.clickableRow}
                     >
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "10px",
+                      <td>
+                        <button
+                          className={styles.expandBtn}
+                          onClick={(e) => {
+                            e.stopPropagation();
+
+                            setExpandedRow(
+                              expandedRow === staff._id ? null : staff._id,
+                            );
+                          }}
+                        >
+                          <ExpandMoreIcon
+                            style={{
+                              transform:
+                                expandedRow === staff._id
+                                  ? "rotate(180deg)"
+                                  : "rotate(0deg)",
+                              transition: "0.3s",
+                            }}
+                          />
+                        </button>
+                      </td>
+                      <td>
+                        <div className={styles.staffNameWrapper}>
+                          <div className={styles.staffAvatar}>
+                            <img src={staff.profileUrl} alt="" />
+                          </div>
+                          <span>{staff.name}</span>
+                        </div>
+                      </td>
+
+                      <td>{staff.staffId}</td>
+                      <td>{staff.role || "--"}</td>
+
+                      <td>
+                        {new Date(staff.dateOfJoining).toLocaleDateString(
+                          "en-GB",
+                        )}
+                      </td>
+
+                      <td>{staff.noOfMonths || "--"}</td>
+                      <td>{staff.email}</td>
+                      <td>{staff.phone}</td>
+
+                      <td>
+                        <span
+                          className={`${styles.status} ${
+                            staff.status?.toLowerCase() === "checked in"
+                              ? styles.in
+                              : staff.status === "not checked in"
+                                ? styles.out
+                                : styles.leave
+                          }`}
+                        >
+                          {staff.status || "--"}
+                        </span>
+                      </td>
+
+                      <td
+                        onClick={(e) => {
+                          e.stopPropagation();
                         }}
                       >
-                        <EditOutlinedIcon
-                          onClick={() => navigate(`/staff/edit/${staff._id}`)}
-                          sx={{
-                            color: "#2563eb",
-                            cursor: "pointer",
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
                           }}
-                        />
+                        >
+                          <EditOutlinedIcon
+                            onClick={() => navigate(`/staff/edit/${staff._id}`)}
+                            sx={{
+                              color: "#2563eb",
+                              cursor: "pointer",
+                            }}
+                          />
 
-                        <DeleteOutlineOutlinedIcon
-                          onClick={() => handleDeleteClick(staff._id)}
-                          sx={{
-                            color: "#ef4444",
-                            cursor: "pointer",
-                          }}
-                        />
-                      </div>
-                    </td>
-                  </tr>
+                          <DeleteOutlineOutlinedIcon
+                            onClick={() => handleDeleteClick(staff._id)}
+                            sx={{
+                              color: "#ef4444",
+                              cursor: "pointer",
+                            }}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td colSpan="9" style={{ padding: 0, border: "none" }}>
+                        <Collapse
+                          in={expandedRow === staff._id}
+                          timeout={300}
+                          unmountOnExit
+                        >
+                          <div className={styles.passwordAccordion}>
+                            <strong>Password:</strong>{" "}
+                            {staff.showPassword || "--"}
+                          </div>
+                        </Collapse>
+                      </td>
+                    </tr>
+                  </React.Fragment>
                 ))
               )}
             </tbody>

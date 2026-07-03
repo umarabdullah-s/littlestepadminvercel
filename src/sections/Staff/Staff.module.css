@@ -144,6 +144,19 @@
   font-weight: 500;
   color: #6b7280;
 }
+.expandBtn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.passwordAccordion {
+  padding: 16px 24px;
+  background: #f8fafc;
+  color: #334155;
+  border-radius: 12px;
+  margin: 8px;
+}
 @media (max-width: 576px) {
   .staffPage {
     padding: 12px;
@@ -398,5 +411,75 @@
 
   .noDataCell p {
     font-size: 16px;
+  }
+}
+@media (min-width: 1201px) and (max-width: 1400px) {
+  .staffPage {
+    padding: 22px;
+  }
+
+  .top {
+    align-items: center;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .filterSelect {
+    width: 250px;
+  }
+
+  .addBtn {
+    padding: 12px 28px;
+  }
+
+  .tableSection {
+    padding: 18px;
+  }
+
+  .tableSection table {
+    min-width: 100%;
+  }
+
+  .tableSection th,
+  .tableSection td {
+    padding: 16px 14px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .staffAvatar {
+    width: 38px;
+    height: 38px;
+  }
+
+  .staffNameWrapper {
+    gap: 12px;
+  }
+
+  .status {
+    padding: 7px 14px;
+    font-size: 12px;
+  }
+
+  .paginationWrapper {
+    justify-content: flex-end;
+  }
+
+  .noDataImage {
+    width: 220px;
+  }
+
+  .noDataCell p {
+    font-size: 16px;
+  }
+
+  .passwordAccordion {
+    padding: 18px 24px;
   }
 }

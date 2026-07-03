@@ -1144,7 +1144,7 @@ return (
         <div className={styles.photoCard}>
           <h4 className={styles.cardTitle}>
             <PhotoCameraOutlinedIcon className={styles.titleIcon} />
-            Staff Photo
+            Staff Photo <span style={{ color: "#ef4444" }}>*</span>
           </h4>
 
           <div className={styles.uploadWrapper1}>
