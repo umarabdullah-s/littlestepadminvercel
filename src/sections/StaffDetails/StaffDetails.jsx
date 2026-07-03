@@ -170,6 +170,10 @@ const StaffDetails = () => {
   useEffect(() => {
     fetchAttendanceData();
   }, [fetchAttendanceData]);
+  const hasCorrectionRequest = attendanceData.some(
+    (attendance) => attendance.correctionRequest,
+  );
+
   const handleDeleteStaff = async () => {
     try {
       await deleteStaff(id);
@@ -631,7 +635,9 @@ const StaffDetails = () => {
                   <th>CHECK-IN</th>
                   <th>CHECK-OUT</th>
                   <th>STATUS</th>
-                  <th>ACTION</th>
+
+                  {hasCorrectionRequest && <th>ACTION</th>}
+
                   <th>
                     <PhotoCameraIcon />
                   </th>
@@ -665,29 +671,31 @@ const StaffDetails = () => {
                           </span>
                         </td>
 
-                        <td>
-                          {attendance.correctionRequest ? (
-                            <button
-                              className={styles.editAttendanceBtn}
-                              onClick={() => {
-                                setSelectedAttendanceId(attendance._id);
+                        {hasCorrectionRequest && (
+                          <td>
+                            {attendance.correctionRequest ? (
+                              <button
+                                className={styles.editAttendanceBtn}
+                                onClick={() => {
+                                  setSelectedAttendanceId(attendance._id);
 
-                                setAttendanceForm({
-                                  checkInTime: attendance.checkInTime || "",
-                                  breakInTime: attendance.breakInTime || "",
-                                  breakOutTime: attendance.breakOutTime || "",
-                                  checkOutTime: attendance.checkOutTime || "",
-                                });
+                                  setAttendanceForm({
+                                    checkInTime: attendance.checkInTime || "",
+                                    breakInTime: attendance.breakInTime || "",
+                                    breakOutTime: attendance.breakOutTime || "",
+                                    checkOutTime: attendance.checkOutTime || "",
+                                  });
 
-                                setOpenEditModal(true);
-                              }}
-                            >
-                              Edit Attendance
-                            </button>
-                          ) : (
-                            "--"
-                          )}
-                        </td>
+                                  setOpenEditModal(true);
+                                }}
+                              >
+                                Edit Attendance
+                              </button>
+                            ) : (
+                              "--"
+                            )}
+                          </td>
+                        )}
 
                         <td>
                           {attendance.imageUrl && (
@@ -716,7 +724,10 @@ const StaffDetails = () => {
                       </tr>
 
                       <tr>
-                        <td colSpan="7" style={{ padding: 0, border: "none" }}>
+                        <td
+                          colSpan={hasCorrectionRequest ? 7 : 6}
+                          style={{ padding: 0, border: "none" }}
+                        >
                           <Collapse
                             in={expandedAttendance === attendance._id}
                             timeout={500}

@@ -33,7 +33,7 @@
 .table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
+  /* table-layout: fixed; */
 }
 
 .table thead {
@@ -56,6 +56,9 @@
 
   color: #374151;
   font-size: 14px;
+}
+.email {
+  white-space: nowrap;
 }
 .staffNameWrapper {
   display: flex;

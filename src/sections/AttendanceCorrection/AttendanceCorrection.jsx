@@ -141,7 +141,7 @@ const handleResponse = async (requestId, status, staffId) => {
                     </td>
 
                     <td>{item.staff?.staffId}</td>
-                    <td>{item.staff?.email}</td>
+                    <td className={styles.email}>{item.staff?.email}</td>
                     <td>{item.requestType}</td>
                     <td>
                       {item.createdAt
