@@ -36,6 +36,7 @@ import Fade from "@mui/material/Fade";
 import Collapse from "@mui/material/Collapse";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import Skeleton from "@mui/material/Skeleton";
 
 const StaffDetails = () => {
   const navigate = useNavigate();
@@ -87,6 +88,7 @@ const StaffDetails = () => {
   const [selectedAttendanceId, setSelectedAttendanceId] = useState(null);
   const [updateLoading, setUpdateLoading] = useState(false);
   const [expandedAttendance, setExpandedAttendance] = useState(null);
+  const [profileLoading, setProfileLoading] = useState(true);
 
   useEffect(() => {
     const tab = location.state?.activeTab;
@@ -131,24 +133,26 @@ const StaffDetails = () => {
   }, [id, selectedMonth, selectedYear, attendancePage]);
 
   useEffect(() => {
-    const fetchStaffDetails = async () => {
-      try {
-        const [staffResponse, attendanceSummaryResponse, documentResponse] =
-          await Promise.all([
-            getStaffById(id),
-            getStaffAttendanceSummaryById(id),
-            getStaffDocuments(id),
-          ]);
+   const fetchStaffDetails = async () => {
+     try {
+       setProfileLoading(true);
 
-        setStaff(staffResponse.data.data);
+       const [staffResponse, attendanceSummaryResponse, documentResponse] =
+         await Promise.all([
+           getStaffById(id),
+           getStaffAttendanceSummaryById(id),
+           getStaffDocuments(id),
+         ]);
 
-        setAttendanceSummary(attendanceSummaryResponse.data.data);
-
-        setDocuments(documentResponse.data.data);
-      } catch (error) {
-        console.error("Error fetching staff details:", error);
-      }
-    };
+       setStaff(staffResponse.data.data);
+       setAttendanceSummary(attendanceSummaryResponse.data.data);
+       setDocuments(documentResponse.data.data);
+     } catch (error) {
+       console.error(error);
+     } finally {
+       setProfileLoading(false);
+     }
+   };
 
     fetchStaffDetails();
   }, [id]);
@@ -312,39 +316,63 @@ const StaffDetails = () => {
         <div className={styles.profileCard}>
           <div className={styles.profileLeft}>
             <div className={styles.avatar}>
-              <img
-                src={staff?.profileUrl}
-                alt={staff?.name}
-                className={styles.profileImage}
-              />
+              {profileLoading ? (
+                <Skeleton variant="circular" width={120} height={120} />
+              ) : (
+                <img
+                  src={staff?.profileUrl}
+                  alt={staff?.name}
+                  className={styles.profileImage}
+                />
+              )}
             </div>
 
             <div>
-              <h2>{staff?.name}</h2>
-
-              <p>{staff?.role}</p>
-
-              <p>Staff ID: {staff?.staffId}</p>
+              {profileLoading ? (
+                <>
+                  <Skeleton width={180} height={40} />
+                  <Skeleton width={120} height={30} />
+                  <Skeleton width={100} height={30} />
+                </>
+              ) : (
+                <>
+                  <h2>{staff?.name}</h2>
+                  <p>{staff?.role}</p>
+                  <p>Staff ID: {staff?.staffId}</p>
+                </>
+              )}
 
               <div className={styles.infoRow}>
                 <div className={styles.infoItem}>
                   <EmailOutlinedIcon className={styles.infoIcon} />
-                  <span>{staff?.email}</span>
+                  {profileLoading ? (
+                    <Skeleton width={180} />
+                  ) : (
+                    <span>{staff?.email}</span>
+                  )}
                 </div>
 
                 <div className={styles.infoItem}>
                   <LocalPhoneOutlinedIcon className={styles.infoIcon} />
-                  <span>{staff?.phone}</span>
+                  {profileLoading ? (
+                    <Skeleton width={120} />
+                  ) : (
+                    <span>{staff?.phone}</span>
+                  )}
                 </div>
 
                 <div className={styles.infoItem}>
                   <CalendarMonthOutlinedIcon className={styles.infoIcon} />
-                  <span>
-                    Joined{" "}
-                    {staff?.dateOfJoining
-                      ? new Date(staff.dateOfJoining).toLocaleDateString()
-                      : "N/A"}
-                  </span>
+                  {profileLoading ? (
+                    <Skeleton width={140} />
+                  ) : (
+                    <span>
+                      Joined{" "}
+                      {staff?.dateOfJoining
+                        ? new Date(staff.dateOfJoining).toLocaleDateString()
+                        : "N/A"}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -370,77 +398,150 @@ const StaffDetails = () => {
         <div className={styles.detailsGrid}>
           <div className={styles.detailCard}>
             <h4>Role</h4>
-            <p>{staff?.role || "N/A"}</p>
+
+            {profileLoading ? (
+              <Skeleton width="80%" height={28} />
+            ) : (
+              <p>{staff?.role || "N/A"}</p>
+            )}
           </div>
 
           <div className={styles.detailCard}>
             <h4>Work Schedule</h4>
-            <p>{staff?.workSchedule || "N/A"}</p>
+            {profileLoading ? (
+              <Skeleton width="80%" height={28} />
+            ) : (
+              <p>{staff?.workSchedule || "N/A"}</p>
+            )}
+            {/* <p>{staff?.workSchedule || "N/A"}</p> */}
           </div>
 
           <div className={styles.detailCard}>
             <h4>Employment Type</h4>
-            <p>{staff?.employmentType || "N/A"}</p>
+            {profileLoading ? (
+              <Skeleton width="80%" height={28} />
+            ) : (
+              <p>{staff?.employmentType || "N/A"}</p>
+            )}
+            {/* <p>{staff?.employmentType || "N/A"}</p> */}
           </div>
 
           <div className={styles.detailCard}>
             <h4>Address</h4>
-            <p>{staff?.address || "N/A"}</p>
+            {profileLoading ? (
+              <Skeleton width="80%" height={28} />
+            ) : (
+              <p>{staff?.address || "N/A"}</p>
+            )}
+            {/* <p>{staff?.address || "N/A"}</p> */}
           </div>
 
           <div className={styles.detailCard}>
             <h4>Emergency Contact</h4>
-            <p>{staff?.emergencyContact || "N/A"}</p>
+            {profileLoading ? (
+              <Skeleton width="80%" height={28} />
+            ) : (
+              <p>{staff?.emergencyContact || "N/A"}</p>
+            )}
+            {/* <p>{staff?.emergencyContact || "N/A"}</p> */}
           </div>
 
           <div className={styles.detailCard}>
             <h4>Blood Group</h4>
-            <p>{staff?.bloodGroup || "N/A"}</p>
+            {profileLoading ? (
+              <Skeleton width="80%" height={28} />
+            ) : (
+              <p>{staff?.bloodGroup || "N/A"}</p>
+            )}
+            {/* <p>{staff?.bloodGroup || "N/A"}</p> */}
           </div>
 
           <div className={styles.detailCard}>
             <h4>DOB</h4>
-            <p>
-              {staff?.dateOfBirth
-                ? new Date(staff.dateOfBirth).toLocaleDateString()
-                : "N/A"}
-            </p>
+            {profileLoading ? (
+              <Skeleton width="80%" height={28} />
+            ) : (
+              <p>
+                {staff?.dateOfBirth
+                  ? new Date(staff.dateOfBirth).toLocaleDateString()
+                  : "N/A"}
+              </p>
+            )}
           </div>
 
           <div className={styles.detailCard}>
             <h4>BANK NAME</h4>
-            <p>{staff?.bankName || "N/A"}</p>
+            {profileLoading ? (
+              <Skeleton width="80%" height={28} />
+            ) : (
+              <p>{staff?.bankName || "N/A"}</p>
+            )}
+            {/* <p>{staff?.bankName || "N/A"}</p> */}
           </div>
 
           <div className={styles.detailCard}>
             <h4>PAN Number</h4>
-            <p>{staff?.panNumber || "N/A"}</p>
+            {profileLoading ? (
+              <Skeleton width="80%" height={28} />
+            ) : (
+              <p>{staff?.panNumber || "N/A"}</p>
+            )}
+            {/* <p>{staff?.panNumber || "N/A"}</p> */}
           </div>
 
           <div className={styles.detailCard}>
             <h4>IFSC Code</h4>
-            <p>{staff?.ifscCode || "N/A"}</p>
+            {profileLoading ? (
+              <Skeleton width="80%" height={28} />
+            ) : (
+              <p>{staff?.ifscCode || "N/A"}</p>
+            )}
+            {/* <p>{staff?.ifscCode || "N/A"}</p> */}
           </div>
         </div>
 
         <div className={styles.statsGrid}>
           <div className={styles.statCard}>
-            <h2>{attendanceSummary?.daysPresent || 0}</h2>
+            <h2>
+              {profileLoading ? (
+                <Skeleton width={40} height={40} />
+              ) : (
+                attendanceSummary?.daysPresent || 0
+              )}
+            </h2>
             <p>Working Days</p>
           </div>
 
           <div className={styles.statCard}>
-            <h2>{attendanceSummary?.daysLeave || 0}</h2>
+            <h2>
+              {profileLoading ? (
+                <Skeleton width={40} height={40} />
+              ) : (
+                attendanceSummary?.daysLeave || 0
+              )}
+            </h2>
             <p>Leave Taken</p>
           </div>
 
           <div className={styles.statCard}>
-            <h2>{attendanceSummary?.daysPermission || 0}</h2>
+            <h2>
+              {profileLoading ? (
+                <Skeleton width={40} height={40} />
+              ) : (
+                attendanceSummary?.daysPermission || 0
+              )}
+            </h2>
             <p>Permissions</p>
           </div>
 
           <div className={styles.statCard}>
-            <h2>{attendanceSummary?.daysLate || 0}</h2>
+            <h2>
+              {profileLoading ? (
+                <Skeleton width={40} height={40} />
+              ) : (
+                attendanceSummary?.daysLate || 0
+              )}
+            </h2>
             <p>Late</p>
           </div>
         </div>
@@ -503,7 +604,40 @@ const StaffDetails = () => {
               </thead>
 
               <tbody>
-                {documents.length > 0 ? (
+                {profileLoading ? (
+                  [...Array(5)].map((_, index) => (
+                    <tr key={index}>
+                      <td>
+                        <Skeleton variant="text" width={180} height={30} />
+                      </td>
+
+                      <td>
+                        <Skeleton variant="text" width={120} height={30} />
+                      </td>
+
+                      <td>
+                        <Skeleton
+                          variant="rounded"
+                          width={90}
+                          height={30}
+                          sx={{ borderRadius: "20px" }}
+                        />
+                      </td>
+
+                      <td>
+                        <Skeleton variant="text" width={100} height={30} />
+                      </td>
+
+                      <td>
+                        <div className={styles.actionIcons}>
+                          <Skeleton variant="circular" width={30} height={30} />
+                          <Skeleton variant="circular" width={30} height={30} />
+                          <Skeleton variant="circular" width={30} height={30} />
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : documents.length > 0 ? (
                   documents.map((doc, index) => (
                     <tr key={doc._id || index}>
                       <td>{doc.label}</td>
