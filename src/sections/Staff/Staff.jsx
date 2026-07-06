@@ -107,7 +107,7 @@ const handleDeleteConfirm = async () => {
           <table>
             <thead>
               <tr>
-                <th></th>
+                <th></th> {/* Arrow column */}
                 <th>NAME</th>
                 <th>EM-ID</th>
                 <th>ROLE</th>
@@ -267,15 +267,8 @@ const handleDeleteConfirm = async () => {
                           unmountOnExit
                         >
                           <div className={styles.passwordAccordion}>
-                            <div className={styles.accordionItem}>
-                              <strong>Password:</strong>
-                              <span>{staff.showPassword || "--"}</span>
-                            </div>
-
-                            <div className={styles.accordionItem}>
-                              <strong>No. of Months:</strong>
-                              <span>{staff.noOfMonths || "--"}</span>
-                            </div>
+                            <strong>Password:</strong>{" "}
+                            {staff.showPassword || "--"}
                           </div>
                         </Collapse>
                       </td>

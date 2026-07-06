@@ -157,26 +157,6 @@
   border-radius: 12px;
   margin: 8px;
 }
-
-.accordionItem {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.accordionItem:last-child {
-  margin-bottom: 0;
-}
-
-.accordionItem strong {
-  min-width: 130px;
-  color: #0f172a;
-}
-
-.accordionItem span {
-  color: #475569;
-}
 @media (max-width: 576px) {
   .staffPage {
     padding: 12px;
