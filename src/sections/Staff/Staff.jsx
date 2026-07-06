@@ -107,12 +107,12 @@ const handleDeleteConfirm = async () => {
           <table>
             <thead>
               <tr>
-                <th></th> {/* Arrow column */}
+                <th></th>
                 <th>NAME</th>
                 <th>EM-ID</th>
                 <th>ROLE</th>
                 <th>DATE OF JOIN</th>
-                <th>No. OF MONTH</th>
+                {/* <th>No. OF MONTH</th> */}
                 <th>E-MAIL</th>
                 <th>NUMBER</th>
                 <th>STATUS</th>
@@ -210,7 +210,7 @@ const handleDeleteConfirm = async () => {
                         )}
                       </td>
 
-                      <td>{staff.noOfMonths || "--"}</td>
+                      {/* <td>{staff.noOfMonths || "--"}</td> */}
                       <td>{staff.email}</td>
                       <td>{staff.phone}</td>
 
@@ -267,8 +267,15 @@ const handleDeleteConfirm = async () => {
                           unmountOnExit
                         >
                           <div className={styles.passwordAccordion}>
-                            <strong>Password:</strong>{" "}
-                            {staff.showPassword || "--"}
+                            <div className={styles.accordionItem}>
+                              <strong>Password:</strong>
+                              <span>{staff.showPassword || "--"}</span>
+                            </div>
+
+                            <div className={styles.accordionItem}>
+                              <strong>No. of Months:</strong>
+                              <span>{staff.noOfMonths || "--"}</span>
+                            </div>
                           </div>
                         </Collapse>
                       </td>
