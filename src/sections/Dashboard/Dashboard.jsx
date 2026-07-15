@@ -104,6 +104,7 @@ const fetchAttendanceList = async (filter = "", currentPage = 1) => {
 
     return "Good Night";
   })();
+  const showImageColumn = staffData.some((staff) => staff.imageUrl);
   return (
     <MainLayout>
       <div className={styles.dashboard}>
@@ -164,9 +165,11 @@ const fetchAttendanceList = async (filter = "", currentPage = 1) => {
                   <th>Check-In</th>
                   <th>Check-Out</th>
                   <th>Status</th>
-                  <th>
-                    <PhotoCameraIcon />
-                  </th>
+                  {showImageColumn && (
+                    <th>
+                      <PhotoCameraIcon />
+                    </th>
+                  )}
                 </tr>
               </thead>
 
@@ -235,33 +238,35 @@ const fetchAttendanceList = async (filter = "", currentPage = 1) => {
                           </span>
                         </td>
 
-                        <td>
-                          {staff.imageUrl && (
-                            <button
-                              className={styles.expandBtn}
-                              onClick={() =>
-                                setExpandedRow(
-                                  expandedRow === staff.id ? null : staff.id,
-                                )
-                              }
-                            >
-                              <ExpandMoreIcon
-                                style={{
-                                  transform:
-                                    expandedRow === staff.id
-                                      ? "rotate(180deg)"
-                                      : "rotate(0deg)",
-                                  transition: "transform 0.5s ease",
-                                }}
-                              />
-                            </button>
-                          )}
-                        </td>
+                        {showImageColumn && (
+                          <td>
+                            {staff.imageUrl && (
+                              <button
+                                className={styles.expandBtn}
+                                onClick={() =>
+                                  setExpandedRow(
+                                    expandedRow === staff.id ? null : staff.id,
+                                  )
+                                }
+                              >
+                                <ExpandMoreIcon
+                                  style={{
+                                    transform:
+                                      expandedRow === staff.id
+                                        ? "rotate(180deg)"
+                                        : "rotate(0deg)",
+                                    transition: "transform 0.5s ease",
+                                  }}
+                                />
+                              </button>
+                            )}
+                          </td>
+                        )}
                       </tr>
 
                       <tr>
                         <td
-                          colSpan="7"
+                          colSpan={showImageColumn ? "7" : "6"}
                           style={{
                             padding: 0,
                             border: "none",
@@ -288,7 +293,7 @@ const fetchAttendanceList = async (filter = "", currentPage = 1) => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6">
+                    <td colSpan={showImageColumn ? "7" : "6"}>
                       <div className={styles.noData}>
                         <img src="/critic_no_found.svg" alt="No Data Found" />
 
